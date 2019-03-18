@@ -6,12 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
-
 @Document(collection = "usuarios")
 
 public class ModeloUsuario extends Credentials {
-    private List<String> roles;
+    private String rol;
     private String correoElectronico;
     private String movil;
     private String nombre;
@@ -28,22 +26,22 @@ public class ModeloUsuario extends Credentials {
         
     }
 
-    public ModeloUsuario(String correoElectronico, List<String> roles){
+    public ModeloUsuario(String correoElectronico, String rol){
         String pattern = "dd-MM-yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         String date = simpleDateFormat.format(new Date());
         this.fechaRegistro =date;
         this.correoElectronico =correoElectronico;
-        this.roles=roles;
+        this.rol=rol;
     }
 
 
-    public List<String> getRoles() {
-        return roles;
+    public String getRol() {
+        return rol;
     }
 
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
+    public void setRol(String rol) {
+        this.rol = rol;
     }
 
     public String getCorreoElectronico() {
@@ -124,40 +122,5 @@ public class ModeloUsuario extends Credentials {
 
     public void setIdEstablecimiento(String idEstablecimiento) {
         this.idEstablecimiento = idEstablecimiento;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-
-        ModeloUsuario fullUser = (ModeloUsuario) o;
-
-        return roles != null ? roles.equals(fullUser.roles) : fullUser.roles == null;
-    }
-
-    @Override
-    public ModeloUsuario setPassword(String password) {
-        super.setPassword(password);
-        return this;
-    }
-
-    @Override
-    public ModeloUsuario setUsername(String username) {
-        super.setUsername(username);
-        return this;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (roles != null ? roles.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("FullUser{ username='%s', password='%s', roles=%s", super.getUsername(), super.getPassword(), roles);
     }
 }

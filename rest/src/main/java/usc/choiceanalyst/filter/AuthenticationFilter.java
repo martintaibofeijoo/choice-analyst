@@ -1,7 +1,6 @@
 package usc.choiceanalyst.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import usc.choiceanalyst.config.AuthConstants;
 import usc.choiceanalyst.model.auth.Credentials;
 import usc.choiceanalyst.service.UserAuthDetailsService;
 import io.jsonwebtoken.JwtBuilder;
@@ -24,6 +23,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.stream.Collectors;
+import static usc.choiceanalyst.config.AuthConstants.*;
+
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager manager;
@@ -54,12 +55,12 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         JwtBuilder tokenBuilder = Jwts.builder()
                 .setSubject(((User)(authResult.getPrincipal())).getUsername())
                 .setIssuedAt(new Date(now))
-                .setExpiration(new Date(now + AuthConstants.TOKEN_DURATION))
-                .claim(AuthConstants.ROLES_CLAIM, authorities)
-                .signWith(SignatureAlgorithm.HS512, TextCodec.BASE64.decode(AuthConstants.TOKEN_SECRET));
+                .setExpiration(new Date(now + TOKEN_DURATION))
+                .claim(ROLES_CLAIM, authorities)
+                .signWith(SignatureAlgorithm.HS512, TextCodec.BASE64.decode(TOKEN_SECRET));
                 //.compressWith(CompressionCodecs.DEFLATE);
 
-        response.addHeader(AuthConstants.AUTH_HEADER, String.format("%s %s", AuthConstants.TOKEN_PREFIX, tokenBuilder.compact()));
+        response.addHeader(AUTH_HEADER, String.format("%s %s", TOKEN_PREFIX, tokenBuilder.compact()));
     }
 
 }

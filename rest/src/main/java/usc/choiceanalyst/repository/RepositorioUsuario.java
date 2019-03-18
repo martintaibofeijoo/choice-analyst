@@ -13,6 +13,5 @@ public interface RepositorioUsuario extends MongoRepository<ModeloUsuario, Strin
     Optional<ModeloUsuario> findByUsername(String username);
     List<ModeloUsuario> findAll();
     Page<ModeloUsuario> findAll(Pageable pageable);
-    Page<ModeloUsuario> findAllByRolesContaining(String roles, Pageable pageable);
     ModeloUsuario save(ModeloUsuario entity);
 }

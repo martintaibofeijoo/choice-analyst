@@ -1,6 +1,6 @@
 package usc.choiceanalyst.filter;
 
-import usc.choiceanalyst.config.AuthConstants;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import static usc.choiceanalyst.config.AuthConstants.*;
+
 
 public class AuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -28,9 +30,9 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         try {
-            String header = request.getHeader(AuthConstants.AUTH_HEADER);
+            String header = request.getHeader(AUTH_HEADER);
 
-            if (header == null || !header.startsWith(AuthConstants.TOKEN_PREFIX)) {
+            if (header == null || !header.startsWith(TOKEN_PREFIX)) {
                 chain.doFilter(request, response);
                 return;
             }
@@ -45,12 +47,12 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
     private UsernamePasswordAuthenticationToken getAuthentication(String token) throws ExpiredJwtException {
         Claims claims = Jwts.parser()
-                .setSigningKey(TextCodec.BASE64.decode(AuthConstants.TOKEN_SECRET))
-                .parseClaimsJws(token.replace(AuthConstants.TOKEN_PREFIX, "").trim())
+                .setSigningKey(TextCodec.BASE64.decode(TOKEN_SECRET))
+                .parseClaimsJws(token.replace(TOKEN_PREFIX, "").trim())
                 .getBody();
         String user = claims.getSubject();
 
-        List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(claims.get(AuthConstants.ROLES_CLAIM).toString());
+        List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(claims.get(ROLES_CLAIM).toString());
 
         return user == null ? null : new UsernamePasswordAuthenticationToken(user, token, authorities);
     }

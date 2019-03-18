@@ -28,16 +28,11 @@ public class UserAuthDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<ModeloUsuario> user = db.findByUsername(username);
 
-        if(!user.isPresent())
+        if(user == null)
             throw new UsernameNotFoundException(username);
 
-        String roles = user.get().getRoles()
-                .stream()
-                .map(role -> String.format("ROLE_%s", role))
-                .collect(Collectors.joining(","));
-
-        List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
-
+        String rol = user.get().getRol();
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(rol);
         return new User(user.get().getUsername(), user.get().getPassword(), authorities);
     }
 }
