@@ -2,11 +2,24 @@ import React, {PureComponent as Component} from 'react'
 import {Link, Redirect} from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal'
 import {
-    Button, Col, Row, CardFooter, Card, CardHeader, CardTitle, CardBody, Form, FormGroup, Label, Input, Alert
+    Button,
+    Col,
+    Row,
+    CardFooter,
+    Card,
+    CardHeader,
+    CardTitle,
+    CardBody,
+    Form,
+    FormGroup,
+    Label,
+    Input,
+    Alert,
+    NavbarBrand
 } from 'reactstrap';
 
 
-import Imagen from '../imagenes/choiceanalyst_inicio.png'
+import choiceanalyst_inicio from '../imagenes/choiceanalyst_inicio.png'
 import Image from 'react-bootstrap/Image'
 import {ButtonToolbar, Container, Media} from "react-bootstrap";
 import {Authentication} from "../authentication";
@@ -27,25 +40,40 @@ export class IniciarSesion extends Component {
                 if (auth.authenticated)
                     return <Redirect to="/"/>;
                 else
-                    return <ButtonToolbar>
-                        <Button
-                            variant="primary"
-                            onClick={() => this.setState({modalShow: true})}
-                        >
-                            Launch vertically centered modal
-                        </Button>
-
-                        <Row>
-                            <Col xs="12" sm={{size: 6, offset: 3}}>
-                                <VistaIniciarSesion
-                                    onLogin={auth.login}
-                                    show={this.state.modalShow}
-                                    onHide={modalClose}
-                                />
-                                <VistaIniciarSesionError error={auth.error}/>
+                    return <article>
+                        <row>
+                            <Col sm>
+                                <Image className="imagenInicio" src={choiceanalyst_inicio}/>
                             </Col>
-                        </Row>
-                    </ButtonToolbar>
+                        </row>
+
+                        <ButtonToolbar>
+                            <Button size={"lg"}
+                                color={"success"}
+                                onClick={() => this.setState({modalShow: true})}
+                            >
+                                Iniciar Sesión
+                            </Button>
+                            <Button
+                                size="lg"
+                                color={"success"}
+                                onClick={() => this.setState({modalShow: true})}
+                            >
+                                Registrarse
+                            </Button>
+                            <Row>
+                                <Col xs="12" sm={{size: 6, offset: 3}}>
+                                    <VistaIniciarSesion
+                                        onLogin={auth.login}
+                                        show={this.state.modalShow}
+                                        onHide={modalClose}
+                                    />
+                                    <VistaIniciarSesionError error={auth.error}/>
+                                </Col>
+                            </Row>
+                        </ButtonToolbar>
+
+                    </article>
             }}
         </Authentication>
     }
@@ -84,33 +112,28 @@ class VistaIniciarSesion extends Component {
         >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Modal heading
+                    Iniciar Sesión
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Card color="primary">
-                    <CardHeader>
-                        <CardTitle className={"login"}>Login</CardTitle>
-                    </CardHeader>
+                <Card>
                     <CardBody>
                         <Form>
                             <FormGroup>
-                                <Label>Username</Label>
+                                <Label>Usuario</Label>
                                 <Input value={this.state.username} onChange={this.onUsernameChange}/>
                             </FormGroup>
                             <FormGroup>
-                                <Label>Password</Label>
+                                <Label>Contraseña</Label>
                                 <Input type="password" value={this.state.password} onChange={this.onPasswordChange}/>
                             </FormGroup>
                         </Form>
                     </CardBody>
-                    <CardFooter>
-                        <Button block onClick={this.onLoginButtonClick}>Login</Button>
-                    </CardFooter>
                 </Card>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={this.props.onHide}>Close</Button>
+                <Button color={"primary"} block onClick={this.onLoginButtonClick}>Iniciar Sesión</Button>
+                <Button color={"secondary"} onClick={this.props.onHide}>Cerrar</Button>
             </Modal.Footer>
         </Modal>
     }
@@ -125,3 +148,4 @@ class VistaIniciarSesionError extends Component {
         else return null
     }
 }
+
