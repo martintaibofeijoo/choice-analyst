@@ -17,7 +17,7 @@ export class AuthenticatedApp extends Component {
     }
 
     login = (user, pass) => {
-        fetch("http://localhost:9000/login", {method: 'POST', body: JSON.stringify({username: user, password: pass})})
+        fetch("http://localhost:9000/login", {method: 'POST', body: JSON.stringify({nombreIngrediente: user, password: pass})})
             .then(response => {
                 const codigo = response.status;
                 if (codigo === 200) {
@@ -26,7 +26,7 @@ export class AuthenticatedApp extends Component {
                     this.setState(prev => ({
                             ...prev,
                             authenticated: true,
-                            user: {username: user, rol: decodeToken.rol},
+                            user: {nombreIngrediente: user, rol: decodeToken.rol},
                             token: token
                         }),
                         () => {

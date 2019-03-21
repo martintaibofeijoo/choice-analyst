@@ -91,7 +91,7 @@ class VistaIniciarSesion extends Component {
 
     onUsernameChange = event => {
         let value = event.target !== null ? event.target.value : ""
-        this.setState(prev => ({...prev, username: value}))
+        this.setState(prev => ({...prev, nombreIngrediente: value}))
     }
 
     onPasswordChange = event => {
@@ -100,7 +100,7 @@ class VistaIniciarSesion extends Component {
     }
 
     onLoginButtonClick = () => {
-        this.props.onLogin(this.state.username, this.state.password)
+        this.props.onLogin(this.state.nombreIngrediente, this.state.password)
     }
 
     render() {
@@ -121,7 +121,7 @@ class VistaIniciarSesion extends Component {
                         <Form>
                             <FormGroup>
                                 <Label>Usuario</Label>
-                                <Input value={this.state.username} onChange={this.onUsernameChange}/>
+                                <Input value={this.state.nombreIngrediente} onChange={this.onUsernameChange}/>
                             </FormGroup>
                             <FormGroup>
                                 <Label>Contraseña</Label>

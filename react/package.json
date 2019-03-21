@@ -12,7 +12,8 @@
     "react-icons": "^3.1.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.0.4",
-    "reactstrap": "^6.5.0"
+    "reactstrap": "^6.5.0",
+    "lodash": "latest"
   },
   "scripts": {
     "start": "react-scripts start",

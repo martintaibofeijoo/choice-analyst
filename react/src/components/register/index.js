@@ -42,7 +42,7 @@ export class RegisterView extends Component {
 
     onUsernameChange = event => {
         let value = event.target !== null ? event.target.value : ""
-        this.setState(prev => ({...prev, username: value}))
+        this.setState(prev => ({...prev, nombreIngrediente: value}))
     }
 
     onPasswordChange = event => {
@@ -56,14 +56,14 @@ export class RegisterView extends Component {
     }
 
     onRegisterButtonClick = () => {
-        this.doRegister(this.state.username, this.state.password, this.state.email)
+        this.doRegister(this.state.nombreIngrediente, this.state.password, this.state.email)
     }
 
     doRegister = (username, password, email) => {
         fetch("http://localhost:9000/users", {
             method: 'POST',
             headers: {'Accept': 'application/json;charset=UTF-8', 'Content-Type': 'application/json;charset=UTF-8'},
-            body: JSON.stringify({username: username, password: password, email: email})
+            body: JSON.stringify({nombreIngrediente: username, password: password, email: email})
         })
             .then(response => {
 
@@ -74,7 +74,7 @@ export class RegisterView extends Component {
                         ...prev,
                         alert: {status: "OK", message: "Correctly registered user"}
                     }))
-                    this.props.login(this.state.username, this.state.password)
+                    this.props.login(this.state.nombreIngrediente, this.state.password)
 
                 } else if (codigo === 409) {
                     this.setState(prev => ({...prev, alert: {status: "Error", message: "User already exists"}}))
@@ -93,7 +93,7 @@ export class RegisterView extends Component {
                     <Form>
                         <FormGroup>
                             <Label>USERNAME</Label>
-                            <Input value={this.state.username} onChange={this.onUsernameChange} required/>
+                            <Input value={this.state.nombreIngrediente} onChange={this.onUsernameChange} required/>
                         </FormGroup>
                         <FormGroup>
                             <Label>PASSWORD</Label>

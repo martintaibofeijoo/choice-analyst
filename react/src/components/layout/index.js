@@ -5,6 +5,8 @@ import Register from "../register"
 import Login, {IniciarSesion} from "../login"
 import Logout from "../logout"
 import { Switch, Route, Redirect } from "react-router-dom"
+import {NuevoMenu} from "../nuevomenu";
+
 
 
 export default class Layout extends Component {
@@ -16,6 +18,7 @@ export default class Layout extends Component {
                     <Route path = "/inicio" component = { IniciarSesion } />
                     <Route path = "/register" component = { Register } />
                     <Route path = "/logout" component = { Logout } />
+                    <Route path = "/menu" component = { NuevoMenu } />
 
                     <Redirect from = "/" to = "/prueba"/>
                 </Switch>
