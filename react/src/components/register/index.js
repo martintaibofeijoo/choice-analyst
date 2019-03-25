@@ -85,11 +85,11 @@ export class RegisterView extends Component {
 
     render() {
         return <>
-            <Card color="primary">
+            <Card className="card" color="primary">
                 <CardHeader>
                     <CardTitle className={"login"}>REGISTER</CardTitle>
                 </CardHeader>
-                <CardBody>
+                <CardBody className="menosBottomBody">
                     <Form>
                         <FormGroup>
                             <Label>USERNAME</Label>

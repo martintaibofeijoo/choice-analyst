@@ -136,7 +136,7 @@ export class Plato extends Component {
         super(props)
 
         this.state={
-            nombrePlato: "",
+            nombreIngrediente: "",
             precioPlato: "",
             ingredientes: [
                 {

@@ -3,6 +3,8 @@ package usc.choiceanalyst.controller;
 import usc.choiceanalyst.model.ModeloUsuario;
 import java.net.URI;
 import java.util.*;
+
+import usc.choiceanalyst.model.auxiliar.Menu;
 import usc.choiceanalyst.repository.RepositorioUsuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -79,8 +81,8 @@ public class ControladorUsuarios {
             consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
 
-    public ResponseEntity createUser(@RequestBody ModeloUsuario data) {
-        if (dbu.existsByUsername(data.getUsername())) {
+    public ResponseEntity createUser(@RequestBody Menu data) {
+        /*if (dbu.existsByUsername(data.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } else {
             String roles = "CLIENTE";
@@ -92,7 +94,13 @@ public class ControladorUsuarios {
 
             URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/usuarios/{username}").buildAndExpand(user.getUsername()).toUri();
             return ResponseEntity.created(location).body(user.setPassword("*********"));
-        }
+        }*/
+
+        System.out.println("hola");
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/usuarios/{username}").buildAndExpand("creado").toUri();
+        return ResponseEntity.created(location).body("creado");
+
+
     }
 
     @PreAuthorize("(hasRole('CLIENTE') and principal == #username) or hasRole('ADMINISTRADOR')")
