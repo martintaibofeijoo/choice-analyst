@@ -1,25 +1,14 @@
 import React, {PureComponent as Component} from 'react'
-import {Link, Redirect} from 'react-router-dom'
-import Modal from 'react-bootstrap/Modal'
 import {
     Col,
-    Row,
     CardFooter,
     Card,
     CardHeader,
     CardTitle,
     CardBody,
-
     Input,
-
 } from 'reactstrap';
-
 import Button from 'react-bootstrap/Button'
-
-import choiceanalyst_inicio from '../imagenes/choiceanalyst_inicio.png'
-import Image from 'react-bootstrap/Image'
-import {ButtonToolbar, Container, Media} from "react-bootstrap";
-import {Authentication} from "../authentication";
 import Form from "react-bootstrap/Form";
 
 
@@ -27,11 +16,6 @@ export class NuevoMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            nombreIngrediente: "",
-            identificadorIngrediente: "",
-            identificadorPlato: "",
-            nombre: "",
-            precio: "",
             primerosPlatos: [
                 {
                     nombrePlato: "",
@@ -46,12 +30,19 @@ export class NuevoMenu extends Component {
         }
     }
 
-    onEliminarPrimerPlato = position => {
+    onAnadirPrimerPlato = () => {
         let {primerosPlatos} = this.state;
-
         let nuevosPrimerosPlatos = [
-            ...primerosPlatos.slice(0, position),
-            ...primerosPlatos.slice(position + 1),
+            ...primerosPlatos,
+            {
+                nombrePlato: "",
+                precioPlato: "",
+                ingredientes: [
+                    {
+                        nombreIngrediente: ""
+                    }
+                ]
+            }
         ]
         this.setState({primerosPlatos: nuevosPrimerosPlatos});
     }
@@ -76,6 +67,16 @@ export class NuevoMenu extends Component {
         })
     }
 
+    onAnadirIngredientePrimerPlato = (identificadorPlato) => {
+        this.setState(state => {
+            state.primerosPlatos.map((item, index) => {
+                if (index === identificadorPlato) {
+                    item.ingredientes = [...item.ingredientes, {nombreIngrediente: "",}]
+                }
+            })
+        })
+    }
+
     onModificarIngredientesPrimerPlato = (nombreIngrediente, identificadorIngrediente, identificadorPlato) => {
         this.setState(state => {
             state.primerosPlatos.map((item, index) => {
@@ -85,16 +86,6 @@ export class NuevoMenu extends Component {
                             item1.nombreIngrediente = nombreIngrediente
                         }
                     })
-                }
-            })
-        })
-    }
-
-    onAnadirIngredientePrimerPlato = (identificadorPlato) => {
-        this.setState(state => {
-            state.primerosPlatos.map((item, index) => {
-                if (index === identificadorPlato) {
-                    item.ingredientes = [...item.ingredientes, {nombreIngrediente: "",}]
                 }
             })
         })
@@ -113,20 +104,12 @@ export class NuevoMenu extends Component {
         })
     }
 
-
-    onAnadirPrimerPlato = () => {
+    onEliminarPrimerPlato = position => {
         let {primerosPlatos} = this.state;
+
         let nuevosPrimerosPlatos = [
-            ...primerosPlatos,
-            {
-                nombrePlato: "",
-                precioPlato: "",
-                ingredientes: [
-                    {
-                        nombreIngrediente: ""
-                    }
-                ]
-            }
+            ...primerosPlatos.slice(0, position),
+            ...primerosPlatos.slice(position + 1),
         ]
         this.setState({primerosPlatos: nuevosPrimerosPlatos});
     }
@@ -157,25 +140,27 @@ export class NuevoMenu extends Component {
     render() {
         return (
             <div>
-                <h1>Primeros Platos</h1>
-                <ul className="lista">
-                    {this.state.primerosPlatos.map(
-                        (item, index) =>
-                            <Plato plato={item} key={index} identificadorPlato={index}
-                                   onEliminarPlato={() => this.onEliminarPrimerPlato(index)}
-                                   onModificarNombrePlato={this.onModificarNombrePrimerPlato}
-                                   onModificarPrecioPlato={this.onModificarPrecioPrimerPlato}
-                                   onModificarIngredientesPlato={this.onModificarIngredientesPrimerPlato}
-                                   onAnadirIngredientePlato={this.onAnadirIngredientePrimerPlato}
-                                   onEliminarIngredientePlato={this.onEliminarIngredientePrimerPlato}
-                            />
-                    )
-                    }
-                </ul>
                 <div>
-                    <Button variant="success" onClick={this.onAnadirPrimerPlato}>
-                        Añadir Primer Plato
-                    </Button>
+                    <h1>Primeros Platos</h1>
+                    <ul className="lista">
+                        {this.state.primerosPlatos.map(
+                            (item, index) =>
+                                <Plato plato={item} key={index} identificadorPlato={index}
+                                       onEliminarPlato={() => this.onEliminarPrimerPlato(index)}
+                                       onModificarNombrePlato={this.onModificarNombrePrimerPlato}
+                                       onModificarPrecioPlato={this.onModificarPrecioPrimerPlato}
+                                       onModificarIngredientesPlato={this.onModificarIngredientesPrimerPlato}
+                                       onAnadirIngredientePlato={this.onAnadirIngredientePrimerPlato}
+                                       onEliminarIngredientePlato={this.onEliminarIngredientePrimerPlato}
+                                />
+                        )
+                        }
+                    </ul>
+                    <div>
+                        <Button style={{marginBottom: '20px'}} block variant="success" onClick={this.onAnadirPrimerPlato}>
+                            Añadir Primer Plato
+                        </Button>
+                    </div>
                 </div>
                 <div>
                     <Button style={{marginBottom: '50px'}} block color={"success"} onClick={this.onCrearMenu}>Crear
@@ -212,21 +197,20 @@ class Plato extends Component {
         this.props.onModificarPrecioPlato(value, this.props.identificadorPlato)
     }
 
-
-    eliminarPlato = () => {
-        if (this.props.onEliminarPlato)
-            this.props.onEliminarPlato();
+    onEliminarPlato = () => {
+        this.props.onEliminarPlato();
     }
 
-    onEliminarIngrediente = position => {
+    onAnadirIngrediente = () => {
         let {ingredientes} = this.state;
-
         let nuevosIngredientes = [
-            ...ingredientes.slice(0, position),
-            ...ingredientes.slice(position + 1),
+            ...ingredientes,
+            {
+                nombreIngrediente: ""
+            }
         ]
         this.setState({ingredientes: nuevosIngredientes});
-        this.props.onEliminarIngredientePlato(this.props.identificadorPlato)
+        this.props.onAnadirIngredientePlato(this.props.identificadorPlato)
     }
 
     onModificarIngrediente = (nombreIngrediente, identificadorIngrediente) => {
@@ -240,16 +224,15 @@ class Plato extends Component {
         this.props.onModificarIngredientesPlato(nombreIngrediente, identificadorIngrediente, this.props.identificadorPlato)
     }
 
-    onAnadirIngrediente = () => {
+    onEliminarIngrediente = identificadorIngrediente => {
         let {ingredientes} = this.state;
+
         let nuevosIngredientes = [
-            ...ingredientes,
-            {
-                nombreIngrediente: ""
-            }
+            ...ingredientes.slice(0, identificadorIngrediente),
+            ...ingredientes.slice(identificadorIngrediente + 1),
         ]
         this.setState({ingredientes: nuevosIngredientes});
-        this.props.onAnadirIngredientePlato(this.props.identificadorPlato)
+        this.props.onEliminarIngredientePlato(this.props.identificadorPlato)
     }
 
     render() {
@@ -278,11 +261,10 @@ class Plato extends Component {
                     </CardHeader>
                     <CardBody style={{marginBottom: '-50px'}}>
                         <ul className="lista">
-                            {console.table(this.props.plato)}
                             {this.props.plato.ingredientes.map(
                                 (item, index) =>
                                     <Ingrediente ingrediente={item} key={index} identificadorIngrediente={index}
-                                                 onRemoveIngrediente={() => this.onEliminarIngrediente(index)}
+                                                 onEliminarIngrediente={() => this.onEliminarIngrediente(index)}
                                                  onModificarIngrediente={this.onModificarIngrediente}/>
                             )
                             }
@@ -295,7 +277,7 @@ class Plato extends Component {
                     </CardFooter>
                 </CardBody>
                 <CardFooter>
-                    <Button block variant="danger" className="botonEliminarPlato" onClick={this.eliminarPlato}>
+                    <Button block variant="danger" className="botonEliminarPlato" onClick={this.onEliminarPlato}>
                         Eliminar Plato
                     </Button>
                 </CardFooter>
@@ -318,9 +300,8 @@ class Ingrediente extends Component {
         this.props.onModificarIngrediente(value, this.props.identificadorIngrediente)
     }
 
-    eliminarIngrediente = () => {
-        if (this.props.onRemoveIngrediente)
-            this.props.onRemoveIngrediente();
+    onEliminarIngrediente = () => {
+        this.props.onEliminarIngrediente();
     }
 
     render() {
@@ -335,7 +316,7 @@ class Ingrediente extends Component {
                                        onChange={this.onNombreIngredienteChange}/>
                             </Col>
                             <Col>
-                                <Button block variant="danger" onClick={this.eliminarIngrediente}>
+                                <Button block variant="danger" onClick={this.onEliminarIngrediente}>
                                     Eliminar Ingrediente
                                 </Button>
                             </Col>
