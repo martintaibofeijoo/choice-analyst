@@ -10,10 +10,8 @@ import {
     CardTitle,
     CardBody,
 
-    Label,
     Input,
-    Alert,
-    NavbarBrand, FormGroup
+
 } from 'reactstrap';
 
 import Button from 'react-bootstrap/Button'
@@ -29,13 +27,20 @@ export class NuevoMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            nombreIngrediente: "",
+            identificadorIngrediente: "",
+            identificadorPlato: "",
             nombre: "",
             precio: "",
             primerosPlatos: [
                 {
                     nombrePlato: "",
                     precioPlato: "",
-                    ingredientes: []
+                    ingredientes: [
+                        {
+                            nombreIngrediente: ""
+                        }
+                    ]
                 }
             ]
         }
@@ -52,41 +57,57 @@ export class NuevoMenu extends Component {
     }
 
     onModificarNombrePrimerPlato = (nombre, identificador) => {
-        this.setState(prev => ({...prev, nombre: nombre}))
-        this.setState(prev => ({...prev, identificador: identificador}))
         this.setState(state => {
             state.primerosPlatos.map((item, index) => {
                 if (index === identificador) {
                     item.nombrePlato = nombre;
-                    //console.table(this.state.primerosPlatos)
                 }
             })
         })
-
     }
 
     onModificarPrecioPrimerPlato = (precio, identificador) => {
-        this.setState(prev => ({...prev, precio: precio}))
-        this.setState(prev => ({...prev, identificador: identificador}))
         this.setState(state => {
             state.primerosPlatos.map((item, index) => {
                 if (index === identificador) {
                     item.precioPlato = precio;
-                    //console.table(this.state.primerosPlatos)
                 }
             })
         })
     }
 
-    onModificarIngredientesPrimerPlato = (ingredientes, identificador) => {
-        this.setState(prev => ({...prev, ingredientes: ingredientes}))
-        this.setState(prev => ({...prev, identificador: identificador}))
+    onModificarIngredientesPrimerPlato = (nombreIngrediente, identificadorIngrediente, identificadorPlato) => {
         this.setState(state => {
             state.primerosPlatos.map((item, index) => {
-                if (index === identificador) {
-                    debugger
-                    item.ingredientes = ingredientes;
-                    //console.table(this.state.primerosPlatos)
+                if (index === identificadorPlato) {
+                    item.ingredientes.map((item1, index1) => {
+                        if (index1 === identificadorIngrediente) {
+                            item1.nombreIngrediente = nombreIngrediente
+                        }
+                    })
+                }
+            })
+        })
+    }
+
+    onAnadirIngredientePrimerPlato = (identificadorPlato) => {
+        this.setState(state => {
+            state.primerosPlatos.map((item, index) => {
+                if (index === identificadorPlato) {
+                    item.ingredientes = [...item.ingredientes, {nombreIngrediente: "",}]
+                }
+            })
+        })
+    }
+
+    onEliminarIngredientePrimerPlato = (identificadorPlato) => {
+        this.setState(state => {
+            state.primerosPlatos.map((item, index) => {
+                if (index === identificadorPlato) {
+                    item.ingredientes = [
+                        ...item.ingredientes.slice(0, identificadorPlato),
+                        ...item.ingredientes.slice(identificadorPlato + 1),
+                    ]
                 }
             })
         })
@@ -100,44 +121,14 @@ export class NuevoMenu extends Component {
             {
                 nombrePlato: "",
                 precioPlato: "",
-                ingredientes: []
+                ingredientes: [
+                    {
+                        nombreIngrediente: ""
+                    }
+                ]
             }
         ]
         this.setState({primerosPlatos: nuevosPrimerosPlatos});
-    }
-
-
-    onEliminarIngredientePrimerPlato = position => {
-        let {ingredientes} = this.state.primerosPlatos;
-        let nuevosIngredientes = [
-            ...ingredientes.slice(0, position),
-            ...ingredientes.slice(position + 1),
-        ]
-        this.setState({ingredientes: nuevosIngredientes});
-    }
-
-
-    onModificarIngredientePrimerPlato = (nombreIngrediente, identificador) => {
-        this.setState(state => {
-            state.ingredientes.map((item, index) => {
-                if (index === identificador) {
-                    item.nombreIngrediente=nombreIngrediente;
-                }
-            })
-        })
-        this.props.onModificarIngredientesPlato(this.state.ingredientes, this.props.clave)
-
-    }
-
-    onAnadirIngredientePrimerPlato = () => {
-        let {ingredientes} = this.state.primerosPlatos;
-        let nuevosIngredientes = [
-            ...ingredientes,
-            {
-                nombreIngrediente: ""
-            }
-        ]
-        this.setState({ingredientes: nuevosIngredientes});
     }
 
     onCrearMenu = () => {
@@ -160,24 +151,21 @@ export class NuevoMenu extends Component {
         const codigo = response.status
         console.log(codigo)*/
         console.table(primerosPlatos)
-        debugger
 
     }
 
     render() {
         return (
             <div>
-                <h1>{this.state.nombre}</h1>
-                <h1>{this.state.precio}</h1>
                 <h1>Primeros Platos</h1>
                 <ul className="lista">
                     {this.state.primerosPlatos.map(
                         (item, index) =>
-                            <Plato plato={item} key={index} clave={index}
+                            <Plato plato={item} key={index} identificadorPlato={index}
                                    onEliminarPlato={() => this.onEliminarPrimerPlato(index)}
                                    onModificarNombrePlato={this.onModificarNombrePrimerPlato}
                                    onModificarPrecioPlato={this.onModificarPrecioPrimerPlato}
-                                   onModificarIngredientePlato={this.onModificarIngredientePrimerPlato}
+                                   onModificarIngredientesPlato={this.onModificarIngredientesPrimerPlato}
                                    onAnadirIngredientePlato={this.onAnadirIngredientePrimerPlato}
                                    onEliminarIngredientePlato={this.onEliminarIngredientePrimerPlato}
                             />
@@ -202,6 +190,8 @@ class Plato extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            nombrePlato: "",
+            precioPlato: "",
             ingredientes: [
                 {
                     nombreIngrediente: ""
@@ -212,12 +202,14 @@ class Plato extends Component {
 
     onNombrePlatoChange = event => {
         let value = event.target !== null ? event.target.value : ""
-        this.props.onModificarNombrePlato(value, this.props.clave)
+        this.setState(prev => ({...prev, nombrePlato: value}))
+        this.props.onModificarNombrePlato(value, this.props.identificadorPlato)
     }
 
     onPrecioPlatoChange = event => {
         let value = event.target !== null ? event.target.value : ""
-        this.props.onModificarPrecioPlato(value, this.props.clave)
+        this.setState(prev => ({...prev, precioPlato: value}))
+        this.props.onModificarPrecioPlato(value, this.props.identificadorPlato)
     }
 
 
@@ -228,24 +220,24 @@ class Plato extends Component {
 
     onEliminarIngrediente = position => {
         let {ingredientes} = this.state;
+
         let nuevosIngredientes = [
             ...ingredientes.slice(0, position),
             ...ingredientes.slice(position + 1),
         ]
         this.setState({ingredientes: nuevosIngredientes});
+        this.props.onEliminarIngredientePlato(this.props.identificadorPlato)
     }
 
-
-    onModificarIngrediente = (nombreIngrediente, identificador) => {
+    onModificarIngrediente = (nombreIngrediente, identificadorIngrediente) => {
         this.setState(state => {
             state.ingredientes.map((item, index) => {
-                if (index === identificador) {
-                    item.nombreIngrediente=nombreIngrediente;
+                if (index === identificadorIngrediente) {
+                    item.nombreIngrediente = nombreIngrediente;
                 }
             })
         })
-        this.props.onModificarIngredientesPlato(this.state.ingredientes, this.props.clave)
-
+        this.props.onModificarIngredientesPlato(nombreIngrediente, identificadorIngrediente, this.props.identificadorPlato)
     }
 
     onAnadirIngrediente = () => {
@@ -253,17 +245,18 @@ class Plato extends Component {
         let nuevosIngredientes = [
             ...ingredientes,
             {
-                nombreIngrediente: "",
+                nombreIngrediente: ""
             }
         ]
         this.setState({ingredientes: nuevosIngredientes});
+        this.props.onAnadirIngredientePlato(this.props.identificadorPlato)
     }
 
     render() {
         return (
             <Card color="primary">
                 <CardHeader style={{marginBottom: '-30px'}}>
-                    <CardTitle>Plato {this.props.clave + 1} </CardTitle>
+                    <CardTitle>Plato {this.props.identificadorPlato + 1} </CardTitle>
                 </CardHeader>
                 <CardBody>
                     <Form>
@@ -285,9 +278,10 @@ class Plato extends Component {
                     </CardHeader>
                     <CardBody style={{marginBottom: '-50px'}}>
                         <ul className="lista">
-                            {this.state.ingredientes.map(
+                            {console.table(this.props.plato)}
+                            {this.props.plato.ingredientes.map(
                                 (item, index) =>
-                                    <Ingrediente ingrediente={item} key={index} clave={index}
+                                    <Ingrediente ingrediente={item} key={index} identificadorIngrediente={index}
                                                  onRemoveIngrediente={() => this.onEliminarIngrediente(index)}
                                                  onModificarIngrediente={this.onModificarIngrediente}/>
                             )
@@ -313,12 +307,15 @@ class Plato extends Component {
 class Ingrediente extends Component {
     constructor(props) {
         super(props)
-        this.state = {}
+        this.state = {
+            nombreIngrediente: ""
+        }
     }
 
     onNombreIngredienteChange = event => {
         let value = event.target !== null ? event.target.value : ""
-        this.props.onModificarIngrediente(value ,this.props.clave)
+        this.setState(prev => ({...prev, nombreIngrediente: value}))
+        this.props.onModificarIngrediente(value, this.props.identificadorIngrediente)
     }
 
     eliminarIngrediente = () => {
