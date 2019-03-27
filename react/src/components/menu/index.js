@@ -136,11 +136,11 @@ export class Plato extends Component {
         super(props)
 
         this.state={
-            nombreIngrediente: "",
+            user: "",
             precioPlato: "",
             ingredientes: [
                 {
-                    nombreIngrediente: ""
+                    user: ""
                 }
             ]
         }
@@ -148,7 +148,7 @@ export class Plato extends Component {
 
     onNombrePlatoChange = event => {
         let value = event.target !== null ? event.target.value : ""
-        this.setState(prev => ({...prev, nombreIngrediente: value}))
+        this.setState(prev => ({...prev, user: value}))
     }
 
     onPrecioPlatoChange = event => {
@@ -190,7 +190,7 @@ export class Plato extends Component {
                     <Form>
                         <Form.Row>
                             <Col>
-                                <Input placeholder="Nombre del Plato" value={this.state.nombreIngrediente} onChange={this.onNombrePlatoChange}/>
+                                <Input placeholder="Nombre del Plato" value={this.state.user} onChange={this.onNombrePlatoChange}/>
                             </Col>
                             <Col>
                                 <Input placeholder="Precio del Plato" value={this.state.precioPlato} onChange={this.onPrecioPlatoChange}/>
@@ -211,13 +211,13 @@ class Ingrediente extends Component {
         super(props)
 
         this.state={
-            nombreIngrediente: ""
+            user: ""
         }
     }
 
     onNombreIngredienteChange = event => {
         let value = event.target !== null ? event.target.value : ""
-        this.setState(prev => ({...prev, nombreIngrediente: value}))
+        this.setState(prev => ({...prev, user: value}))
     }
 
     _eliminarIngrediente() {
@@ -232,7 +232,7 @@ class Ingrediente extends Component {
                     <Form>
                         <Form.Row>
                             <Col>
-                                <Input placeholder="Nombre del Ingrediente" value={this.state.nombreIngrediente} onChange={this.onNombreIngredienteChange}/>
+                                <Input placeholder="Nombre del Ingrediente" value={this.state.user} onChange={this.onNombreIngredienteChange}/>
                             </Col>
                         </Form.Row>
                     </Form>

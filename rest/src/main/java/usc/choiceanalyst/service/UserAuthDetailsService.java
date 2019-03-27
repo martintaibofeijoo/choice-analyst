@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserAuthDetailsService implements UserDetailsService {
@@ -28,8 +27,9 @@ public class UserAuthDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<ModeloUsuario> user = db.findByUsername(username);
 
-        if(user == null)
+        if(user.equals(Optional.empty()))
             throw new UsernameNotFoundException(username);
+
 
         String rol = user.get().getRol();
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(rol);

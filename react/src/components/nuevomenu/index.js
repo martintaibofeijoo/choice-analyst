@@ -22,7 +22,7 @@ export class NuevoMenu extends Component {
                     precioPlato: "",
                     ingredientes: [
                         {
-                            nombreIngrediente: ""
+                            user: ""
                         }
                     ]
                 }
@@ -39,7 +39,7 @@ export class NuevoMenu extends Component {
                 precioPlato: "",
                 ingredientes: [
                     {
-                        nombreIngrediente: ""
+                        user: ""
                     }
                 ]
             }
@@ -71,7 +71,7 @@ export class NuevoMenu extends Component {
         this.setState(state => {
             state.primerosPlatos.map((item, index) => {
                 if (index === identificadorPlato) {
-                    item.ingredientes = [...item.ingredientes, {nombreIngrediente: "",}]
+                    item.ingredientes = [...item.ingredientes, {user: "",}]
                 }
             })
         })
@@ -83,7 +83,7 @@ export class NuevoMenu extends Component {
                 if (index === identificadorPlato) {
                     item.ingredientes.map((item1, index1) => {
                         if (index1 === identificadorIngrediente) {
-                            item1.nombreIngrediente = nombreIngrediente
+                            item1.user = nombreIngrediente
                         }
                     })
                 }
@@ -179,7 +179,7 @@ class Plato extends Component {
             precioPlato: "",
             ingredientes: [
                 {
-                    nombreIngrediente: ""
+                    user: ""
                 }
             ]
         }
@@ -206,7 +206,7 @@ class Plato extends Component {
         let nuevosIngredientes = [
             ...ingredientes,
             {
-                nombreIngrediente: ""
+                user: ""
             }
         ]
         this.setState({ingredientes: nuevosIngredientes});
@@ -217,7 +217,7 @@ class Plato extends Component {
         this.setState(state => {
             state.ingredientes.map((item, index) => {
                 if (index === identificadorIngrediente) {
-                    item.nombreIngrediente = nombreIngrediente;
+                    item.user = nombreIngrediente;
                 }
             })
         })
@@ -290,13 +290,13 @@ class Ingrediente extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            nombreIngrediente: ""
+            user: ""
         }
     }
 
     onNombreIngredienteChange = event => {
         let value = event.target !== null ? event.target.value : ""
-        this.setState(prev => ({...prev, nombreIngrediente: value}))
+        this.setState(prev => ({...prev, user: value}))
         this.props.onModificarIngrediente(value, this.props.identificadorIngrediente)
     }
 
@@ -312,7 +312,7 @@ class Ingrediente extends Component {
                         <Form.Row>
                             <Col>
                                 <Input className="inputs" placeholder="Nombre del Ingrediente"
-                                       value={this.props.ingrediente.nombreIngrediente}
+                                       value={this.props.ingrediente.user}
                                        onChange={this.onNombreIngredienteChange}/>
                             </Col>
                             <Col>

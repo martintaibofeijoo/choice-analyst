@@ -48,7 +48,7 @@ export default class NavigationBar extends Component {
                 </UnauthenticatedOnly>
                 <AuthenticatedOnly>
                     <NavItem>
-                        <NavLink tag={Link} to="/logout">Logout</NavLink>
+                        <NavLink tag={Link} to="/logout">Cerrar Sesión</NavLink>
                     </NavItem>
                 </AuthenticatedOnly>
             </Nav>

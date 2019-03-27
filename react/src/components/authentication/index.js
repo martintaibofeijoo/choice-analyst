@@ -17,24 +17,26 @@ export class AuthenticatedApp extends Component {
     }
 
     login = (user, pass) => {
-        fetch("http://localhost:9000/login", {method: 'POST', body: JSON.stringify({nombreIngrediente: user, password: pass})})
+        fetch("http://localhost:9000/login", {method: 'POST', body: JSON.stringify({username: user, password: pass})})
             .then(response => {
                 const codigo = response.status;
+
                 if (codigo === 200) {
                     const token = response.headers.get("Authorization");
                     const decodeToken = JSON.parse(atob(token.split('.')[1]));
                     this.setState(prev => ({
                             ...prev,
                             authenticated: true,
-                            user: {nombreIngrediente: user, rol: decodeToken.rol},
-                            token: token
+                            user: {username: user, rol: decodeToken.rol},
+                            token: token,
+                            error: {}
                         }),
                         () => {
                         })
                 } else
                     this.setState(prev => ({
                         ...prev,
-                        error: {code: "INVALID_LOGIN", message: "Invalid user or password!"}
+                        error: {code: "INVALID_LOGIN", message: "Usuario o Contraseña Invalido!"}
                     }))
             })
     }
