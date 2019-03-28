@@ -1,72 +1,44 @@
-import React, { PureComponent as Component } from 'react'
-import {FiSearch as SearchIcon} from "react-icons/fi"
+import React, {PureComponent as Component} from 'react'
 import {
     Navbar,
     NavbarBrand,
     Nav,
     NavItem,
-    NavLink,
-    Form,
-    FormGroup,
-    Input,
-    InputGroup,
-    InputGroupAddon,
-    InputGroupText,
-    Button
+    NavLink
 } from 'reactstrap'
 
-import { Link } from 'react-router-dom'
-import { AuthenticatedOnly, UnauthenticatedOnly } from "../authentication";
+import {Link} from 'react-router-dom'
+import {AuthenticatedOnly, UnauthenticatedOnly} from "../authentication";
 import choiceanalyst_navbar from "../imagenes/choiceanalyst_navbar.png";
-import {Container, Image} from "react-bootstrap";
+import {Image} from "react-bootstrap";
 
 
 export default class NavigationBar extends Component {
-    onSearchButtonClick = () => {}
 
-    render(){
-        return <Navbar sticky = "top" expand dark color = "primary">
-            <NavbarBrand tag={Link} to="/">
-                <Image src={choiceanalyst_navbar}  />
-            </NavbarBrand>
+    render() {
+        return <Navbar sticky="top" expand dark color="primary">
+            <AuthenticatedOnly>
+                <NavbarBrand tag={Link} to="/">
+                    <Image src={choiceanalyst_navbar}/>
+                </NavbarBrand>
+            </AuthenticatedOnly>
+            <UnauthenticatedOnly>
+                <NavbarBrand tag={Link} to="/inicio">
+                    <Image src={choiceanalyst_navbar}/>
+                </NavbarBrand>
+            </UnauthenticatedOnly>
             <Nav className="ml-auto" navbar>
-
-                <UnauthenticatedOnly>
-                    <NavItem>
-                        <NavLink tag={Link} to="/inicio">Iniciar Sesión</NavLink>
-                    </NavItem>
-                </UnauthenticatedOnly>
-                <UnauthenticatedOnly>
-                    <NavItem>
-                        <NavLink tag={Link} to="/register">Register</NavLink>
-                    </NavItem>
-                </UnauthenticatedOnly>
-                <UnauthenticatedOnly>
+                <AuthenticatedOnly>
                     <NavItem>
                         <NavLink tag={Link} to="/menu">Añadir Menú</NavLink>
                     </NavItem>
-                </UnauthenticatedOnly>
+                </AuthenticatedOnly>
                 <AuthenticatedOnly>
                     <NavItem>
                         <NavLink tag={Link} to="/logout">Cerrar Sesión</NavLink>
                     </NavItem>
                 </AuthenticatedOnly>
             </Nav>
-            <Form inline>
-                <FormGroup>
-                    <InputGroup size = "sm">
-                        <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                                <SearchIcon/>
-                            </InputGroupText>
-                        </InputGroupAddon>
-                        <Input type = "text" placeholder="Search..." />
-                        <InputGroupAddon addonType="append">
-                            <Button onClick={this.onSearchButtonClick}>Search</Button>
-                        </InputGroupAddon>
-                    </InputGroup>
-                </FormGroup>
-            </Form>
         </Navbar>
     }
 }

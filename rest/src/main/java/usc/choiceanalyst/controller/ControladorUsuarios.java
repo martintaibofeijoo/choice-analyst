@@ -2,6 +2,7 @@ package usc.choiceanalyst.controller;
 
 import usc.choiceanalyst.model.ModeloUsuario;
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import usc.choiceanalyst.model.auxiliar.Menu;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Example;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import java.text.Normalizer;
 
 @RestController
 @RequestMapping("usuarios")
@@ -81,26 +83,32 @@ public class ControladorUsuarios {
             consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
 
-    public ResponseEntity createUser(@RequestBody Menu data) {
-        /*if (dbu.existsByUsername(data.getUsername())) {
+    public ResponseEntity createUser(@RequestBody ModeloUsuario usuario, String localizacionEstablecimiento, String tipoEstablecimiento) {
+        if (dbu.existsByUsername(usuario.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } else {
-            String roles = "CLIENTE";
+            String pattern = "dd-MM-yyyy";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            usuario.setFechaRegistro(simpleDateFormat.format(new Date()));
+            usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
 
-            ModeloUsuario user = new ModeloUsuario(data.getCorreoElectronico(), roles);
-            user.setUsername(data.getUsername());
-            user.setPassword(passwordEncoder.encode(data.getPassword()));
-            dbu.save(user);
+            if(usuario.getIdEstablecimiento()!=null){
+                usuario.setRol("ADMINISTRADOR");
+                String nombreEstablecimiento = usuario.getIdEstablecimiento();
+                String idEstablecimiento= usuario.getIdEstablecimiento();
 
-            URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/usuarios/{username}").buildAndExpand(user.getUsername()).toUri();
-            return ResponseEntity.created(location).body(user.setPassword("*********"));
-        }*/
+                idEstablecimiento = Normalizer.normalize(idEstablecimiento, Normalizer.Form.NFD);
+                idEstablecimiento = idEstablecimiento.replaceAll("[^\\p{ASCII}]", "");
+                idEstablecimiento=idEstablecimiento.replace(" ","-");
+                idEstablecimiento=idEstablecimiento.toLowerCase();
+                usuario.setIdEstablecimiento(idEstablecimiento);
+            }
 
-        System.out.println("hola");
-        URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/usuarios/{username}").buildAndExpand("creado").toUri();
-        return ResponseEntity.created(location).body("creado");
+            dbu.save(usuario);
 
-
+            URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/usuarios/{username}").buildAndExpand(usuario.getUsername()).toUri();
+            return ResponseEntity.created(location).body(usuario.setPassword("*********"));
+        }
     }
 
     @PreAuthorize("(hasRole('CLIENTE') and principal == #username) or hasRole('ADMINISTRADOR')")

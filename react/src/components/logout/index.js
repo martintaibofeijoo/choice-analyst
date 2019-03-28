@@ -11,7 +11,7 @@ export default class Logout extends Component {
                 if (auth.authenticated)
                     auth.logout()
                 else
-                    return <Redirect to ="/" />
+                    return <Redirect to ="/inicio" />
             }}
         </Authentication>
     }

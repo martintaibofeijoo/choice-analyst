@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class ModeloUsuario extends Credentials {
     private String rol;
     private String correoElectronico;
-    private String movil;
+    private String telefonoContacto;
     private String nombre;
     private String apellidos;
     private String fechaRegistro;
@@ -26,12 +26,11 @@ public class ModeloUsuario extends Credentials {
         
     }
 
-    public ModeloUsuario(String correoElectronico, String rol){
+    public ModeloUsuario(String rol){
         String pattern = "dd-MM-yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         String date = simpleDateFormat.format(new Date());
         this.fechaRegistro =date;
-        this.correoElectronico =correoElectronico;
         this.rol=rol;
     }
 
@@ -52,12 +51,12 @@ public class ModeloUsuario extends Credentials {
         this.correoElectronico = correoElectronico;
     }
 
-    public String getMovil() {
-        return movil;
+    public String getTelefonoContacto() {
+        return telefonoContacto;
     }
 
-    public void setMovil(String movil) {
-        this.movil = movil;
+    public void setTelefonoContacto(String telefonoContacto) {
+        this.telefonoContacto = telefonoContacto;
     }
 
     public String getNombre() {

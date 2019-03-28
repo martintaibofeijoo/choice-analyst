@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import NavigationBar from "../navbar"
 import { Container } from "reactstrap"
-import Register from "../register"
 import Login, {Inicio} from "../inicio"
 import Logout from "../logout"
 import { Switch, Route, Redirect } from "react-router-dom"
@@ -16,7 +15,6 @@ export default class Layout extends Component {
             <Container className = "pt-3" tag = "main">
                 <Switch>
                     <Route path = "/inicio" component = { Inicio } />
-                    <Route path = "/register" component = { Register } />
                     <Route path = "/logout" component = { Logout } />
                     <Route path = "/menu" component = { NuevoMenu } />
 

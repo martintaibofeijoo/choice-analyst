@@ -1,4 +1,4 @@
-// In production, we register a service worker to serve assets from local cache.
+// In production, we registro a service worker to serve assets from local cache.
 
 // This lets the app load faster on subsequent visits in production, and gives
 // it offline capabilities. However, it also means that developers (and users)
@@ -45,7 +45,7 @@ export function register(config) {
           );
         });
       } else {
-        // Is not local host. Just register service worker
+        // Is not local host. Just registro service worker
         registerValidSW(swUrl, config);
       }
     });
