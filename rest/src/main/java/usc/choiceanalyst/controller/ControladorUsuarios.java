@@ -1,11 +1,13 @@
 package usc.choiceanalyst.controller;
 
+import usc.choiceanalyst.model.ModeloEstablecimiento;
 import usc.choiceanalyst.model.ModeloUsuario;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import usc.choiceanalyst.model.auxiliar.Menu;
+import usc.choiceanalyst.repository.RepositorioEstablecimiento;
 import usc.choiceanalyst.repository.RepositorioUsuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,12 +29,14 @@ import java.text.Normalizer;
 public class ControladorUsuarios {
 
     private RepositorioUsuario dbu;
+    private RepositorioEstablecimiento dbes;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public ControladorUsuarios(RepositorioUsuario dbu, PasswordEncoder passwordEncoder) {
+    public ControladorUsuarios(RepositorioUsuario dbu, RepositorioEstablecimiento dbes, PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
         this.dbu = dbu;
+        this.dbes = dbes;
 
     }
 
@@ -87,6 +91,8 @@ public class ControladorUsuarios {
         if (dbu.existsByUsername(usuario.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } else {
+            System.out.println(localizacionEstablecimiento);
+            System.out.println(tipoEstablecimiento);
             String pattern = "dd-MM-yyyy";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             usuario.setFechaRegistro(simpleDateFormat.format(new Date()));
@@ -102,6 +108,14 @@ public class ControladorUsuarios {
                 idEstablecimiento=idEstablecimiento.replace(" ","-");
                 idEstablecimiento=idEstablecimiento.toLowerCase();
                 usuario.setIdEstablecimiento(idEstablecimiento);
+
+                if(dbes.existsByIdEstablecimiento(idEstablecimiento)){
+                    return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                }else{
+                    ModeloEstablecimiento establecimiento = new ModeloEstablecimiento(usuario.getIdEstablecimiento(), usuario.getUsername(), nombreEstablecimiento, localizacionEstablecimiento, tipoEstablecimiento);
+                    dbes.save(establecimiento);
+                }
+
             }
 
             dbu.save(usuario);

@@ -1,31 +1,29 @@
 import React, {PureComponent as Component} from 'react'
-import {Link, Redirect} from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal'
 import {
     Button,
     Card,
     CardBody,
-    Form,
-    FormGroup,
     Label,
-    Input,
     Alert,
 } from 'reactstrap';
 
-export default class IniciarSesion extends Component {
-    constructor() {
-        super()
+import Form from 'react-bootstrap/Form'
+
+export default class VistaIniciarSesion extends Component {
+    constructor(props) {
+        super(props)
 
         this.state = {
             username: "",
             password: "",
-
+            validated: false
         }
     }
 
     onUsernameChange = event => {
         let value = event.target !== null ? event.target.value : ""
-        this.setState(prev => ({...prev, user: value}))
+        this.setState(prev => ({...prev, username: value}))
     }
 
     onPasswordChange = event => {
@@ -33,14 +31,25 @@ export default class IniciarSesion extends Component {
         this.setState(prev => ({...prev, password: value}))
     }
 
-    onLoginButtonClick = () => {
-        this.props.onLogin(this.state.user, this.state.password)
+    onLoginButtonClick = (event) => {
+        this.setState({validated: true});
+        const form = event.currentTarget;
+
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else if (form.checkValidity() === true) {
+            this.props.onLogin(this.state.username, this.state.password)
+            event.preventDefault();
+            event.stopPropagation();
+        }
     }
 
     render() {
         return <Modal
             {...this.props}
             size="lg"
+
             aria-labelledby="contained-modal-title-vcenter"
             centered
         >
@@ -49,37 +58,43 @@ export default class IniciarSesion extends Component {
                     Iniciar Sesión
                 </Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                <Card>
+            <Modal.Body style={{background: '#000'}}>
+                <Card color={"primary"}>
                     <CardBody>
-                        <Form>
-                            <FormGroup>
+                        <Form
+                            noValidate
+                            validated={this.state.validated}
+                            onSubmit={event => this.onLoginButtonClick(event)}
+                        >
+                            <Form.Group>
                                 <Label>Usuario</Label>
-                                <Input value={this.state.user} onChange={this.onUsernameChange}/>
-                            </FormGroup>
-                            <FormGroup>
+                                <Form.Control value={this.state.username} onChange={this.onUsernameChange}
+                                              pattern="[a-z][a-z0-9-_\.]{4,20}" required/>
+                                <Form.Control.Feedback type="invalid">
+                                    El usuario debe contener: 4-20 carácteres (sin mayúsculas).
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group>
                                 <Label>Contraseña</Label>
-                                <Input type="password" value={this.state.password} onChange={this.onPasswordChange}/>
-                            </FormGroup>
+                                <Form.Control type="password" value={this.state.password}
+                                              onChange={this.onPasswordChange}
+                                              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*" required/>
+                                <Form.Control.Feedback type="invalid">
+                                    La contraseña debe contener: una mayúscula, una minúscula y un número.
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                            <Alert
+                                color={"danger"}
+                                isOpen={this.props.error.code !== undefined}
+                            >
+                                {this.props.error.message}
+                            </Alert>
+                            <Button color={"success"} block type={"onSubmit"}>Iniciar
+                                Sesión</Button>
                         </Form>
                     </CardBody>
                 </Card>
             </Modal.Body>
-            <Modal.Footer>
-                <Button color={"primary"} block onClick={this.onLoginButtonClick}>Iniciar Sesión</Button>
-                <Button color={"secondary"} onClick={this.props.onHide}>Cerrar</Button>
-            </Modal.Footer>
         </Modal>
     }
 }
-
-class IniciarSesionError extends Component {
-    render() {
-        if (this.props.error.code)
-            return <Alert className="mt-3" color="danger">
-                {this.props.error.message}
-            </Alert>
-        else return null
-    }
-}
-

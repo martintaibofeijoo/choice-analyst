@@ -91,13 +91,13 @@ export class NuevoMenu extends Component {
         })
     }
 
-    onEliminarIngredientePrimerPlato = (identificadorPlato) => {
+    onEliminarIngredientePrimerPlato = (identificadorIngrediente, identificadorPlato) => {
         this.setState(state => {
             state.primerosPlatos.map((item, index) => {
                 if (index === identificadorPlato) {
                     item.ingredientes = [
-                        ...item.ingredientes.slice(0, identificadorPlato),
-                        ...item.ingredientes.slice(identificadorPlato + 1),
+                        ...item.ingredientes.slice(0, identificadorIngrediente),
+                        ...item.ingredientes.slice(identificadorIngrediente + 1),
                     ]
                 }
             })
@@ -232,7 +232,7 @@ class Plato extends Component {
             ...ingredientes.slice(identificadorIngrediente + 1),
         ]
         this.setState({ingredientes: nuevosIngredientes});
-        this.props.onEliminarIngredientePlato(this.props.identificadorPlato)
+        this.props.onEliminarIngredientePlato(identificadorIngrediente, this.props.identificadorPlato)
     }
 
     render() {

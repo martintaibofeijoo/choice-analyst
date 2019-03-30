@@ -31,7 +31,10 @@ li.lista{
     height: 100%;
 
 }
-
+.containerexperimento{
+    width: 150%;
+    height: 100%;
+}
 .card{
     margin-bottom: 20px;
 }

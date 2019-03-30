@@ -26,6 +26,15 @@ public class ModeloEstablecimiento {
     public ModeloEstablecimiento() {
     }
 
+    public ModeloEstablecimiento(String idEstablecimiento, String idAdministrador, String nombre, String localizacion, String tipo) {
+        this.idEstablecimiento=idEstablecimiento;
+        this.idAdministrador=idAdministrador;
+        this.nombre=nombre;
+        this.localizacion=localizacion;
+        this.tipo=tipo;
+    }
+
+
     public String getIdEstablecimiento() {
         return idEstablecimiento;
     }
