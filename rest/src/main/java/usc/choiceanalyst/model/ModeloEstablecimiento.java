@@ -6,6 +6,7 @@ import usc.choiceanalyst.model.auxiliar.Filtro;
 import usc.choiceanalyst.model.auxiliar.Menu;
 import usc.choiceanalyst.model.auxiliar.Pregunta;
 
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +41,11 @@ public class ModeloEstablecimiento {
     }
 
     public void setIdEstablecimiento(String idEstablecimiento) {
-        this.idEstablecimiento = idEstablecimiento;
+        String idEstablecimiento1 = Normalizer.normalize(idEstablecimiento, Normalizer.Form.NFD);
+        idEstablecimiento1 = idEstablecimiento1.replaceAll("[^\\p{ASCII}]", "");
+        idEstablecimiento1 = idEstablecimiento1.replace(" ", "-");
+        idEstablecimiento1 = idEstablecimiento1.toLowerCase();
+        this.idEstablecimiento = idEstablecimiento1;
     }
 
     public String getIdAdministrador() {

@@ -53,7 +53,7 @@ public class ControladorUsuarios {
         }
     }
 
-    
+
     @PreAuthorize("permitAll()")
     @GetMapping(
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
@@ -87,12 +87,12 @@ public class ControladorUsuarios {
             consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
 
-    public ResponseEntity createUser(@RequestBody ModeloUsuario usuario, String localizacionEstablecimiento, String tipoEstablecimiento) {
+    public ResponseEntity createUser(@RequestBody ModeloUsuario usuario, @RequestBody ModeloEstablecimiento establecimiento1) {
         if (dbu.existsByUsername(usuario.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } else {
-            System.out.println(localizacionEstablecimiento);
-            System.out.println(tipoEstablecimiento);
+            System.out.println(establecimiento1.getLocalizacion());
+            System.out.println(establecimiento1.getTipo());
             String pattern = "dd-MM-yyyy";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             usuario.setFechaRegistro(simpleDateFormat.format(new Date()));
@@ -112,7 +112,7 @@ public class ControladorUsuarios {
                 if(dbes.existsByIdEstablecimiento(idEstablecimiento)){
                     return ResponseEntity.status(HttpStatus.CONFLICT).build();
                 }else{
-                    ModeloEstablecimiento establecimiento = new ModeloEstablecimiento(usuario.getIdEstablecimiento(), usuario.getUsername(), nombreEstablecimiento, localizacionEstablecimiento, tipoEstablecimiento);
+                    ModeloEstablecimiento establecimiento = new ModeloEstablecimiento(usuario.getIdEstablecimiento(), usuario.getUsername(), nombreEstablecimiento, establecimiento1.getTipo(), establecimiento1.getLocalizacion());
                     dbes.save(establecimiento);
                 }
 

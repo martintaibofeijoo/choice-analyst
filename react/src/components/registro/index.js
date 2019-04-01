@@ -91,28 +91,56 @@ export default class VistaRegistro extends Component {
     }
 
     doRegister = (username, password, correoElectronico, telefonoContacto, nombre, apellidos, nombreEstablecimiento, tipoEstablecimiento, localizacionEstablecimiento) => {
-        fetch("http://localhost:9000/usuarios", {
+
+        fetch("http://localhost:9000/establecimientos", {
             method: 'POST',
             headers: {'Accept': 'application/json;charset=UTF-8', 'Content-Type': 'application/json;charset=UTF-8'},
             body: JSON.stringify({
-                username: username,
-                password: password,
-                correoElectronico: correoElectronico,
-                telefonoContacto: telefonoContacto,
-                nombre: nombre,
-                apellidos: apellidos,
-                idEstablecimiento: nombreEstablecimiento,
-                tipoEstablecimiento: tipoEstablecimiento,
-                localizacionEstablecimiento: localizacionEstablecimiento
+                idAdministrador: username,
+                nombre: nombreEstablecimiento,
+                localizacion: localizacionEstablecimiento,
+                tipo: tipoEstablecimiento
             })
         })
             .then(response => {
                 const codigo = response.status;
 
                 if (codigo === 201) {
-                    this.props.login(this.state.username, this.state.password)
+                    console.table(response)
+                    debugger
+                   /* fetch("http://localhost:9000/usuarios", {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json;charset=UTF-8',
+                            'Content-Type': 'application/json;charset=UTF-8'
+                        },
+                        body: JSON.stringify({
+                            username: username,
+                            password: password,
+                            correoElectronico: correoElectronico,
+                            telefonoContacto: telefonoContacto,
+                            nombre: nombre,
+                            apellidos: apellidos,
+                            idEstablecimiento: nombreEstablecimiento
+                        })
+                    })
+                        .then(response => {
+                            const codigo = response.status;
+
+                            if (codigo === 201) {
+                                this.props.login(this.state.username, this.state.password)
+                            } else if (codigo === 409) {
+                                this.setState(prev => ({
+                                    ...prev,
+                                    alert: {status: "Error", message: "Usuario ya existente"}
+                                }))
+                            }
+                        })*/
                 } else if (codigo === 409) {
-                    this.setState(prev => ({...prev, alert: {status: "Error", message: "Usuario ya existente"}}))
+                    this.setState(prev => ({
+                        ...prev,
+                        alert: {status: "Error", message: "Establecimiento ya existente"}
+                    }))
                 }
             })
     }
