@@ -92,10 +92,17 @@ export default class VistaRegistro extends Component {
 
     doRegister = (username, password, correoElectronico, telefonoContacto, nombre, apellidos, nombreEstablecimiento, tipoEstablecimiento, localizacionEstablecimiento) => {
 
+        let idEstablecimiento = nombreEstablecimiento.normalize('NFD').replace(/[\u0300-\u036f]/g,"");
+        idEstablecimiento=idEstablecimiento.toLocaleLowerCase()
+        idEstablecimiento=idEstablecimiento.replace(" ", "-");
+
+        debugger;
+
         fetch("http://localhost:9000/establecimientos", {
             method: 'POST',
             headers: {'Accept': 'application/json;charset=UTF-8', 'Content-Type': 'application/json;charset=UTF-8'},
             body: JSON.stringify({
+                idEstablecimiento: idEstablecimiento,
                 idAdministrador: username,
                 nombre: nombreEstablecimiento,
                 localizacion: localizacionEstablecimiento,
@@ -121,7 +128,7 @@ export default class VistaRegistro extends Component {
                             telefonoContacto: telefonoContacto,
                             nombre: nombre,
                             apellidos: apellidos,
-                            idEstablecimiento: nombreEstablecimiento
+                            idEstablecimiento: idEstablecimiento,
                         })
                     })
                         .then(response => {

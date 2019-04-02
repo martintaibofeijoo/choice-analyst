@@ -52,5 +52,24 @@ public class ControladorExperimentos {
         return ResponseEntity.ok(dbex.findAll(Example.of(experimento)));
     }
 
+    @PreAuthorize("permitAll()")
+    @PostMapping(
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+
+    public ResponseEntity createExperimento(@RequestBody ModeloExperimento experimento) {
+        System.out.println("hola");
+        if (dbex.existsByIdExperimento(experimento.getIdExperimento())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } else {
+
+
+
+            URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/experimentos/{idExperimento}").buildAndExpand(experimento.getIdExperimento()).toUri();
+            return ResponseEntity.created(location).body(experimento);
+        }
+    }
+
 
 }

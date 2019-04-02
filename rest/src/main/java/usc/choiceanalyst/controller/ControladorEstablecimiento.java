@@ -89,7 +89,7 @@ public class ControladorEstablecimiento {
             dbes.save(establecimiento);
 
             URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/establecimientos/{idEstablecimiento}").buildAndExpand(establecimiento.getIdEstablecimiento()).toUri();
-            return ResponseEntity.created(location).body(establecimiento.getIdEstablecimiento());
+            return ResponseEntity.created(location).body(establecimiento);
         }
     }
 

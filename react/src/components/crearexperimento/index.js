@@ -190,11 +190,11 @@ export class CrearExperimento extends Component {
     }
 
     onCrearExperimento = () => {
-        this.doCrearExperimento(this.state.preguntas, this.state.filtros)
+        this.doCrearExperimento(this.state.preguntas, this.state.filtros, this.state.objetivos)
     }
 
-    doCrearExperimento = async (preguntas, filtros) => {
-        /*const response = await fetch(`http://localhost:9000/usuarios/`, {
+    doCrearExperimento = async (preguntas, filtros, objetivos) => {
+        const response = await fetch(`http://localhost:9000/experimentos/`, {
             method: 'POST',
             headers: {
                 //'Authorization': this.props.token,
@@ -203,13 +203,14 @@ export class CrearExperimento extends Component {
             },
 
             body: JSON.stringify({
-
+                preguntas: preguntas,
+                filtros: filtros,
+                objetivos: objetivos
             })
         })
-        const codigo = response.status
-        console.log(codigo)*/
-        console.table(filtros)
 
+        const codigo = response.status
+        console.log(codigo)
 
     }
 
