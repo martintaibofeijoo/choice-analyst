@@ -14,15 +14,6 @@ import VistaRegistro from "../registro";
 
 
 export class Experimentos extends Component {
-    constructor() {
-        super();
-        this.state = {
-            iniciarSesion: false,
-            registrarse: false
-        };
-    }
-
-
     render() {
         return <Authentication>
             {
@@ -40,23 +31,25 @@ class VistaExperimentos extends Component {
         }
     }
 
-  /*  async componentDidMount() {
-        const postRequest = await fetch(`http://localhost:9000/experimentos/${this.props.auth.user.username}`, {
-            method: "GET",
-            mode: "cors",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-        console.table(postRequest)
+      async componentDidMount() {
+          const postRequest = await fetch(`http://localhost:9000/experimentos/${this.props.auth.user.username}`, {
+              method: "GET",
+              'Authorization': this.props.auth.token,
+              mode: "cors",
+              headers: {
+                  "Content-Type": "application/json"
+              }
+          })
+          console.table(postRequest)
 
-        const postResponse = await postRequest.json()
-        console.table(postResponse)
-        this.setState(prev => ({
-            ...prev,
-            experimentos: postResponse.experimentos,
-        }))
-    }*/
+          const postResponse = await postRequest.json()
+          console.table(postResponse)
+          this.setState(prev => ({
+              ...prev,
+              experimentos: postResponse.experimentos,
+          }))
+          debugger
+      }
 
     render() {
         return <h1>

@@ -1,8 +1,8 @@
 plugins{
-	id 'org.springframework.boot' version '2.1.3.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.7.RELEASE'
+	id 'org.springframework.boot' version '2.0.7.RELEASE'
 	id 'java'
 }
+apply plugin: 'io.spring.dependency-management'
 
 group = 'usc.choiceanalyst'
 version = '0.0.1-SNAPSHOT'

@@ -2,11 +2,11 @@ package usc.choiceanalyst.controller;
 
 import usc.choiceanalyst.model.ModeloEstablecimiento;
 import usc.choiceanalyst.model.ModeloUsuario;
+
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import usc.choiceanalyst.model.auxiliar.Menu;
 import usc.choiceanalyst.repository.RepositorioEstablecimiento;
 import usc.choiceanalyst.repository.RepositorioUsuario;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Example;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import java.text.Normalizer;
 
 @RestController
@@ -66,7 +67,7 @@ public class ControladorUsuarios {
                 usuario.setRol(rol);
             }
         }
-        return ResponseEntity.ok(dbu.findAll(Example.of(usuario),PageRequest.of(page, size, criteria)));
+        return ResponseEntity.ok(dbu.findAll(Example.of(usuario), PageRequest.of(page, size, criteria)));
     }
 
 
@@ -87,35 +88,17 @@ public class ControladorUsuarios {
             consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
 
-    public ResponseEntity createUser(@RequestBody ModeloUsuario usuario, @RequestBody ModeloEstablecimiento establecimiento1) {
+    public ResponseEntity createUser(@RequestBody ModeloUsuario usuario) {
         if (dbu.existsByUsername(usuario.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } else {
-            System.out.println(establecimiento1.getLocalizacion());
-            System.out.println(establecimiento1.getTipo());
             String pattern = "dd-MM-yyyy";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             usuario.setFechaRegistro(simpleDateFormat.format(new Date()));
             usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
 
-            if(usuario.getIdEstablecimiento()!=null){
+            if (usuario.getIdEstablecimiento() != null) {
                 usuario.setRol("ADMINISTRADOR");
-                String nombreEstablecimiento = usuario.getIdEstablecimiento();
-                String idEstablecimiento= usuario.getIdEstablecimiento();
-
-                idEstablecimiento = Normalizer.normalize(idEstablecimiento, Normalizer.Form.NFD);
-                idEstablecimiento = idEstablecimiento.replaceAll("[^\\p{ASCII}]", "");
-                idEstablecimiento=idEstablecimiento.replace(" ","-");
-                idEstablecimiento=idEstablecimiento.toLowerCase();
-                usuario.setIdEstablecimiento(idEstablecimiento);
-
-                if(dbes.existsByIdEstablecimiento(idEstablecimiento)){
-                    return ResponseEntity.status(HttpStatus.CONFLICT).build();
-                }else{
-                    ModeloEstablecimiento establecimiento = new ModeloEstablecimiento(usuario.getIdEstablecimiento(), usuario.getUsername(), nombreEstablecimiento, establecimiento1.getTipo(), establecimiento1.getLocalizacion());
-                    dbes.save(establecimiento);
-                }
-
             }
 
             dbu.save(usuario);

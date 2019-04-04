@@ -41,7 +41,7 @@ public class ControladorExperimentos {
 
     }
 
-    @PreAuthorize("principal == #username || hasRole('ADMINISTRADOR')")
+    @PreAuthorize("permitAll()")
     @GetMapping(
             path = "/{username}",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
@@ -63,9 +63,6 @@ public class ControladorExperimentos {
         if (dbex.existsByIdExperimento(experimento.getIdExperimento())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } else {
-
-
-
             URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/experimentos/{idExperimento}").buildAndExpand(experimento.getIdExperimento()).toUri();
             return ResponseEntity.created(location).body(experimento);
         }

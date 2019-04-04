@@ -2,8 +2,7 @@ package usc.choiceanalyst.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import usc.choiceanalyst.model.auxiliar.Filtro;
-import usc.choiceanalyst.model.auxiliar.Pregunta;
+import usc.choiceanalyst.model.auxiliar.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,10 +16,9 @@ public class ModeloExperimento {
     @Id private String idExperimento;
     private String idAdministrador;
     private String idEstablecimiento;
-    private String nombre;
+    private String nombreExperimento;
     private String fechaCreacion;
-    private List<String> objetivos;
-    private List<Filtro> filtros;
+    private List<Objetivo> objetivos;
     private List<Pregunta> preguntas;
 
 
@@ -57,12 +55,12 @@ public class ModeloExperimento {
         this.idEstablecimiento = idEstablecimiento;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombreExperimento() {
+        return nombreExperimento;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombreExperimento(String nombreExperimento) {
+        this.nombreExperimento = nombreExperimento;
     }
 
     public String getFechaCreacion() {
@@ -73,27 +71,19 @@ public class ModeloExperimento {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public List<String> getObjetivos() {
-        return objetivos;
-    }
-
-    public void setObjetivos(List<String> objetivos) {
-        this.objetivos = objetivos;
-    }
-
-    public List<Filtro> getFiltros() {
-        return filtros;
-    }
-
-    public void setFiltros(List<Filtro> filtros) {
-        this.filtros = filtros;
-    }
-
     public List<Pregunta> getPreguntas() {
         return preguntas;
     }
 
     public void setPreguntas(List<Pregunta> preguntas) {
         this.preguntas = preguntas;
+    }
+
+    public List<Objetivo> getObjetivos() {
+        return objetivos;
+    }
+
+    public void setObjetivos(List<Objetivo> objetivos) {
+        this.objetivos = objetivos;
     }
 }

@@ -6,18 +6,31 @@ import {
     CardHeader,
     CardTitle,
     CardBody,
-    Input,
+    Input, Label,
 } from 'reactstrap';
 import Button from 'react-bootstrap/Button'
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-
+import {Authentication} from "../authentication";
 
 export class CrearExperimento extends Component {
+    render() {
+        return <Authentication>
+            {
+                auth => <VistaCrearExperimento auth={auth}/>
+            }
+        </Authentication>
+    }
+}
+
+class VistaCrearExperimento extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            idAdministrador: this.props.auth.user.username,
+            idEstablecimiento: "",
+            nombreExperimento: "",
             preguntas: [
                 {
                     textoPregunta: "",
@@ -29,17 +42,19 @@ export class CrearExperimento extends Component {
                     ]
                 }
             ],
-            filtros: [
-                {
-                    textoFiltro: ""
-                }
-            ],
             objetivos: [
                 {
                     textoObjetivo: ""
                 }
-            ]
+            ],
+            variablesAsignadas:[],
+            variables: ["Higiene","Ruído", "Distancía", "Energía", "Compañía", "Atmosfera", "Calidad de Servicio", "Apariencia", "Temperatura", "Saludable" , "Sabroso", "Menu Seleccionado", "Primer Plato", "Segundo Plato", "Postre"]
         }
+    }
+
+    onNombreExperimentoChange = (event) => {
+        let value = event.target !== null ? event.target.value : ""
+        this.setState(prev => ({...prev, nombreExperimento: value}))
     }
 
     onAnadirObjetivo = () => {
@@ -73,37 +88,6 @@ export class CrearExperimento extends Component {
         this.setState({objetivos: nuevosObjetivos});
     }
 
-
-    onAnadirFiltro = () => {
-        let {filtros} = this.state;
-        let nuevosFiltros = [
-            ...filtros,
-            {
-                textoFiltro: ""
-            }
-        ]
-        this.setState({filtros: nuevosFiltros});
-    }
-
-    onModificarFiltro = (textoFiltro, identificadorFiltro) => {
-        this.setState(state => {
-            state.filtros.map((item, index) => {
-                if (index === identificadorFiltro) {
-                    item.textoFiltro = textoFiltro;
-                }
-            })
-        })
-    }
-
-    onEliminarFiltro = identificadorFiltro => {
-        let {filtros} = this.state;
-
-        let nuevosFiltros = [
-            ...filtros.slice(0, identificadorFiltro),
-            ...filtros.slice(identificadorFiltro + 1),
-        ]
-        this.setState({filtros: nuevosFiltros});
-    }
 
     onAnadirPregunta = () => {
         let {preguntas} = this.state;
@@ -190,10 +174,14 @@ export class CrearExperimento extends Component {
     }
 
     onCrearExperimento = () => {
-        this.doCrearExperimento(this.state.preguntas, this.state.filtros, this.state.objetivos)
+        this.doCrearExperimento(this.state.preguntas, this.state.objetivos)
     }
 
-    doCrearExperimento = async (preguntas, filtros, objetivos) => {
+    doCrearExperimento = async (idAdministrador, idEstablecimiento, nombreExperimento, preguntas, objetivos) => {
+        let idExperimento = nombreExperimento.replace(/ /g, "-");
+        idExperimento = idExperimento.toLowerCase()
+        idExperimento = idExperimento.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+
         const response = await fetch(`http://localhost:9000/experimentos/`, {
             method: 'POST',
             headers: {
@@ -203,12 +191,15 @@ export class CrearExperimento extends Component {
             },
 
             body: JSON.stringify({
+                idExperimento: idExperimento,
+                idAdministrador: idAdministrador,
+                idEstablecimiento: idEstablecimiento,
+                nombreExperimento: nombreExperimento,
                 preguntas: preguntas,
-                filtros: filtros,
-                objetivos: objetivos
+                objetivos: objetivos,
             })
         })
-
+        debugger
         const codigo = response.status
         console.log(codigo)
 
@@ -217,7 +208,20 @@ export class CrearExperimento extends Component {
     render() {
         return (
             <Container classname={"containerexperimento"} style={{marginLeft: '-200px'}}>
-                <Row >
+                <Row>
+                    <Form>
+                        <Form.Group>
+                            <Label>Nombre Establecimiento</Label>
+                            <Form.Control value={this.state.nombreExperimento}
+                                          pattern="[a-z0-9A-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-z0-9A-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-Z0-9À-ÿ\u00f1\u00d1]+"
+                                          onChange={this.onNombreExperimentoChange} required/>
+                            <Form.Control.Feedback type="invalid">
+                                Introduce el nombre del establecimiento
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                    </Form>
+                </Row>
+                <Row>
                     <Col>
                         <h1>Preguntas</h1>
                         <ul className="lista">
@@ -242,34 +246,10 @@ export class CrearExperimento extends Component {
                         </div>
                     </Col>
                     <Col>
-                        <h1>Filtros</h1>
-                        <Card color="primary">
-                            <CardHeader style={{marginBottom: '-30px'}}>
-                                <CardTitle>Filtros</CardTitle>
-                            </CardHeader>
-                            <CardBody style={{marginBottom: '-50px'}}>
-                                <ul className="lista">
-                                    {this.state.filtros.map(
-                                        (item, index) =>
-                                            <Filtro filtro={item} key={index} identificadorFiltro={index}
-                                                    onEliminarFiltro={() => this.onEliminarFiltro(index)}
-                                                    onModificarFiltro={this.onModificarFiltro}/>
-                                    )
-                                    }
-                                </ul>
-                            </CardBody>
-                            <CardFooter>
-                                <Button block variant="success" onClick={this.onAnadirFiltro}>
-                                    Añadir Filtro
-                                </Button>
-                            </CardFooter>
-                        </Card>
-
-
                         <h1>Objetivos</h1>
                         <Card color="primary">
                             <CardHeader style={{marginBottom: '-30px'}}>
-                                <CardTitle>Filtros</CardTitle>
+                                <CardTitle>Objetivos</CardTitle>
                             </CardHeader>
                             <CardBody style={{marginBottom: '-50px'}}>
                                 <ul className="lista">
@@ -457,48 +437,6 @@ class Opcion extends Component {
     }
 }
 
-class Filtro extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            textoFiltro: ""
-        }
-    }
-
-    onTextoFiltroChange = event => {
-        let value = event.target !== null ? event.target.value : ""
-        this.setState(prev => ({...prev, textoFiltro: value}))
-        this.props.onModificarFiltro(value, this.props.identificadorFiltro)
-    }
-
-    onEliminarFiltro = () => {
-        this.props.onEliminarFiltro();
-    }
-
-    render() {
-        return (
-            <li className="lista">
-                <div>
-                    <Form>
-                        <Form.Row>
-                            <Col>
-                                <Input className="inputs" placeholder="Texto Filtro"
-                                       value={this.props.filtro.textoFiltro}
-                                       onChange={this.onTextoFiltroChange}/>
-                            </Col>
-                            <Col>
-                                <Button block variant="danger" onClick={this.onEliminarFiltro}>
-                                    Eliminar Filtro
-                                </Button>
-                            </Col>
-                        </Form.Row>
-                    </Form>
-                </div>
-            </li>
-        )
-    }
-}
-
 class Objetivo extends Component {
     constructor(props) {
         super(props)
@@ -525,7 +463,7 @@ class Objetivo extends Component {
                         <Form.Row>
                             <Col>
                                 <Input className="inputs" placeholder="Texto Objetivo"
-                                       value={this.props.objetivo.textoObjetivon}
+                                       value={this.props.objetivo.textoObjetivo}
                                        onChange={this.onTextoObjetivoChange}/>
                             </Col>
                             <Col>

@@ -5,8 +5,8 @@ import java.util.List;
 public class Plato {
     private String idPlato;
     private String tipo;
-    private String nombre;
-    private float precio;
+    private String nombrePlato;
+    private float precioPlato;
     private List<String> ingredientes;
 
     public String getIdPlato() {
@@ -25,20 +25,20 @@ public class Plato {
         this.tipo = tipo;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombrePlato() {
+        return nombrePlato;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombrePlato(String nombrePlato) {
+        this.nombrePlato = nombrePlato;
     }
 
-    public float getPrecio() {
-        return precio;
+    public float getPrecioPlato() {
+        return precioPlato;
     }
 
-    public void setPrecio(float precio) {
-        this.precio = precio;
+    public void setPrecioPlato(float precioPlato) {
+        this.precioPlato = precioPlato;
     }
 
     public List<String> getIngredientes() {

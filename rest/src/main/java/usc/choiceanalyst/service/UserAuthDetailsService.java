@@ -30,7 +30,6 @@ public class UserAuthDetailsService implements UserDetailsService {
         if(user.equals(Optional.empty()))
             throw new UsernameNotFoundException(username);
 
-
         String rol = user.get().getRol();
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(rol);
         return new User(user.get().getUsername(), user.get().getPassword(), authorities);

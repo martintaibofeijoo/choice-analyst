@@ -10,7 +10,6 @@ import {
 
 import Form from 'react-bootstrap/Form'
 
-
 export default class VistaRegistro extends Component {
     constructor(props) {
         super(props)
@@ -27,7 +26,7 @@ export default class VistaRegistro extends Component {
             apellidos: "",
             nombreEstablecimiento: "",
             localizacionEstablecimiento: "",
-            tipoEstablecimiento: "",
+            tipoEstablecimiento: "Restaurante",
             validated: false
         }
     }
@@ -91,12 +90,10 @@ export default class VistaRegistro extends Component {
     }
 
     doRegister = (username, password, correoElectronico, telefonoContacto, nombre, apellidos, nombreEstablecimiento, tipoEstablecimiento, localizacionEstablecimiento) => {
-
-        let idEstablecimiento = nombreEstablecimiento.normalize('NFD').replace(/[\u0300-\u036f]/g,"");
-        idEstablecimiento=idEstablecimiento.toLocaleLowerCase()
-        idEstablecimiento=idEstablecimiento.replace(" ", "-");
-
-        debugger;
+        let idEstablecimiento = nombreEstablecimiento.replace(/ /g, "-");
+        console.table(idEstablecimiento)
+        idEstablecimiento = idEstablecimiento.toLowerCase()
+        idEstablecimiento = idEstablecimiento.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 
         fetch("http://localhost:9000/establecimientos", {
             method: 'POST',
@@ -104,18 +101,17 @@ export default class VistaRegistro extends Component {
             body: JSON.stringify({
                 idEstablecimiento: idEstablecimiento,
                 idAdministrador: username,
-                nombre: nombreEstablecimiento,
-                localizacion: localizacionEstablecimiento,
-                tipo: tipoEstablecimiento
+                nombreEstablecimiento: nombreEstablecimiento,
+                localizacionEstablecimiento: localizacionEstablecimiento,
+                tipoEstablecimiento: tipoEstablecimiento
             })
         })
             .then(response => {
                 const codigo = response.status;
-
                 if (codigo === 201) {
                     console.table(response)
                     debugger
-                   /* fetch("http://localhost:9000/usuarios", {
+                    fetch("http://localhost:9000/usuarios", {
                         method: 'POST',
                         headers: {
                             'Accept': 'application/json;charset=UTF-8',
@@ -133,7 +129,6 @@ export default class VistaRegistro extends Component {
                     })
                         .then(response => {
                             const codigo = response.status;
-
                             if (codigo === 201) {
                                 this.props.login(this.state.username, this.state.password)
                             } else if (codigo === 409) {
@@ -142,7 +137,7 @@ export default class VistaRegistro extends Component {
                                     alert: {status: "Error", message: "Usuario ya existente"}
                                 }))
                             }
-                        })*/
+                        })
                 } else if (codigo === 409) {
                     this.setState(prev => ({
                         ...prev,
@@ -235,7 +230,7 @@ export default class VistaRegistro extends Component {
                                 <Form.Group as={Col}>
                                     <Label>Nombre Establecimiento</Label>
                                     <Form.Control value={this.state.nombreEstablecimiento}
-
+                                                  pattern="[a-z0-9A-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-z0-9A-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-Z0-9À-ÿ\u00f1\u00d1]+"
                                                   onChange={this.onNombreEstablecimientoChange} required/>
                                     <Form.Control.Feedback type="invalid">
                                         Introduce el nombre del establecimiento

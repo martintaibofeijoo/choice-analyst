@@ -2,13 +2,9 @@ package usc.choiceanalyst.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import usc.choiceanalyst.model.auxiliar.Filtro;
 import usc.choiceanalyst.model.auxiliar.Menu;
-import usc.choiceanalyst.model.auxiliar.Pregunta;
 
 import java.text.Normalizer;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 
@@ -16,23 +12,24 @@ import java.util.List;
 
 public class ModeloEstablecimiento {
 
-    @Id private String idEstablecimiento;
+    @Id
+    private String idEstablecimiento;
     private String idAdministrador;
-    private String nombre;
-    private String localizacion;
-    private String tipo;
+    private String nombreEstablecimiento;
+    private String localizacionEstablecimiento;
+    private String tipoEstablecimiento;
     private List<Menu> menus;
 
 
     public ModeloEstablecimiento() {
     }
 
-    public ModeloEstablecimiento(String idEstablecimiento, String idAdministrador, String nombre, String localizacion, String tipo) {
-        this.idEstablecimiento=idEstablecimiento;
-        this.idAdministrador=idAdministrador;
-        this.nombre=nombre;
-        this.localizacion=localizacion;
-        this.tipo=tipo;
+    public ModeloEstablecimiento(String idEstablecimiento, String idAdministrador, String nombreEstablecimiento, String localizacionEstablecimiento, String tipoEstablecimiento) {
+        this.idEstablecimiento = idEstablecimiento;
+        this.idAdministrador = idAdministrador;
+        this.nombreEstablecimiento = nombreEstablecimiento;
+        this.localizacionEstablecimiento = localizacionEstablecimiento;
+        this.tipoEstablecimiento = tipoEstablecimiento;
     }
 
 
@@ -41,11 +38,7 @@ public class ModeloEstablecimiento {
     }
 
     public void setIdEstablecimiento(String idEstablecimiento) {
-        String idEstablecimiento1 = Normalizer.normalize(idEstablecimiento, Normalizer.Form.NFD);
-        idEstablecimiento1 = idEstablecimiento1.replaceAll("[^\\p{ASCII}]", "");
-        idEstablecimiento1 = idEstablecimiento1.replace(" ", "-");
-        idEstablecimiento1 = idEstablecimiento1.toLowerCase();
-        this.idEstablecimiento = idEstablecimiento1;
+        this.idEstablecimiento = idEstablecimiento;
     }
 
     public String getIdAdministrador() {
@@ -56,28 +49,28 @@ public class ModeloEstablecimiento {
         this.idAdministrador = idAdministrador;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombreEstablecimiento() {
+        return nombreEstablecimiento;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombreEstablecimiento(String nombreEstablecimiento) {
+        this.nombreEstablecimiento = nombreEstablecimiento;
     }
 
-    public String getLocalizacion() {
-        return localizacion;
+    public String getLocalizacionEstablecimiento() {
+        return localizacionEstablecimiento;
     }
 
-    public void setLocalizacion(String localizacion) {
-        this.localizacion = localizacion;
+    public void setLocalizacionEstablecimiento(String localizacionEstablecimiento) {
+        this.localizacionEstablecimiento = localizacionEstablecimiento;
     }
 
-    public String getTipo() {
-        return tipo;
+    public String getTipoEstablecimiento() {
+        return tipoEstablecimiento;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setTipoEstablecimiento(String tipoEstablecimiento) {
+        this.tipoEstablecimiento = tipoEstablecimiento;
     }
 
     public List<Menu> getMenus() {

@@ -3,18 +3,10 @@ package usc.choiceanalyst.model.auxiliar;
 import java.util.List;
 
 public class Pregunta {
-    private String idPregunta;
     private String variableAsociada;
     private String textoPregunta;
     private List<Opcion> opciones;
 
-    public String getIdPregunta() {
-        return idPregunta;
-    }
-
-    public void setIdPregunta(String idPregunta) {
-        this.idPregunta = idPregunta;
-    }
 
     public String getVariableAsociada() {
         return variableAsociada;
