@@ -47,8 +47,8 @@ class VistaCrearExperimento extends Component {
                     textoObjetivo: ""
                 }
             ],
-            variablesAsignadas:[],
-            variables: ["Higiene","Ruído", "Distancía", "Energía", "Compañía", "Atmosfera", "Calidad de Servicio", "Apariencia", "Temperatura", "Saludable" , "Sabroso", "Menu Seleccionado", "Primer Plato", "Segundo Plato", "Postre"]
+            variablesAsignadas: [],
+            variables: ["Higiene", "Ruído", "Distancía", "Energía", "Compañía", "Atmosfera", "Calidad de Servicio", "Apariencia", "Temperatura", "Saludable", "Sabroso", "Menu Seleccionado", "Primer Plato", "Segundo Plato", "Postre"]
         }
     }
 
@@ -121,9 +121,35 @@ class VistaCrearExperimento extends Component {
             state.preguntas.map((item, index) => {
                 if (index === identificador) {
                     item.variableAsociada = variableAsociada;
+                    if (this.state.variables.includes(variableAsociada)) {
+                        let posicion = 0;
+                        this.state.variables.map((item, index) => {
+                            if (item === variableAsociada) {
+                                posicion = index;
+                            }
+                        })
+                        console.log(posicion)
+                        let {variables} = this.state;
+
+                        let nuevasVariables = [
+                            ...variables.slice(0, posicion),
+                            ...variables.slice(posicion + 1),
+                        ]
+                        this.setState({variables: nuevasVariables});
+
+                    } else if (this.state.variables.includes(variableAsociada)) {
+                        let {variables} = this.state;
+                        let nuevasVariables = [
+                            ...variables, variableAsociada
+                        ]
+                        this.setState({variables: nuevasVariables});
+                    }
                 }
             })
         })
+        console.table(this.state.preguntas)
+
+
     }
 
     onAnadirOpcionPregunta = (identificadorPregunta) => {
@@ -207,68 +233,79 @@ class VistaCrearExperimento extends Component {
 
     render() {
         return (
-            <Container classname={"containerexperimento"} style={{marginLeft: '-200px'}}>
+            <Container classname={"containerexperimento"}>
                 <Row>
-                    <Form>
-                        <Form.Group>
-                            <Label>Nombre Establecimiento</Label>
-                            <Form.Control value={this.state.nombreExperimento}
-                                          pattern="[a-z0-9A-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-z0-9A-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-Z0-9À-ÿ\u00f1\u00d1]+"
-                                          onChange={this.onNombreExperimentoChange} required/>
-                            <Form.Control.Feedback type="invalid">
-                                Introduce el nombre del establecimiento
-                            </Form.Control.Feedback>
-                        </Form.Group>
-                    </Form>
+                    <Card block color="primary">
+                        <CardHeader style={{marginBottom: '-30px'}}>
+                            <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Nombre Experimento</CardTitle>
+                        </CardHeader>
+                        <CardBody>
+                            <Card color="primary">
+                                <CardBody>
+                                    <Input className="inputs" placeholder="Nombre Experimento"
+                                           value={this.state.nombreExperimento}
+                                           onChange={this.onNombreExperimentoChange}/>
+                                </CardBody>
+                            </Card>
+                        </CardBody>
+                    </Card>
                 </Row>
                 <Row>
-                    <Col>
-                        <h1>Preguntas</h1>
-                        <ul className="lista">
-                            {this.state.preguntas.map(
-                                (item, index) =>
-                                    <Pregunta pregunta={item} key={index} identificadorPregunta={index}
-                                              onEliminarPregunta={() => this.onEliminarPregunta(index)}
-                                              onModificarTextoPregunta={this.onModificarTextoPregunta}
-                                              onModificarVariableAsociadaPregunta={this.onModificarVariableAsociadaPregunta}
-                                              onModificarOpcionesPregunta={this.onModificarOpcionesPregunta}
-                                              onAnadirOpcionPregunta={this.onAnadirOpcionPregunta}
-                                              onEliminarOpcionPregunta={this.onEliminarOpcionPregunta}
-                                    />
-                            )
-                            }
-                        </ul>
-                        <div>
-                            <Button style={{marginBottom: '20px'}} block variant="success"
-                                    onClick={this.onAnadirPregunta}>
-                                Añadir Pregunta
-                            </Button>
-                        </div>
-                    </Col>
-                    <Col>
-                        <h1>Objetivos</h1>
-                        <Card color="primary">
-                            <CardHeader style={{marginBottom: '-30px'}}>
-                                <CardTitle>Objetivos</CardTitle>
-                            </CardHeader>
-                            <CardBody style={{marginBottom: '-50px'}}>
-                                <ul className="lista">
-                                    {this.state.objetivos.map(
-                                        (item, index) =>
-                                            <Objetivo objetivo={item} key={index} identificadorObjetivo={index}
-                                                      onEliminarObjetivo={() => this.onEliminarObjetivo(index)}
-                                                      onModificarObjetivo={this.onModificarObjetivo}/>
-                                    )
-                                    }
-                                </ul>
-                            </CardBody>
-                            <CardFooter>
-                                <Button block variant="success" onClick={this.onAnadirObjetivo}>
-                                    Añadir Objetivo
+                    <Card block color="primary">
+                        <CardHeader style={{marginBottom: '-30px'}}>
+                            <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Preguntas</CardTitle>
+                        </CardHeader>
+                        <CardBody>
+                            <ul className="lista">
+                                {this.state.preguntas.map(
+                                    (item, index) =>
+                                        <Pregunta pregunta={item} key={index} identificadorPregunta={index}
+                                                  variables={this.state.variables}
+                                                  onEliminarPregunta={() => this.onEliminarPregunta(index)}
+                                                  onModificarTextoPregunta={this.onModificarTextoPregunta}
+                                                  onModificarVariableAsociadaPregunta={this.onModificarVariableAsociadaPregunta}
+                                                  onModificarOpcionesPregunta={this.onModificarOpcionesPregunta}
+                                                  onAnadirOpcionPregunta={this.onAnadirOpcionPregunta}
+                                                  onEliminarOpcionPregunta={this.onEliminarOpcionPregunta}
+                                        />
+                                )
+                                }
+                            </ul>
+                            <div>
+                                <Button style={{marginBottom: '20px'}} block variant="success"
+                                        onClick={this.onAnadirPregunta}>
+                                    Añadir Pregunta
                                 </Button>
-                            </CardFooter>
-                        </Card>
-                    </Col>
+                            </div>
+                        </CardBody>
+                    </Card>
+                </Row>
+                <Row>
+                    <Card block color="primary">
+                        <CardHeader style={{marginBottom: '-30px'}}>
+                            <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Objetivos</CardTitle>
+                        </CardHeader>
+                        <CardBody>
+                            <Card color="primary">
+                                <CardBody style={{marginBottom: '-50px'}}>
+                                    <ul className="lista">
+                                        {this.state.objetivos.map(
+                                            (item, index) =>
+                                                <Objetivo objetivo={item} key={index} identificadorObjetivo={index}
+                                                          onEliminarObjetivo={() => this.onEliminarObjetivo(index)}
+                                                          onModificarObjetivo={this.onModificarObjetivo}/>
+                                        )
+                                        }
+                                    </ul>
+                                </CardBody>
+                                <CardFooter>
+                                    <Button block variant="success" onClick={this.onAnadirObjetivo}>
+                                        Añadir Objetivo
+                                    </Button>
+                                </CardFooter>
+                            </Card>
+                        </CardBody>
+                    </Card>
                 </Row>
                 <Row>
                     <Button style={{marginBottom: '50px'}} block color={"success"}
@@ -359,9 +396,17 @@ class Pregunta extends Component {
                                        onChange={this.onTextoPreguntaChange}/>
                             </Col>
                             <Col>
-                                <Input className="inputs" placeholder="Nombre Variable"
+
+                                <Input className="inputs" type={"select"} placeholder="Añadir Variable"
                                        value={this.props.pregunta.variableAsociada}
-                                       onChange={this.onVariableAsociadaChange}/>
+                                       onChange={this.onVariableAsociadaChange}>
+                                    <option value="" disabled>Seleccionar Variable</option>
+                                    {this.props.variables.map(
+                                        (item, index) =>
+                                            <option>{item}</option>
+                                    )
+                                    }
+                                </Input>
                             </Col>
                         </Form.Row>
                     </Form>
