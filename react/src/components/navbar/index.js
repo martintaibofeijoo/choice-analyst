@@ -28,14 +28,14 @@ export default class NavigationBar extends Component {
                 </NavbarBrand>
             </UnauthenticatedOnly>
             <Nav className="ml-auto" navbar>
-                <UnauthenticatedOnly>
+                <AuthenticatedOnly>
                     <NavItem>
                         <NavLink tag={Link} to="/crearExperimento">Añadir Experimento</NavLink>
                     </NavItem>
-                </UnauthenticatedOnly>
+                </AuthenticatedOnly>
                 <AuthenticatedOnly>
                     <NavItem>
-                        <NavLink tag={Link} to="/menu">Añadir Menú</NavLink>
+                        <NavLink tag={Link} to="/menus">Menus</NavLink>
                     </NavItem>
                 </AuthenticatedOnly>
                 <AuthenticatedOnly>

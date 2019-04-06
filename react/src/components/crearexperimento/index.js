@@ -48,7 +48,7 @@ class VistaCrearExperimento extends Component {
                 }
             ],
             variablesAsignadas: [],
-            variables: ["Higiene", "Ruído", "Distancía", "Energía", "Compañía", "Atmosfera", "Calidad de Servicio", "Apariencia", "Temperatura", "Saludable", "Sabroso", "Menu Seleccionado", "Primer Plato", "Segundo Plato", "Postre"]
+            variables: ["Higiene", "Ruído", "Distancía", "Energía", "Compañía", "Atmósfera", "Calidad de Servicio", "Apariencia", "Temperatura", "Saludable", "Sabroso", "Menu Seleccionado", "Primer Plato", "Segundo Plato", "Postre"]
         }
     }
 
@@ -121,7 +121,7 @@ class VistaCrearExperimento extends Component {
             state.preguntas.map((item, index) => {
                 if (index === identificador) {
                     item.variableAsociada = variableAsociada;
-                    if (this.state.variables.includes(variableAsociada)) {
+                   /* if (this.state.variables.includes(variableAsociada)) {
                         let posicion = 0;
                         this.state.variables.map((item, index) => {
                             if (item === variableAsociada) {
@@ -143,13 +143,10 @@ class VistaCrearExperimento extends Component {
                             ...variables, variableAsociada
                         ]
                         this.setState({variables: nuevasVariables});
-                    }
+                    }*/
                 }
             })
         })
-        console.table(this.state.preguntas)
-
-
     }
 
     onAnadirOpcionPregunta = (identificadorPregunta) => {

@@ -4,7 +4,7 @@ import { Container } from "reactstrap"
 import {Inicio} from "../inicio"
 import Logout from "../logout"
 import { Switch, Route, Redirect } from "react-router-dom"
-import {NuevoMenu} from "../nuevomenu";
+import {Menus} from "../menus";
 import {Experimentos} from "../experimentos";
 import {CrearExperimento} from "../crearexperimento";
 
@@ -19,7 +19,7 @@ export default class Layout extends Component {
                     <Route path = "/experimentos" component = { Experimentos } />
                     <Route path = "/inicio" component = { Inicio } />
                     <Route path = "/logout" component = { Logout } />
-                    <Route path = "/menu" component = { NuevoMenu } />
+                    <Route path = "/menus" component = { Menus } />
                     <Route path = "/crearExperimento" component = { CrearExperimento } />
 
                     <Redirect from = "/" to = "/inicio"/>
