@@ -150,6 +150,7 @@ export default class VistaRegistro extends Component {
     render() {
         return <Modal
             {...this.props}
+
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
             centered

@@ -42,17 +42,17 @@ export class Inicio extends Component {
                     return <article>
                         <Row>
                             <Col sm>
-                                <Image className="imagenInicio" src={choiceanalyst_inicio}/>
+                                <Image style={{height: '100%', width: '100%'}} src={choiceanalyst_inicio}/>
                             </Col>
                         </Row>
                         <Row>
-                            <h2 style={{textAlign: 'center', marginTop: '50px'}}>Somos una plataforma mediante la cúal
+                            <h2 style={{textAlign: 'center', marginTop: '50px'}}>Somos una plataforma mediante la que
                                 podrás crear experimentos asociados a tu establecimiento para analizar los platos y
                                 menús elegidos por tus clientes en función de sus respuestas </h2>
                         </Row>
                         <Row style={{marginTop: '50px'}}>
                             <Col>
-                                <Button block size={"lg"}
+                                <Button className={"botonPrimary"} block size={"lg"}
                                         color={"primary"}
                                         onClick={() => this.setState({
                                             iniciarSesion: true
@@ -62,7 +62,7 @@ export class Inicio extends Component {
                                 </Button>
                             </Col>
                             <Col>
-                                <Button block size={"lg"}
+                                <Button className={"botonPrimary"} block size={"lg"}
                                         color={"primary"}
                                         onClick={() => this.setState({
                                             registrarse: true

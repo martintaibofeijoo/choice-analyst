@@ -1,4 +1,4 @@
-.searchInput{
+.searchInput {
     background-color: white;
     display: flex;
     justify-content: center;
@@ -6,48 +6,54 @@
     padding: 0 1rem;
 }
 
-.imagenInicio{
+
+.columnas {
     width: 100%;
     height: 100%;
 }
 
-.columnas{
-    width: 100%;
-    height: 100%;
-}
-
-ul.lista{
+ul.lista {
     margin: 0px;
     padding: 0px;
     list-style-type: none;
     margin-bottom: 30px;
 }
-li.lista{
+
+li.lista {
     margin-bottom: 10px;
 }
 
 .inputs {
     width: 100%;
     height: 100%;
+}
 
-}
-.containerexperimento{
-    width: 150%;
-    height: 100%;
-}
-.card{
+
+.card {
     margin-bottom: 20px;
 }
 
-.botonEliminarPlato{
+.botonEliminarPlato {
 
 
 }
 
-.menosBottomHeader{
+.menosBottomHeader {
     margin-bottom: -23px;
 }
 
-.menosBottomBody{
+.menosBottomBody {
     margin-bottom: -50px;
+}
+
+.botonSuccess {
+    background-color: rgb(42, 102, 54);
+}
+
+.botonDanger {
+    background-color: rgb(177, 49, 66);
+}
+
+.botonPrimary {
+    background-color: rgb(177, 49, 66);
 }

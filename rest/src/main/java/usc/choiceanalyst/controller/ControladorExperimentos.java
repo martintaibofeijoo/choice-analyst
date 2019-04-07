@@ -19,6 +19,8 @@ import usc.choiceanalyst.model.ModeloUsuario;
 import usc.choiceanalyst.repository.RepositorioEstablecimiento;
 import usc.choiceanalyst.repository.RepositorioExperimento;
 import usc.choiceanalyst.model.*;
+import usc.choiceanalyst.repository.RepositorioUsuario;
+
 import java.net.URI;
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
@@ -31,14 +33,13 @@ public class ControladorExperimentos {
 
     private RepositorioExperimento dbex;
     private RepositorioEstablecimiento dbes;
-    private PasswordEncoder passwordEncoder;
+    private RepositorioUsuario dbu;
 
     @Autowired
-    public ControladorExperimentos(RepositorioExperimento dbex, RepositorioEstablecimiento dbes, PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
+    public ControladorExperimentos(RepositorioExperimento dbex, RepositorioEstablecimiento dbes, RepositorioUsuario dbu) {
         this.dbex= dbex;
         this.dbes = dbes;
-
+        this.dbu=dbu;
     }
 
     @PreAuthorize("permitAll()")
@@ -59,10 +60,12 @@ public class ControladorExperimentos {
     )
 
     public ResponseEntity createExperimento(@RequestBody ModeloExperimento experimento) {
-        System.out.println("hola");
         if (dbex.existsByIdExperimento(experimento.getIdExperimento())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } else {
+            Optional<ModeloUsuario> usuario = dbu.findByUsername(experimento.getIdAdministrador());
+            experimento.setIdEstablecimiento(usuario.get().getIdEstablecimiento());
+            dbex.save(experimento);
             URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/experimentos/{idExperimento}").buildAndExpand(experimento.getIdExperimento()).toUri();
             return ResponseEntity.created(location).body(experimento);
         }

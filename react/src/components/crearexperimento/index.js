@@ -13,6 +13,7 @@ import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import {Authentication} from "../authentication";
+import {Redirect} from "react-router-dom";
 
 export class CrearExperimento extends Component {
     render() {
@@ -121,29 +122,29 @@ class VistaCrearExperimento extends Component {
             state.preguntas.map((item, index) => {
                 if (index === identificador) {
                     item.variableAsociada = variableAsociada;
-                   /* if (this.state.variables.includes(variableAsociada)) {
-                        let posicion = 0;
-                        this.state.variables.map((item, index) => {
-                            if (item === variableAsociada) {
-                                posicion = index;
-                            }
-                        })
-                        console.log(posicion)
-                        let {variables} = this.state;
+                    /* if (this.state.variables.includes(variableAsociada)) {
+                         let posicion = 0;
+                         this.state.variables.map((item, index) => {
+                             if (item === variableAsociada) {
+                                 posicion = index;
+                             }
+                         })
+                         console.log(posicion)
+                         let {variables} = this.state;
 
-                        let nuevasVariables = [
-                            ...variables.slice(0, posicion),
-                            ...variables.slice(posicion + 1),
-                        ]
-                        this.setState({variables: nuevasVariables});
+                         let nuevasVariables = [
+                             ...variables.slice(0, posicion),
+                             ...variables.slice(posicion + 1),
+                         ]
+                         this.setState({variables: nuevasVariables});
 
-                    } else if (this.state.variables.includes(variableAsociada)) {
-                        let {variables} = this.state;
-                        let nuevasVariables = [
-                            ...variables, variableAsociada
-                        ]
-                        this.setState({variables: nuevasVariables});
-                    }*/
+                     } else if (this.state.variables.includes(variableAsociada)) {
+                         let {variables} = this.state;
+                         let nuevasVariables = [
+                             ...variables, variableAsociada
+                         ]
+                         this.setState({variables: nuevasVariables});
+                     }*/
                 }
             })
         })
@@ -197,7 +198,7 @@ class VistaCrearExperimento extends Component {
     }
 
     onCrearExperimento = () => {
-        this.doCrearExperimento(this.state.preguntas, this.state.objetivos)
+        this.doCrearExperimento(this.state.idAdministrador, this.state.idEstablecimiento, this.state.nombreExperimento, this.state.preguntas, this.state.objetivos)
     }
 
     doCrearExperimento = async (idAdministrador, idEstablecimiento, nombreExperimento, preguntas, objetivos) => {
@@ -216,7 +217,6 @@ class VistaCrearExperimento extends Component {
             body: JSON.stringify({
                 idExperimento: idExperimento,
                 idAdministrador: idAdministrador,
-                idEstablecimiento: idEstablecimiento,
                 nombreExperimento: nombreExperimento,
                 preguntas: preguntas,
                 objetivos: objetivos,
@@ -224,13 +224,16 @@ class VistaCrearExperimento extends Component {
         })
         debugger
         const codigo = response.status
-        console.log(codigo)
+
+        if (codigo === 200) {
+            this.props.history.push(`/experimentos`)
+        }
 
     }
 
     render() {
         return (
-            <Container classname={"containerexperimento"}>
+            <Container>
                 <Row>
                     <Card block color="primary">
                         <CardHeader style={{marginBottom: '-30px'}}>
@@ -269,7 +272,7 @@ class VistaCrearExperimento extends Component {
                                 }
                             </ul>
                             <div>
-                                <Button style={{marginBottom: '20px'}} block variant="success"
+                                <Button className={"botonSuccess"} style={{marginBottom: '20px'}} block
                                         onClick={this.onAnadirPregunta}>
                                     Añadir Pregunta
                                 </Button>
@@ -296,7 +299,7 @@ class VistaCrearExperimento extends Component {
                                     </ul>
                                 </CardBody>
                                 <CardFooter>
-                                    <Button block variant="success" onClick={this.onAnadirObjetivo}>
+                                    <Button block className={"botonSuccess"} onClick={this.onAnadirObjetivo}>
                                         Añadir Objetivo
                                     </Button>
                                 </CardFooter>
@@ -305,7 +308,7 @@ class VistaCrearExperimento extends Component {
                     </Card>
                 </Row>
                 <Row>
-                    <Button style={{marginBottom: '50px'}} block color={"success"}
+                    <Button style={{marginBottom: '50px'}} block className={"botonSuccess"}
                             onClick={this.onCrearExperimento}>Crear
                         Experimento</Button>
                 </Row>
@@ -422,13 +425,13 @@ class Pregunta extends Component {
                         </ul>
                     </CardBody>
                     <CardFooter style={{marginBottom: '-30px'}}>
-                        <Button block variant="success" onClick={this.onAnadirOpcion}>
+                        <Button block className={"botonSuccess"} onClick={this.onAnadirOpcion}>
                             Añadir Opcion
                         </Button>
                     </CardFooter>
                 </CardBody>
                 <CardFooter>
-                    <Button block variant="danger" className="botonEliminarPlato" onClick={this.onEliminarPregunta}>
+                    <Button block className="botonDanger" onClick={this.onEliminarPregunta}>
                         Eliminar Pregunta
                     </Button>
                 </CardFooter>
@@ -467,7 +470,7 @@ class Opcion extends Component {
                                        onChange={this.onTextoOpcionChange}/>
                             </Col>
                             <Col>
-                                <Button block variant="danger" onClick={this.onEliminarOpcion}>
+                                <Button block className={"botonDanger"}  onClick={this.onEliminarOpcion}>
                                     Eliminar Opcion
                                 </Button>
                             </Col>
@@ -509,7 +512,7 @@ class Objetivo extends Component {
                                        onChange={this.onTextoObjetivoChange}/>
                             </Col>
                             <Col>
-                                <Button block variant="danger" onClick={this.onEliminarObjetivo}>
+                                <Button block className={"botonDanger"} onClick={this.onEliminarObjetivo}>
                                     Eliminar Objetivo
                                 </Button>
                             </Col>
