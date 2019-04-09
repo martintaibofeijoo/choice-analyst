@@ -235,12 +235,12 @@ class VistaCrearExperimento extends Component {
         return (
             <Container>
                 <Row>
-                    <Card block color="primary">
+                    <Card className="cards" block color="primary">
                         <CardHeader style={{marginBottom: '-30px'}}>
                             <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Nombre Experimento</CardTitle>
                         </CardHeader>
                         <CardBody>
-                            <Card color="primary">
+                            <Card className="cards" color="primary">
                                 <CardBody>
                                     <Input className="inputs" placeholder="Nombre Experimento"
                                            value={this.state.nombreExperimento}
@@ -251,7 +251,7 @@ class VistaCrearExperimento extends Component {
                     </Card>
                 </Row>
                 <Row>
-                    <Card block color="primary">
+                    <Card className="cards" block color="primary">
                         <CardHeader style={{marginBottom: '-30px'}}>
                             <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Preguntas</CardTitle>
                         </CardHeader>
@@ -281,12 +281,12 @@ class VistaCrearExperimento extends Component {
                     </Card>
                 </Row>
                 <Row>
-                    <Card block color="primary">
+                    <Card className="cards" block color="primary">
                         <CardHeader style={{marginBottom: '-30px'}}>
                             <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Objetivos</CardTitle>
                         </CardHeader>
                         <CardBody>
-                            <Card color="primary">
+                            <Card className="cards" color="primary">
                                 <CardBody style={{marginBottom: '-50px'}}>
                                     <ul className="lista">
                                         {this.state.objetivos.map(
@@ -383,19 +383,19 @@ class Pregunta extends Component {
 
     render() {
         return (
-            <Card color="primary">
+            <Card className="cards" className="cards" color="primary">
                 <CardHeader style={{marginBottom: '-30px'}}>
                     <CardTitle>Pregunta {this.props.identificadorPregunta + 1} </CardTitle>
                 </CardHeader>
                 <CardBody>
                     <Form>
                         <Form.Row>
-                            <Col>
+                            <Col sm={9}>
                                 <Input className="inputs" placeholder="Texto Pregunta"
                                        value={this.props.pregunta.textoPregunta}
                                        onChange={this.onTextoPreguntaChange}/>
                             </Col>
-                            <Col>
+                            <Col sm={3}>
 
                                 <Input className="inputs" type={"select"} placeholder="Añadir Variable"
                                        value={this.props.pregunta.variableAsociada}
@@ -410,25 +410,28 @@ class Pregunta extends Component {
                             </Col>
                         </Form.Row>
                     </Form>
-                    <CardHeader style={{marginBottom: '-30px'}}>
-                        <CardTitle>Opciones</CardTitle>
-                    </CardHeader>
-                    <CardBody style={{marginBottom: '-50px'}}>
-                        <ul className="lista">
-                            {this.props.pregunta.opciones.map(
-                                (item, index) =>
-                                    <Opcion opcion={item} key={index} identificadorOpcion={index}
-                                            onEliminarOpcion={() => this.onEliminarOpcion(index)}
-                                            onModificarOpcion={this.onModificarOpcion}/>
-                            )
-                            }
-                        </ul>
-                    </CardBody>
-                    <CardFooter style={{marginBottom: '-30px'}}>
-                        <Button block className={"botonSuccess"} onClick={this.onAnadirOpcion}>
-                            Añadir Opcion
-                        </Button>
-                    </CardFooter>
+                    <Card className="cards" style={{marginTop: '20px', marginBottom: '-10px'}} className="cards" color="primary">
+
+                        <CardHeader style={{marginBottom: '-20px'}}>
+                            <CardTitle>Opciones</CardTitle>
+                        </CardHeader>
+                        <CardBody style={{marginBottom: '-50px'}}>
+                            <ul className="lista">
+                                {this.props.pregunta.opciones.map(
+                                    (item, index) =>
+                                        <Opcion opcion={item} key={index} identificadorOpcion={index}
+                                                onEliminarOpcion={() => this.onEliminarOpcion(index)}
+                                                onModificarOpcion={this.onModificarOpcion}/>
+                                )
+                                }
+                            </ul>
+                        </CardBody>
+                        <CardFooter>
+                            <Button block className={"botonSuccess"} onClick={this.onAnadirOpcion}>
+                                Añadir Opcion
+                            </Button>
+                        </CardFooter>
+                    </Card>
                 </CardBody>
                 <CardFooter>
                     <Button block className="botonDanger" onClick={this.onEliminarPregunta}>
@@ -464,13 +467,13 @@ class Opcion extends Component {
                 <div>
                     <Form>
                         <Form.Row>
-                            <Col>
+                            <Col sm={9}>
                                 <Input className="inputs" placeholder="Texto Opcion"
                                        value={this.props.opcion.textoOpcion}
                                        onChange={this.onTextoOpcionChange}/>
                             </Col>
-                            <Col>
-                                <Button block className={"botonDanger"}  onClick={this.onEliminarOpcion}>
+                            <Col sm={3}>
+                                <Button block className={"botonDanger"} onClick={this.onEliminarOpcion}>
                                     Eliminar Opcion
                                 </Button>
                             </Col>
@@ -506,12 +509,12 @@ class Objetivo extends Component {
                 <div>
                     <Form>
                         <Form.Row>
-                            <Col>
+                            <Col sm={9}>
                                 <Input className="inputs" placeholder="Texto Objetivo"
                                        value={this.props.objetivo.textoObjetivo}
                                        onChange={this.onTextoObjetivoChange}/>
                             </Col>
-                            <Col>
+                            <Col sm={3}>
                                 <Button block className={"botonDanger"} onClick={this.onEliminarObjetivo}>
                                     Eliminar Objetivo
                                 </Button>

@@ -57,3 +57,8 @@ li.lista {
 .botonPrimary {
     background-color: rgb(177, 49, 66);
 }
+
+.cards {
+    border-radius: 20px;
+    border-color: rgb(139, 154, 167);
+}
