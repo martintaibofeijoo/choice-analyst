@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import usc.choiceanalyst.model.ModeloEstablecimiento;
+import usc.choiceanalyst.model.auxiliar.Menu;
 import usc.choiceanalyst.repository.RepositorioEstablecimiento;
 
 import java.net.URI;
@@ -62,6 +63,19 @@ public class ControladorEstablecimiento {
             return ResponseEntity.created(location).body(establecimiento);
         }
     }
+
+    @PreAuthorize("permitAll()")
+    @GetMapping(
+            path = "/{idAdministrador}/menus/{fechaSeleccionada}",
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+    public ResponseEntity<Menu> getMenusEstablecimiento(@PathVariable("idAdministrador") String idAdministrador, @PathVariable("fechaSeleccionada") String fechaSeleccionada) {
+        System.out.println(idAdministrador);
+        System.out.println(fechaSeleccionada);
+        return ResponseEntity.notFound().build();
+
+    }
+
 
 
 

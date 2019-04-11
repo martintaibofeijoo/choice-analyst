@@ -49,7 +49,7 @@ export default class VistaIniciarSesion extends Component {
         return <Modal
             {...this.props}
             size="lg"
-
+            classname={"modals"}
             aria-labelledby="contained-modal-title-vcenter"
             centered
         >
@@ -59,7 +59,7 @@ export default class VistaIniciarSesion extends Component {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body style={{background: '#000'}}>
-                <Card color={"primary"}>
+                <Card className={"cards"} color={"primary"}>
                     <CardBody>
                         <Form
                             noValidate
@@ -68,7 +68,7 @@ export default class VistaIniciarSesion extends Component {
                         >
                             <Form.Group>
                                 <Label>Usuario</Label>
-                                <Form.Control value={this.state.username} onChange={this.onUsernameChange}
+                                <Form.Control size="sm" value={this.state.username} onChange={this.onUsernameChange}
                                               pattern="[a-z][a-z0-9-_\.]{4,20}" required/>
                                 <Form.Control.Feedback type="invalid">
                                     El usuario debe contener: 4-20 carácteres (sin mayúsculas).
@@ -76,7 +76,7 @@ export default class VistaIniciarSesion extends Component {
                             </Form.Group>
                             <Form.Group>
                                 <Label>Contraseña</Label>
-                                <Form.Control type="password" value={this.state.password}
+                                <Form.Control type="password" size="sm" value={this.state.password}
                                               onChange={this.onPasswordChange}
                                               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*" required/>
                                 <Form.Control.Feedback type="invalid">
@@ -89,7 +89,7 @@ export default class VistaIniciarSesion extends Component {
                             >
                                 {this.props.error.message}
                             </Alert>
-                            <Button color={"success"} block type={"onSubmit"}>Iniciar
+                            <Button className={"botonSuccess"} size={"sm"} block type={"onSubmit"}>Iniciar
                                 Sesión</Button>
                         </Form>
                     </CardBody>

@@ -3,26 +3,17 @@ package usc.choiceanalyst.model.auxiliar;
 import java.util.List;
 
 public class Plato {
-    private String idPlato;
-    private String tipo;
     private String nombrePlato;
+    private String tipoPlato;
     private float precioPlato;
-    private List<String> ingredientes;
+    private List<Ingrediente> ingredientes;
 
-    public String getIdPlato() {
-        return idPlato;
+    public String getTipoPlato() {
+        return tipoPlato;
     }
 
-    public void setIdPlato(String idPlato) {
-        this.idPlato = idPlato;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setTipoPlato(String tipoPlato) {
+        this.tipoPlato = tipoPlato;
     }
 
     public String getNombrePlato() {
@@ -41,11 +32,11 @@ public class Plato {
         this.precioPlato = precioPlato;
     }
 
-    public List<String> getIngredientes() {
+    public List<Ingrediente> getIngredientes() {
         return ingredientes;
     }
 
-    public void setIngredientes(List<String> ingredientes) {
+    public void setIngredientes(List<Ingrediente> ingredientes) {
         this.ingredientes = ingredientes;
     }
 }

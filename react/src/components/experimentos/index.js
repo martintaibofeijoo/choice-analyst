@@ -55,7 +55,7 @@ class VistaExperimentos extends Component {
             <h1>Experimentos</h1>
             {this.state.experimentos.map(
                 (item, index) =>
-                    <Card block color="primary">
+                    <Card className={"cards"} block color="primary">
                         <CardHeader style={{marginBottom: '-30px'}}>
                             <CardTitle
                                 style={{
@@ -69,15 +69,15 @@ class VistaExperimentos extends Component {
                         <CardFooter>
                             <Row>
                                 <Col>
-                                    <Button block color="success" tag={Link}
+                                    <Button block className={"botonSuccess"} tag={Link}
                                             to={`/experimentos/verExperimento/${item.idExperimento}`}>Ver</Button>
                                 </Col>
                                 <Col>
-                                    <Button block color="warning" tag={Link}
+                                    <Button block className={"botonWarning"} tag={Link}
                                             to={`/experimentos/modificarExperimento/${item.idExperimento}`}>Modificar</Button>
                                 </Col>
                                 <Col>
-                                    <Button block color="danger" tag={Link}
+                                    <Button block className={"botonDanger"} tag={Link}
                                             to={`experimentos/eliminarExperimento/${item.idExperimento}`}>Eliminar</Button>
                                 </Col>
                             </Row>

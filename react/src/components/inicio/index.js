@@ -53,7 +53,6 @@ export class Inicio extends Component {
                         <Row style={{marginTop: '50px'}}>
                             <Col>
                                 <Button className={"botonPrimary"} block size={"lg"}
-                                        color={"primary"}
                                         onClick={() => this.setState({
                                             iniciarSesion: true
                                         })}
@@ -63,7 +62,6 @@ export class Inicio extends Component {
                             </Col>
                             <Col>
                                 <Button className={"botonPrimary"} block size={"lg"}
-                                        color={"primary"}
                                         onClick={() => this.setState({
                                             registrarse: true
                                         })}

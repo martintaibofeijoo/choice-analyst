@@ -235,14 +235,14 @@ class VistaCrearExperimento extends Component {
         return (
             <Container>
                 <Row>
-                    <Card className="cards" block color="primary">
+                    <Card className="cards" color="primary">
                         <CardHeader style={{marginBottom: '-30px'}}>
                             <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Nombre Experimento</CardTitle>
                         </CardHeader>
                         <CardBody>
                             <Card className="cards" color="primary">
                                 <CardBody>
-                                    <Input className="inputs" placeholder="Nombre Experimento"
+                                    <Input className="inputs" size={"sm"} placeholder="Nombre Experimento"
                                            value={this.state.nombreExperimento}
                                            onChange={this.onNombreExperimentoChange}/>
                                 </CardBody>
@@ -272,7 +272,7 @@ class VistaCrearExperimento extends Component {
                                 }
                             </ul>
                             <div>
-                                <Button className={"botonSuccess"} style={{marginBottom: '20px'}} block
+                                <Button size={"sm"} className={"botonSuccess"} style={{marginBottom: '20px'}} block
                                         onClick={this.onAnadirPregunta}>
                                     Añadir Pregunta
                                 </Button>
@@ -299,7 +299,7 @@ class VistaCrearExperimento extends Component {
                                     </ul>
                                 </CardBody>
                                 <CardFooter>
-                                    <Button block className={"botonSuccess"} onClick={this.onAnadirObjetivo}>
+                                    <Button size={"sm"} block className={"botonSuccess"} onClick={this.onAnadirObjetivo}>
                                         Añadir Objetivo
                                     </Button>
                                 </CardFooter>
@@ -308,7 +308,7 @@ class VistaCrearExperimento extends Component {
                     </Card>
                 </Row>
                 <Row>
-                    <Button style={{marginBottom: '50px'}} block className={"botonSuccess"}
+                    <Button size={"sm"} style={{marginBottom: '50px'}} block className={"botonSuccess"}
                             onClick={this.onCrearExperimento}>Crear
                         Experimento</Button>
                 </Row>
@@ -391,13 +391,13 @@ class Pregunta extends Component {
                     <Form>
                         <Form.Row>
                             <Col sm={9}>
-                                <Input className="inputs" placeholder="Texto Pregunta"
+                                <Input className="inputs" size={"sm"} placeholder="Texto Pregunta"
                                        value={this.props.pregunta.textoPregunta}
                                        onChange={this.onTextoPreguntaChange}/>
                             </Col>
                             <Col sm={3}>
 
-                                <Input className="inputs" type={"select"} placeholder="Añadir Variable"
+                                <Input className="inputs" size={"sm"} type={"select"} placeholder="Añadir Variable"
                                        value={this.props.pregunta.variableAsociada}
                                        onChange={this.onVariableAsociadaChange}>
                                     <option value="" disabled>Seleccionar Variable</option>
@@ -427,14 +427,14 @@ class Pregunta extends Component {
                             </ul>
                         </CardBody>
                         <CardFooter>
-                            <Button block className={"botonSuccess"} onClick={this.onAnadirOpcion}>
+                            <Button size={"sm"} block className={"botonSuccess"} onClick={this.onAnadirOpcion}>
                                 Añadir Opcion
                             </Button>
                         </CardFooter>
                     </Card>
                 </CardBody>
                 <CardFooter>
-                    <Button block className="botonDanger" onClick={this.onEliminarPregunta}>
+                    <Button size={"sm"} block className="botonDanger" onClick={this.onEliminarPregunta}>
                         Eliminar Pregunta
                     </Button>
                 </CardFooter>
@@ -468,12 +468,12 @@ class Opcion extends Component {
                     <Form>
                         <Form.Row>
                             <Col sm={9}>
-                                <Input className="inputs" placeholder="Texto Opcion"
+                                <Input className="inputs" size={"sm"} placeholder="Texto Opcion"
                                        value={this.props.opcion.textoOpcion}
                                        onChange={this.onTextoOpcionChange}/>
                             </Col>
                             <Col sm={3}>
-                                <Button block className={"botonDanger"} onClick={this.onEliminarOpcion}>
+                                <Button size={"sm"} block className={"botonDanger"} onClick={this.onEliminarOpcion}>
                                     Eliminar Opcion
                                 </Button>
                             </Col>
@@ -510,12 +510,12 @@ class Objetivo extends Component {
                     <Form>
                         <Form.Row>
                             <Col sm={9}>
-                                <Input className="inputs" placeholder="Texto Objetivo"
+                                <Input size={"sm"} placeholder="Texto Objetivo"
                                        value={this.props.objetivo.textoObjetivo}
                                        onChange={this.onTextoObjetivoChange}/>
                             </Col>
                             <Col sm={3}>
-                                <Button block className={"botonDanger"} onClick={this.onEliminarObjetivo}>
+                                <Button block size={"sm"} style={{height:"29px"}} className={"botonDanger"} onClick={this.onEliminarObjetivo}>
                                     Eliminar Objetivo
                                 </Button>
                             </Col>

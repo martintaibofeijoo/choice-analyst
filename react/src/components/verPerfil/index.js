@@ -5,12 +5,13 @@ import {
     Card,
     CardBody,
     Label,
-    Alert, Col,
+    Alert, Col, CardHeader, CardTitle,
 } from 'reactstrap';
 
 import Form from 'react-bootstrap/Form'
+import Row from "../crearexperimento";
 
-export default class VistaRegistro extends Component {
+export default class VerPerfil extends Component {
     constructor(props) {
         super(props)
 
@@ -148,19 +149,11 @@ export default class VistaRegistro extends Component {
     }
 
     render() {
-        return <Modal
-            {...this.props}
-            className="modals"
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Registrarse
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body style={{background: '#000'}}>
+        return <Card className="cards" block color="primary">
+            <CardHeader>
+                <CardTitle>Ver Perfil</CardTitle>
+            </CardHeader>
+            <CardBody style={{background: '#000'}}>
                 <Card className="cards" color={"primary"}>
                     <CardBody>
                         <Form
@@ -270,12 +263,12 @@ export default class VistaRegistro extends Component {
                             >
                                 {this.state.alert.message}
                             </Alert>
-                            <Button className="botonSuccess" type={"submit"} block
-                                    >Registrarse</Button>
+                            <Button className="botonSuccess" size= "sm" type={"submit"} block
+                            >Modificar Perfil</Button>
                         </Form>
                     </CardBody>
                 </Card>
-            </Modal.Body>
-        </Modal>
+            </CardBody>
+        </Card>
     }
 }

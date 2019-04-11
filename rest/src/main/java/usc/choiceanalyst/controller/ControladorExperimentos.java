@@ -50,7 +50,7 @@ public class ControladorExperimentos {
     public ResponseEntity<Collection<ModeloExperimento>> getAllExperimentos(@PathVariable("username") String username) {
         ModeloExperimento experimento = new ModeloExperimento();
         experimento.setIdAdministrador(username);
-        return ResponseEntity.ok(dbex.findAll(Example.of(experimento)));
+        return ResponseEntity.ok(dbex.findByIdAdministrador(username));
     }
 
     @PreAuthorize("permitAll()")

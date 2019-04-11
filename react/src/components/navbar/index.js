@@ -11,6 +11,7 @@ import {Link} from 'react-router-dom'
 import {AuthenticatedOnly, UnauthenticatedOnly} from "../authentication";
 import choiceanalyst_navbar from "../imagenes/choiceanalyst_navbar.png";
 import {Image} from "react-bootstrap";
+import NavDropdown from "react-bootstrap/NavDropdown";
 
 
 export default class NavigationBar extends Component {
@@ -39,6 +40,9 @@ export default class NavigationBar extends Component {
                     </NavItem>
                 </AuthenticatedOnly>
                 <AuthenticatedOnly>
+                    <NavItem>
+                        <NavLink tag={Link} to="/verPerfil">Ver Perfil</NavLink>
+                    </NavItem>
                     <NavItem>
                         <NavLink tag={Link} to="/logout">Cerrar Sesión</NavLink>
                     </NavItem>
