@@ -9,22 +9,28 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import usc.choiceanalyst.model.ModeloEstablecimiento;
+import usc.choiceanalyst.model.ModeloUsuario;
 import usc.choiceanalyst.model.auxiliar.Menu;
 import usc.choiceanalyst.repository.RepositorioEstablecimiento;
+import usc.choiceanalyst.repository.RepositorioUsuario;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("establecimientos")
 public class ControladorEstablecimiento {
 
     private RepositorioEstablecimiento dbes;
+    private RepositorioUsuario dbu;
+
 
 
     @Autowired
-    public ControladorEstablecimiento(RepositorioEstablecimiento dbes) {
+    public ControladorEstablecimiento(RepositorioEstablecimiento dbes, RepositorioUsuario dbu) {
         this.dbes = dbes;
+        this.dbu=dbu;
     }
 
     @PreAuthorize("permitAll()")
@@ -74,6 +80,54 @@ public class ControladorEstablecimiento {
         System.out.println(fechaSeleccionada);
         return ResponseEntity.notFound().build();
 
+    }
+
+
+    @PreAuthorize("permitAll()")
+    @PutMapping(
+            path = "/{idEstablecimiento}",
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+
+    public ResponseEntity modifyEstablecimiento(@RequestBody ModeloEstablecimiento establecimiento, @PathVariable("idEstablecimiento") String idEstablecimiento) {
+        if (!dbes.existsByIdEstablecimiento(idEstablecimiento) && !dbu.existsByUsername(establecimiento.getIdAdministrador())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            Optional<ModeloEstablecimiento> establecimientoExistente = dbes.findByIdEstablecimiento(idEstablecimiento);
+            establecimientoExistente.get().setIdEstablecimiento(establecimiento.getIdEstablecimiento());
+            establecimientoExistente.get().setIdAdministrador(establecimiento.getIdAdministrador());
+            establecimientoExistente.get().setLocalizacionEstablecimiento(establecimiento.getLocalizacionEstablecimiento());
+            establecimientoExistente.get().setNombreEstablecimiento(establecimiento.getNombreEstablecimiento());
+            establecimientoExistente.get().setTipoEstablecimiento(establecimiento.getTipoEstablecimiento());
+
+            dbes.save(establecimientoExistente.get());
+            return ResponseEntity.ok().body(establecimientoExistente.get());
+        }
+    }
+
+    @PreAuthorize("permitAll()")
+    @PostMapping(
+            path = "/{idEstablecimiento}/menus",
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+    public ResponseEntity<ModeloEstablecimiento> createMenu(@PathVariable("idEstablecimiento") String idEstablecimiento, @RequestBody Menu menu) {
+        if (dbes.existsByIdEstablecimiento(idEstablecimiento)) {
+
+            Optional<ModeloEstablecimiento> establecimiento = dbes.findByIdAdministrador(idEstablecimiento);
+            for(int i=0; i<establecimiento.get().getMenus().size(); i++){
+                if (establecimiento.get().getMenus().get(i).getIdMenu().equals(menu.getIdMenu())){
+                    return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                }
+            }
+
+            establecimiento.get().getMenus().add(menu);
+            dbes.save(establecimiento.get());
+
+            return ResponseEntity.ok().body(dbes.findByIdEstablecimiento(idEstablecimiento).get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 

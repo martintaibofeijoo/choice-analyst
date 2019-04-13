@@ -9,9 +9,19 @@ import {
 } from 'reactstrap';
 
 import Form from 'react-bootstrap/Form'
-import Row from "../crearexperimento";
+import {Authentication} from "../authentication";
 
 export default class VerPerfil extends Component {
+    render() {
+        return <Authentication>
+            {
+                auth => <VistaVerPerfil auth={auth}/>
+            }
+        </Authentication>
+    }
+}
+
+class VistaVerPerfil extends Component {
     constructor(props) {
         super(props)
 
@@ -30,6 +40,52 @@ export default class VerPerfil extends Component {
             tipoEstablecimiento: "Restaurante",
             validated: false
         }
+    }
+
+    async componentDidMount() {
+        const postRequest = await fetch(`http://localhost:9000/usuarios/${this.props.auth.user.username}`, {
+            method: "GET",
+            //'Authorization': this.props.auth.token,
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        const postResponse = await postRequest.json()
+
+        this.setState(prev => ({
+            ...prev,
+            username: postResponse.username,
+            password: postResponse.password,
+            correoElectronico: postResponse.correoElectronico,
+            telefonoContacto: postResponse.telefonoContacto,
+            nombre: postResponse.nombre,
+            apellidos: postResponse.apellidos,
+            nombreEstablecimiento: postResponse.nombreEstablecimiento,
+            localizacionEstablecimiento: postResponse.localizacionEstablecimiento,
+            tipoEstablecimiento: postResponse.tipoEstablecimiento
+
+        }))
+
+        const postRequest1 = await fetch(`http://localhost:9000/establecimientos/${postResponse.idEstablecimiento}`, {
+            method: "GET",
+            //'Authorization': this.props.auth.token,
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        const postResponse1 = await postRequest1.json()
+
+        this.setState(prev => ({
+            ...prev,
+            nombreEstablecimiento: postResponse1.nombreEstablecimiento,
+            localizacionEstablecimiento: postResponse1.localizacionEstablecimiento,
+            tipoEstablecimiento: postResponse1.tipoEstablecimiento
+
+        }))
+
+
     }
 
     onUsernameChange = event => {
@@ -80,24 +136,19 @@ export default class VerPerfil extends Component {
     onRegisterButtonClick = (event) => {
         this.setState({validated: true});
         const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-        } else {
-            this.doRegister(this.state.username, this.state.password, this.state.correoElectronico, this.state.telefonoContacto, this.state.nombre, this.state.apellidos, this.state.nombreEstablecimiento, this.state.tipoEstablecimiento, this.state.localizacionEstablecimiento)
-            event.preventDefault();
-            event.stopPropagation();
+        if (form.checkValidity() === true) {
+            this.doModificarUsuario(this.state.username, this.state.password, this.state.correoElectronico, this.state.telefonoContacto, this.state.nombre, this.state.apellidos, this.state.nombreEstablecimiento, this.state.tipoEstablecimiento, this.state.localizacionEstablecimiento)
         }
     }
 
-    doRegister = (username, password, correoElectronico, telefonoContacto, nombre, apellidos, nombreEstablecimiento, tipoEstablecimiento, localizacionEstablecimiento) => {
+    doModificarUsuario = (username, password, correoElectronico, telefonoContacto, nombre, apellidos, nombreEstablecimiento, tipoEstablecimiento, localizacionEstablecimiento) => {
         let idEstablecimiento = nombreEstablecimiento.replace(/ /g, "-");
         console.table(idEstablecimiento)
         idEstablecimiento = idEstablecimiento.toLowerCase()
         idEstablecimiento = idEstablecimiento.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 
-        fetch("http://localhost:9000/establecimientos", {
-            method: 'POST',
+        fetch(`http://localhost:9000/establecimientos/${idEstablecimiento}`, {
+            method: 'PUT',
             headers: {'Accept': 'application/json;charset=UTF-8', 'Content-Type': 'application/json;charset=UTF-8'},
             body: JSON.stringify({
                 idEstablecimiento: idEstablecimiento,
@@ -110,10 +161,8 @@ export default class VerPerfil extends Component {
             .then(response => {
                 const codigo = response.status;
                 if (codigo === 201) {
-                    console.table(response)
-                    debugger
-                    fetch("http://localhost:9000/usuarios", {
-                        method: 'POST',
+                    fetch(`http://localhost:9000/usuarios/${this.state.idAdministrador}`, {
+                        method: 'PUT',
                         headers: {
                             'Accept': 'application/json;charset=UTF-8',
                             'Content-Type': 'application/json;charset=UTF-8'
@@ -142,7 +191,7 @@ export default class VerPerfil extends Component {
                 } else if (codigo === 409) {
                     this.setState(prev => ({
                         ...prev,
-                        alert: {status: "Error", message: "Establecimiento ya existente"}
+                        alert: {status: "Error", message: "Establecimiento o Usuario ya existente!"}
                     }))
                 }
             })
@@ -164,7 +213,7 @@ export default class VerPerfil extends Component {
                             <Form.Row>
                                 <Form.Group as={Col}>
                                     <Label>Usuario</Label>
-                                    <Form.Control value={this.state.username} onChange={this.onUsernameChange}
+                                    <Form.Control size={"sm"} value={this.state.username} onChange={this.onUsernameChange}
                                                   pattern="[a-z][a-z0-9-_\.]{4,20}" required/>
                                     <Form.Control.Feedback type="invalid">
                                         El usuario debe contener: 4-20 carácteres (sin mayúsculas).
@@ -172,7 +221,7 @@ export default class VerPerfil extends Component {
                                 </Form.Group>
                                 <Form.Group as={Col}>
                                     <Label>Contraseña</Label>
-                                    <Form.Control type="password" value={this.state.password}
+                                    <Form.Control size={"sm"} type="password" value={this.state.password}
                                                   onChange={this.onPasswordChange}
                                                   pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*" required/>
                                     <Form.Control.Feedback type="invalid">
@@ -183,7 +232,7 @@ export default class VerPerfil extends Component {
                             <Form.Row>
                                 <Form.Group as={Col}>
                                     <Label>Correo Electrónico</Label>
-                                    <Form.Control type="email" value={this.state.correoElectronico}
+                                    <Form.Control size={"sm"} type="email" value={this.state.correoElectronico}
                                                   onChange={this.onCorreoElectronicoChange} required/>
                                     <Form.Control.Feedback type="invalid">
                                         El correo electrónico debe ser de la forma: example@example.dominio.
@@ -191,7 +240,7 @@ export default class VerPerfil extends Component {
                                 </Form.Group>
                                 <Form.Group as={Col}>
                                     <Label>Número de Teléfono</Label>
-                                    <Form.Control value={this.state.telefonoContacto}
+                                    <Form.Control size={"sm"} value={this.state.telefonoContacto}
                                                   pattern="(\+34|0034|34)?[6|7|8|9][0-9]{8}"
                                                   onChange={this.onTelefonoContactoChange} required/>
                                     <Form.Control.Feedback type="invalid">
@@ -202,7 +251,7 @@ export default class VerPerfil extends Component {
                             <Form.Row>
                                 <Form.Group as={Col}>
                                     <Label>Nombre</Label>
-                                    <Form.Control value={this.state.nombre}
+                                    <Form.Control size={"sm"} value={this.state.nombre}
 
                                                   onChange={this.onNombreChange}
                                                   required/>
@@ -212,7 +261,7 @@ export default class VerPerfil extends Component {
                                 </Form.Group>
                                 <Form.Group as={Col}>
                                     <Label>Apellidos</Label>
-                                    <Form.Control value={this.state.apellidos}
+                                    <Form.Control size={"sm"} value={this.state.apellidos}
 
                                                   onChange={this.onApellidosChange} required/>
                                     <Form.Control.Feedback type="invalid">
@@ -223,7 +272,7 @@ export default class VerPerfil extends Component {
                             <Form.Row>
                                 <Form.Group as={Col}>
                                     <Label>Nombre Establecimiento</Label>
-                                    <Form.Control value={this.state.nombreEstablecimiento}
+                                    <Form.Control size={"sm"} value={this.state.nombreEstablecimiento}
                                                   pattern="[a-z0-9A-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-z0-9A-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-Z0-9À-ÿ\u00f1\u00d1]+"
                                                   onChange={this.onNombreEstablecimientoChange} required/>
                                     <Form.Control.Feedback type="invalid">
@@ -232,7 +281,7 @@ export default class VerPerfil extends Component {
                                 </Form.Group>
                                 <Form.Group as={Col}>
                                     <Label>Tipo Establecimiento</Label>
-                                    <Form.Control as="select" value={this.state.tipoEstablecimiento}
+                                    <Form.Control style={{fontSize: 'x-small', width:'100%', height:'47%'}} size={"sm"} as="select" value={this.state.tipoEstablecimiento}
                                                   onChange={this.onTipoEstablecimientoChange} required>
                                         <option>Restaurante</option>
                                         <option>Cafeteria</option>
@@ -246,7 +295,7 @@ export default class VerPerfil extends Component {
 
                             <Form.Group>
                                 <Label>Localización Establecimiento</Label>
-                                <Form.Control value={this.state.localizacionEstablecimiento}
+                                <Form.Control size={"sm"} value={this.state.localizacionEstablecimiento}
 
                                               onChange={this.onLocalizacionEstablecimientoChange} required/>
                                 <Form.Control.Feedback type="invalid">
@@ -263,7 +312,7 @@ export default class VerPerfil extends Component {
                             >
                                 {this.state.alert.message}
                             </Alert>
-                            <Button className="botonSuccess" size= "sm" type={"submit"} block
+                            <Button className="botonSuccess" size="sm" type={"submit"} block
                             >Modificar Perfil</Button>
                         </Form>
                     </CardBody>

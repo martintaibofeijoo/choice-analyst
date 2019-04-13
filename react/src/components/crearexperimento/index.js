@@ -6,13 +6,14 @@ import {
     CardHeader,
     CardTitle,
     CardBody,
-    Input, Label,
+    Input
 } from 'reactstrap';
 import Button from 'react-bootstrap/Button'
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import {Authentication} from "../authentication";
+import {Redirect} from "react-router-dom";
 
 
 export class CrearExperimento extends Component {
@@ -29,6 +30,7 @@ class VistaCrearExperimento extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            ok: false,
             idAdministrador: this.props.auth.user.username,
             idEstablecimiento: "",
             nombreExperimento: "",
@@ -222,98 +224,105 @@ class VistaCrearExperimento extends Component {
                 objetivos: objetivos,
             })
         })
-        debugger
         const codigo = response.status
 
-        if (codigo === 200) {
-            this.props.history.push(`/experimentos`)
+        if (codigo === 201) {
+            this.setState(prev => ({
+                ...prev,
+                ok: true
+            }))
         }
 
     }
 
     render() {
-        return (
-            <Container>
-                <Row>
-                    <Card className="cards" color="primary">
-                        <CardHeader style={{marginBottom: '-30px'}}>
-                            <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Nombre Experimento</CardTitle>
-                        </CardHeader>
-                        <CardBody>
-                            <Card className="cards" color="primary">
-                                <CardBody>
-                                    <Input className="inputs" size={"sm"} placeholder="Nombre Experimento"
-                                           value={this.state.nombreExperimento}
-                                           onChange={this.onNombreExperimentoChange}/>
-                                </CardBody>
-                            </Card>
-                        </CardBody>
-                    </Card>
-                </Row>
-                <Row>
-                    <Card className="cards" block color="primary">
-                        <CardHeader style={{marginBottom: '-30px'}}>
-                            <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Preguntas</CardTitle>
-                        </CardHeader>
-                        <CardBody>
-                            <ul className="lista">
-                                {this.state.preguntas.map(
-                                    (item, index) =>
-                                        <Pregunta pregunta={item} key={index} identificadorPregunta={index}
-                                                  variables={this.state.variables}
-                                                  onEliminarPregunta={() => this.onEliminarPregunta(index)}
-                                                  onModificarTextoPregunta={this.onModificarTextoPregunta}
-                                                  onModificarVariableAsociadaPregunta={this.onModificarVariableAsociadaPregunta}
-                                                  onModificarOpcionesPregunta={this.onModificarOpcionesPregunta}
-                                                  onAnadirOpcionPregunta={this.onAnadirOpcionPregunta}
-                                                  onEliminarOpcionPregunta={this.onEliminarOpcionPregunta}
-                                        />
-                                )
-                                }
-                            </ul>
-                            <div>
-                                <Button size={"sm"} className={"botonSuccess"} style={{marginBottom: '20px'}} block
-                                        onClick={this.onAnadirPregunta}>
-                                    Añadir Pregunta
-                                </Button>
-                            </div>
-                        </CardBody>
-                    </Card>
-                </Row>
-                <Row>
-                    <Card className="cards" block color="primary">
-                        <CardHeader style={{marginBottom: '-30px'}}>
-                            <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Objetivos</CardTitle>
-                        </CardHeader>
-                        <CardBody>
-                            <Card className="cards" color="primary">
-                                <CardBody style={{marginBottom: '-50px'}}>
-                                    <ul className="lista">
-                                        {this.state.objetivos.map(
-                                            (item, index) =>
-                                                <Objetivo objetivo={item} key={index} identificadorObjetivo={index}
-                                                          onEliminarObjetivo={() => this.onEliminarObjetivo(index)}
-                                                          onModificarObjetivo={this.onModificarObjetivo}/>
-                                        )
-                                        }
-                                    </ul>
-                                </CardBody>
-                                <CardFooter>
-                                    <Button size={"sm"} block className={"botonSuccess"} onClick={this.onAnadirObjetivo}>
-                                        Añadir Objetivo
+        if (this.state.ok)
+            return <Redirect to="/experimentos"/>;
+        else
+            return (
+                <Container>
+                    <Row>
+                        <Card block className="cards" color="primary">
+                            <CardHeader style={{marginBottom: '-30px'}}>
+                                <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Nombre
+                                    Experimento</CardTitle>
+                            </CardHeader>
+                            <CardBody>
+                                <Card block className="cards" color="primary">
+                                    <CardBody>
+                                        <Input className="inputs" size={"sm"} placeholder="Nombre Experimento"
+                                               value={this.state.nombreExperimento}
+                                               onChange={this.onNombreExperimentoChange}/>
+                                    </CardBody>
+                                </Card>
+                            </CardBody>
+                        </Card>
+                    </Row>
+                    <Row>
+                        <Card className="cards" block color="primary">
+                            <CardHeader style={{marginBottom: '-30px'}}>
+                                <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Objetivos</CardTitle>
+                            </CardHeader>
+                            <CardBody>
+                                <Card className="cards" color="primary">
+                                    <CardBody style={{marginBottom: '-50px'}}>
+                                        <ul className="lista">
+                                            {this.state.objetivos.map(
+                                                (item, index) =>
+                                                    <Objetivo objetivo={item} key={index} identificadorObjetivo={index}
+                                                              onEliminarObjetivo={() => this.onEliminarObjetivo(index)}
+                                                              onModificarObjetivo={this.onModificarObjetivo}/>
+                                            )
+                                            }
+                                        </ul>
+                                    </CardBody>
+                                    <CardFooter>
+                                        <Button size={"sm"} block className={"botonSuccess"}
+                                                onClick={this.onAnadirObjetivo}>
+                                            Añadir Objetivo
+                                        </Button>
+                                    </CardFooter>
+                                </Card>
+                            </CardBody>
+                        </Card>
+                    </Row>
+                    <Row>
+                        <Card className="cards" block color="primary">
+                            <CardHeader style={{marginBottom: '-30px'}}>
+                                <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Preguntas</CardTitle>
+                            </CardHeader>
+                            <CardBody>
+                                <ul className="lista">
+                                    {this.state.preguntas.map(
+                                        (item, index) =>
+                                            <Pregunta pregunta={item} key={index} identificadorPregunta={index}
+                                                      variables={this.state.variables}
+                                                      onEliminarPregunta={() => this.onEliminarPregunta(index)}
+                                                      onModificarTextoPregunta={this.onModificarTextoPregunta}
+                                                      onModificarVariableAsociadaPregunta={this.onModificarVariableAsociadaPregunta}
+                                                      onModificarOpcionesPregunta={this.onModificarOpcionesPregunta}
+                                                      onAnadirOpcionPregunta={this.onAnadirOpcionPregunta}
+                                                      onEliminarOpcionPregunta={this.onEliminarOpcionPregunta}
+                                            />
+                                    )
+                                    }
+                                </ul>
+                                <div>
+                                    <Button size={"sm"} className={"botonSuccess"} style={{marginBottom: '20px'}} block
+                                            onClick={this.onAnadirPregunta}>
+                                        Añadir Pregunta
                                     </Button>
-                                </CardFooter>
-                            </Card>
-                        </CardBody>
-                    </Card>
-                </Row>
-                <Row>
-                    <Button size={"sm"} style={{marginBottom: '50px'}} block className={"botonSuccess"}
-                            onClick={this.onCrearExperimento}>Crear
-                        Experimento</Button>
-                </Row>
-            </Container>
-        );
+                                </div>
+                            </CardBody>
+                        </Card>
+                    </Row>
+                    <Row>
+                        <Button size={"sm"} style={{marginBottom: '50px'}} block className={"botonSuccess"}
+                                onClick={this.onCrearExperimento}>Crear
+                            Experimento</Button>
+                    </Row>
+                </Container>
+            );
     }
 }
 
@@ -410,9 +419,10 @@ class Pregunta extends Component {
                             </Col>
                         </Form.Row>
                     </Form>
-                    <Card className="cards" style={{marginTop: '20px', marginBottom: '-10px'}} className="cards" color="primary">
+                    <Card className="cards" style={{marginTop: '20px', marginBottom: '-10px'}} className="cards"
+                          color="primary">
 
-                        <CardHeader style={{marginBottom: '-20px'}}>
+                        <CardHeader style={{marginBottom: '-30px'}}>
                             <CardTitle>Opciones</CardTitle>
                         </CardHeader>
                         <CardBody style={{marginBottom: '-50px'}}>
@@ -515,7 +525,8 @@ class Objetivo extends Component {
                                        onChange={this.onTextoObjetivoChange}/>
                             </Col>
                             <Col sm={3}>
-                                <Button block size={"sm"} style={{height:"29px"}} className={"botonDanger"} onClick={this.onEliminarObjetivo}>
+                                <Button block size={"sm"} style={{height: "29px"}} className={"botonDanger"}
+                                        onClick={this.onEliminarObjetivo}>
                                     Eliminar Objetivo
                                 </Button>
                             </Col>

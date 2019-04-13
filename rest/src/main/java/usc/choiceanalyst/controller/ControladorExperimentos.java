@@ -71,5 +71,15 @@ public class ControladorExperimentos {
         }
     }
 
+    @PreAuthorize("permitAll()")
+    @DeleteMapping(path = "/{idExperimento}")
+    public ResponseEntity deleteExperimento(@PathVariable("idExperimento") String idExperimento) {
+        if (!dbex.existsByIdExperimento(idExperimento)) {
+            return ResponseEntity.notFound().build();
+        } else {
+            dbex.deleteByIdExperimento(idExperimento);
+            return ResponseEntity.noContent().build();
+        }
+    }
 
 }

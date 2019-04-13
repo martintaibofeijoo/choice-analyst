@@ -33,6 +33,7 @@ public class ControladorUsuarios {
     private RepositorioEstablecimiento dbes;
     private PasswordEncoder passwordEncoder;
 
+
     @Autowired
     public ControladorUsuarios(RepositorioUsuario dbu, RepositorioEstablecimiento dbes, PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -49,6 +50,7 @@ public class ControladorUsuarios {
     public ResponseEntity<ModeloUsuario> getUser(@PathVariable("username") String username) {
         if (dbu.existsByUsername(username)) {
             return ResponseEntity.ok().body(dbu.findByUsername(username).get());
+
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -108,49 +110,26 @@ public class ControladorUsuarios {
         }
     }
 
-    @PreAuthorize("(hasRole('CLIENTE') and principal == #username) or hasRole('ADMINISTRADOR')")
+    @PreAuthorize("permitAll()")
     @PutMapping(
             path = "/{username}",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
 
-    public ResponseEntity modifyUser(@RequestBody ModeloUsuario data, @PathVariable("username") String username) {
+    public ResponseEntity modifyUser(@RequestBody ModeloUsuario usuario, @PathVariable("username") String username) {
         if (!dbu.existsByUsername(username)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
-            Optional<ModeloUsuario> user = dbu.findByUsername(username);
-            if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals(username)) {
-                if (data.getCorreoElectronico() != null) {
-                    user.get().setCorreoElectronico(data.getCorreoElectronico());
-                }
-                if (data.getPassword() != null) {
-                    user.get().setPassword(passwordEncoder.encode(data.getPassword()));
-                }
-                if (data.getUsername() != null) {
-                    user.get().setUsername(data.getUsername());
-                }
+            Optional<ModeloUsuario> usuarioExistente = dbu.findByUsername(username);
+            usuarioExistente.get().setCorreoElectronico(usuario.getCorreoElectronico());
+            usuarioExistente.get().setPassword(passwordEncoder.encode(usuario.getPassword()));
+            usuarioExistente.get().setPassword(passwordEncoder.encode(usuario.getPassword()));
 
-            }
+            usuarioExistente.get().setUsername(usuario.getUsername());
 
-            /*if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().map(x -> x.getAuthority()).collect(Collectors.toList()).contains("ROLE_ADMIN")) {
-                if (data.getRoles() != null) {
-                    user.get().setRoles(data.getRoles());
-                }
-
-                if (data.getActivo() == true || data.getActivo()==false) {
-                    user.get().setActivo(data.getActivo());
-                }
-            }
-
-            if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().map(x -> x.getAuthority()).collect(Collectors.toList()).contains("ROLE_MODERATOR")) {
-                if (data.getActivo() == true || data.getActivo()==false) {
-                    user.get().setActivo(data.getActivo());
-                }
-            }*/
-
-            dbu.save(user.get());
-            return ResponseEntity.ok().body(user.get().setPassword("*******"));
+            dbu.save(usuarioExistente.get());
+            return ResponseEntity.ok().body(usuarioExistente.get().setPassword("*******"));
         }
     }
 
