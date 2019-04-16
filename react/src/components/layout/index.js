@@ -8,7 +8,6 @@ import {Menus} from "../menus";
 import {Experimentos} from "../experimentos";
 import {CrearExperimento} from "../crearexperimento";
 import VerPerfil from "../verPerfil";
-import {CrearMenu} from "../crearmenu";
 
 export default class Layout extends Component {
     render() {
@@ -20,7 +19,7 @@ export default class Layout extends Component {
                     <Route path="/inicio" component={Inicio}/>
                     <Route path="/logout" component={Logout}/>
                     <Route path="/verPerfil" component={VerPerfil}/>
-                    <Route path="/menus" component={CrearMenu}/>
+                    <Route path="/menus" component={Menus}/>
                     <Route path="/crearExperimento" component={CrearExperimento}/>
 
                     <Redirect from="/" to="/inicio"/>

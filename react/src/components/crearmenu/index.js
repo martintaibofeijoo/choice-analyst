@@ -31,6 +31,7 @@ class VistaCrearMenu extends Component {
         super(props);
         this.state = {
             nombreMenu: "",
+            idAdministrador: this.props.auth.user.username,
             primerosPlatos: [
                 {
                     nombrePlato: "",
@@ -334,17 +335,16 @@ class VistaCrearMenu extends Component {
 
 
     onCrearMenu = () => {
-        this.doCrearMenu(this.state.nombreMenu, this.state.primerosPlatos, this.state.segundosPlatos, this.state.postres)
+        this.doCrearMenu(this.state.nombreMenu, this.state.primerosPlatos, this.state.segundosPlatos, this.state.postres, this.state.idAdministrador)
     }
 
-    doCrearMenu = async (nombreMenu, primerosPlatos, segundosPlatos, postres) => {
+    doCrearMenu = async (nombreMenu, primerosPlatos, segundosPlatos, postres, idAdministrador) => {
         let platos = primerosPlatos.concat(segundosPlatos)
         platos= platos.concat(postres)
         let idMenu = nombreMenu.replace(/ /g, "-");
         idMenu = idMenu.toLowerCase()
         idMenu = idMenu.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-
-        const response = await fetch(`http://localhost:9000/establecimientos/${this.props.auth.username}/menus`, {
+        const response = await fetch(`http://localhost:9000/establecimientos/${idAdministrador}/menus`, {
             method: 'POST',
             headers: {
                 //'Authorization': this.props.token,
@@ -363,6 +363,7 @@ class VistaCrearMenu extends Component {
 
         console.log(codigo)
         console.table(platos)
+        console.table(this.props.auth)
         debugger
 
     }

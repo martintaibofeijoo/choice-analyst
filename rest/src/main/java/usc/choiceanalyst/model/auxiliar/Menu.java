@@ -6,7 +6,7 @@ public class Menu {
     private String idMenu;
     private String nombreMenu;
     private String precio;
-    private String fecha;
+    private List<String> fecha;
     private List<Plato> platos;
 
     public String getIdMenu() {
@@ -25,11 +25,11 @@ public class Menu {
         this.precio = precio;
     }
 
-    public String getFecha() {
+    public List<String> getFecha() {
         return fecha;
     }
 
-    public void setFecha(String fecha) {
+    public void setFecha(List<String> fecha) {
         this.fecha = fecha;
     }
 

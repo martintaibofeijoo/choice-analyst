@@ -15,8 +15,6 @@ import {Authentication} from "../authentication";
 import moment from "moment";
 import Container from "react-bootstrap/es/Container";
 import Row from "react-bootstrap/Row";
-import Carousel from "react-bootstrap/Carousel";
-
 
 export class Menus extends Component {
     render() {

@@ -15,7 +15,9 @@ import usc.choiceanalyst.repository.RepositorioEstablecimiento;
 import usc.choiceanalyst.repository.RepositorioUsuario;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -112,19 +114,26 @@ public class ControladorEstablecimiento {
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
     public ResponseEntity<ModeloEstablecimiento> createMenu(@PathVariable("idEstablecimiento") String idEstablecimiento, @RequestBody Menu menu) {
-        if (dbes.existsByIdEstablecimiento(idEstablecimiento)) {
+        if (dbu.existsByUsername(idEstablecimiento)) {
 
             Optional<ModeloEstablecimiento> establecimiento = dbes.findByIdAdministrador(idEstablecimiento);
-            for(int i=0; i<establecimiento.get().getMenus().size(); i++){
-                if (establecimiento.get().getMenus().get(i).getIdMenu().equals(menu.getIdMenu())){
-                    return ResponseEntity.status(HttpStatus.CONFLICT).build();
+
+            if ( establecimiento.get().getMenus() != null){
+                for(int i=0; i<establecimiento.get().getMenus().size(); i++){
+                    if (establecimiento.get().getMenus().get(i).getIdMenu().equals(menu.getIdMenu())){
+                        return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                    }
                 }
+                establecimiento.get().getMenus().add(menu);
+            }else{
+                List<Menu> menus = new ArrayList<Menu>();
+                menus.add(menu);
+                establecimiento.get().setMenus(menus);
             }
 
-            establecimiento.get().getMenus().add(menu);
             dbes.save(establecimiento.get());
 
-            return ResponseEntity.ok().body(dbes.findByIdEstablecimiento(idEstablecimiento).get());
+            return ResponseEntity.ok().body(dbes.findByIdAdministrador(idEstablecimiento).get());
         } else {
             return ResponseEntity.notFound().build();
         }
