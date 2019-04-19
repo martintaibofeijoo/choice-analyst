@@ -39,7 +39,6 @@ li.lista {
 .botonSuccess {
     background-color: rgb(42, 102, 54);
     color: rgb(255, 255, 255);
-    height:29px;
 }
 
 .botonSuccess:hover {

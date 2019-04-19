@@ -13,6 +13,7 @@ import Button from 'react-bootstrap/Button'
 import Form from "react-bootstrap/Form";
 import {Authentication} from "../authentication";
 import Container from "react-bootstrap/Container";
+import MultipleDatePicker from 'react-multiple-datepicker'
 
 
 export class CrearMenu extends Component {
@@ -32,6 +33,7 @@ class VistaCrearMenu extends Component {
         this.state = {
             nombreMenu: "",
             idAdministrador: this.props.auth.user.username,
+            fechas: "",
             primerosPlatos: [
                 {
                     nombrePlato: "",
@@ -340,7 +342,7 @@ class VistaCrearMenu extends Component {
 
     doCrearMenu = async (nombreMenu, primerosPlatos, segundosPlatos, postres, idAdministrador) => {
         let platos = primerosPlatos.concat(segundosPlatos)
-        platos= platos.concat(postres)
+        platos = platos.concat(postres)
         let idMenu = nombreMenu.replace(/ /g, "-");
         idMenu = idMenu.toLowerCase()
         idMenu = idMenu.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
@@ -383,6 +385,23 @@ class VistaCrearMenu extends Component {
                                     <Input size={"sm"} className="inputs" size={"sm"} placeholder="Nombre Menu"
                                            value={this.state.nombreMenu}
                                            onChange={this.onNombreMenuChange}/>
+                                </CardBody>
+                            </Card>
+                        </CardBody>
+                    </Card>
+                </Row>
+                <Row>
+                    <Card block className="cards" color="primary">
+                        <CardHeader style={{marginBottom: '-30px'}}>
+                            <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Fechas Menu</CardTitle>
+                        </CardHeader>
+                        <CardBody>
+                            <Card block className="cards" color="primary">
+                                <CardBody>
+                                    <MultipleDatePicker
+                                        lenguage={'es'}
+                                        onSubmit={dates => console.log('selected date', dates)}
+                                    />
                                 </CardBody>
                             </Card>
                         </CardBody>
@@ -479,7 +498,7 @@ class VistaCrearMenu extends Component {
                 </Row>
 
                 <Row>
-                    <Button size={"sm"} style={{marginBottom: '50px'}} block className={"botonSuccess"}
+                    <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonSuccess"}
                             onClick={this.onCrearMenu}>Crear
                         Menú</Button>
                 </Row>

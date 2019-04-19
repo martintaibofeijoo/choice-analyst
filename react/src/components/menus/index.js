@@ -15,6 +15,7 @@ import {Authentication} from "../authentication";
 import moment from "moment";
 import Container from "react-bootstrap/es/Container";
 import Row from "react-bootstrap/Row";
+import {Link} from "react-router-dom";
 
 export class Menus extends Component {
     render() {
@@ -82,6 +83,53 @@ class VistaMenus extends Component {
                 </Col>
                 <Col xs={7}>
 
+                    {this.state.menus.map(
+                        (item, index) =>
+                            <Card className={"cards"} block color="primary">
+                                <CardHeader style={{marginBottom: '-30px'}}>
+                                    <CardTitle
+                                        style={{
+                                            fontSize: '20px',
+                                            textAlign: 'center'
+                                        }}>Menu {item.nombreMenu}</CardTitle>
+                                </CardHeader>
+                                <CardBody style={{marginBottom: '-30px'}}>
+                                    <Card className={"cards"} block color="primary">
+                                        <CardHeader style={{marginBottom: '-30px'}}>
+                                            <CardTitle
+                                                style={{
+                                                    fontSize: '20px',
+                                                    textAlign: 'center'
+                                                }}>Menu {item.nombreExperimento}</CardTitle>
+                                        </CardHeader>
+                                        <CardBody style={{marginBottom: '-30px'}}>
+                                        </CardBody>
+                                    </Card>
+                                </CardBody>
+                                <CardFooter>
+                                    <Row>
+                                        <Col>
+                                            <Button size="sm" block className={"botonSuccess"} tag={Link}
+                                                    to={`/experimentos/verExperimento/${item.idExperimento}`}>Ver en
+                                                Detalle</Button>
+                                        </Col>
+                                        <Col>
+                                            <Button size="sm" block className={"botonWarning"} tag={Link}
+                                                    to={`/experimentos/modificarExperimento/${item.idExperimento}`}>Modificar</Button>
+                                        </Col>
+                                        <Col>
+                                            <Button size={"sm"} block className={"botonDanger"}
+                                                    onClick={() => this.setState({
+                                                        mostrarVistaConfirmacion: true,
+                                                        nombreExperimentoEliminar: item.nombreExperimento,
+                                                        idExperimentoEliminar: item.idExperimento
+                                                    })}>Eliminar</Button>
+                                        </Col>
+                                    </Row>
+                                </CardFooter>
+                            </Card>
+                    )
+                    }
                 </Col>
             </Row>
         </Container>
