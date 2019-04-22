@@ -14,6 +14,8 @@ import Form from "react-bootstrap/Form";
 import {Authentication} from "../authentication";
 import Container from "react-bootstrap/Container";
 import MultipleDatePicker from 'react-multiple-datepicker'
+import moment from "moment";
+import {Redirect, Route} from "react-router-dom";
 
 
 export class CrearMenu extends Component {
@@ -26,11 +28,11 @@ export class CrearMenu extends Component {
     }
 }
 
-
 class VistaCrearMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            ok: false,
             nombreMenu: "",
             idAdministrador: this.props.auth.user.username,
             fechas: "",
@@ -335,12 +337,16 @@ class VistaCrearMenu extends Component {
         this.setState({postres: nuevosPostres});
     }
 
-
     onCrearMenu = () => {
-        this.doCrearMenu(this.state.nombreMenu, this.state.primerosPlatos, this.state.segundosPlatos, this.state.postres, this.state.idAdministrador)
+        this.doCrearMenu(this.state.nombreMenu, this.state.primerosPlatos, this.state.segundosPlatos, this.state.postres, this.state.idAdministrador, this.state.fechasMenu)
     }
 
-    doCrearMenu = async (nombreMenu, primerosPlatos, segundosPlatos, postres, idAdministrador) => {
+    doCrearMenu = async (nombreMenu, primerosPlatos, segundosPlatos, postres, idAdministrador, fechasMenu) => {
+        console.table(fechasMenu)
+        let fechasCambiadas = []
+        for (let i = 0; i < fechasMenu.length; i++) {
+            fechasCambiadas[i] = moment(fechasMenu[i]).format('DD-MM-YYYY')
+        }
         let platos = primerosPlatos.concat(segundosPlatos)
         platos = platos.concat(postres)
         let idMenu = nombreMenu.replace(/ /g, "-");
@@ -357,154 +363,170 @@ class VistaCrearMenu extends Component {
             body: JSON.stringify({
                 idMenu: idMenu,
                 nombreMenu: nombreMenu,
+                fechasMenu: fechasCambiadas,
                 platos: platos
             })
         })
         const codigo = response.status
 
-
-        console.log(codigo)
-        console.table(platos)
-        console.table(this.props.auth)
-        debugger
-
+        if (codigo === 200) {
+            this.setState(prev => ({
+                ...prev,
+                ok: true
+            }))
+        }
     }
 
     render() {
-        return (
-            <Container>
-                <Row>
-                    <Card block className="cards" color="primary">
-                        <CardHeader style={{marginBottom: '-30px'}}>
-                            <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Nombre
-                                Menu</CardTitle>
-                        </CardHeader>
-                        <CardBody>
-                            <Card block className="cards" color="primary">
-                                <CardBody>
-                                    <Input size={"sm"} className="inputs" size={"sm"} placeholder="Nombre Menu"
-                                           value={this.state.nombreMenu}
-                                           onChange={this.onNombreMenuChange}/>
-                                </CardBody>
-                            </Card>
-                        </CardBody>
-                    </Card>
-                </Row>
-                <Row>
-                    <Card block className="cards" color="primary">
-                        <CardHeader style={{marginBottom: '-30px'}}>
-                            <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Fechas Menu</CardTitle>
-                        </CardHeader>
-                        <CardBody>
-                            <Card block className="cards" color="primary">
-                                <CardBody>
-                                    <MultipleDatePicker
-                                        lenguage={'es'}
-                                        onSubmit={dates => console.log('selected date', dates)}
-                                    />
-                                </CardBody>
-                            </Card>
-                        </CardBody>
-                    </Card>
-                </Row>
-                <Row>
-                    <Card className="cards" block color="primary">
-                        <CardHeader style={{marginBottom: '-30px'}}>
-                            <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Primeros Platos</CardTitle>
-                        </CardHeader>
-                        <CardBody>
-                            <ul className="lista">
-                                {this.state.primerosPlatos.map(
-                                    (item, index) =>
-                                        <Plato plato={item} key={index} identificadorPlato={index}
-                                               onEliminarPlato={() => this.onEliminarPrimerPlato(index)}
-                                               onModificarNombrePlato={this.onModificarNombrePrimerPlato}
-                                               onModificarPrecioPlato={this.onModificarPrecioPrimerPlato}
-                                               onModificarIngredientesPlato={this.onModificarIngredientesPrimerPlato}
-                                               onAnadirIngredientePlato={this.onAnadirIngredientePrimerPlato}
-                                               onEliminarIngredientePlato={this.onEliminarIngredientePrimerPlato}
+        if (this.state.ok)
+            return <Redirect to="/experimentos"/>;
+        else
+            return (
+                <Container>
+                    <Row>
+                        <Card block className="cards" color="primary">
+                            <CardHeader style={{marginBottom: '-30px'}}>
+                                <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Nombre
+                                    Menu</CardTitle>
+                            </CardHeader>
+                            <CardBody>
+                                <Card block className="cards" color="primary">
+                                    <CardBody>
+                                        <Input size={"sm"} className="inputs" size={"sm"} placeholder="Nombre Menu"
+                                               value={this.state.nombreMenu}
+                                               onChange={this.onNombreMenuChange}/>
+                                    </CardBody>
+                                </Card>
+                            </CardBody>
+                        </Card>
+                    </Row>
+                    <Row>
+                        <Card block className="cards" color="primary">
+                            <CardHeader style={{marginBottom: '-30px'}}>
+                                <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Fechas Menu</CardTitle>
+                            </CardHeader>
+                            <CardBody>
+                                <Card block className="cards" color="primary">
+                                    <CardBody>
+                                        <MultipleDatePicker className={'datepicker'}
+                                                            size={'lg'}
+                                                            regional={'es'}
+
+                                                            onSubmit={dates => this.setState({fechasMenu: dates})}
                                         />
-                                )
-                                }
-                            </ul>
-                            <div>
-                                <Button size={"sm"} style={{marginBottom: '20px'}} block className={"botonSuccess"}
-                                        onClick={this.onAnadirPrimerPlato}>
-                                    Añadir Primer Plato
-                                </Button>
-                            </div>
-                        </CardBody>
-                    </Card>
-                </Row>
+                                    </CardBody>
+                                </Card>
+                            </CardBody>
+                        </Card>
+                    </Row>
+                    <Row>
+                        <Card className="cards" block color="primary">
+                            <CardHeader style={{marginBottom: '-30px'}}>
+                                <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Primeros Platos</CardTitle>
+                            </CardHeader>
+                            <CardBody style={{marginBottom: '-25px'}}>
+                                <ul className="lista">
+                                    {this.state.primerosPlatos.map(
+                                        (item, index) =>
+                                            <Plato plato={item} key={index} identificadorPlato={index}
+                                                   onEliminarPlato={() => this.onEliminarPrimerPlato(index)}
+                                                   onModificarNombrePlato={this.onModificarNombrePrimerPlato}
+                                                   onModificarPrecioPlato={this.onModificarPrecioPrimerPlato}
+                                                   onModificarIngredientesPlato={this.onModificarIngredientesPrimerPlato}
+                                                   onAnadirIngredientePlato={this.onAnadirIngredientePrimerPlato}
+                                                   onEliminarIngredientePlato={this.onEliminarIngredientePrimerPlato}
+                                            />
+                                    )
+                                    }
+                                </ul>
+                                <div>
+                                    <Button size={"sm"} style={{marginBottom: '20px'}} block className={"botonSuccess"}
+                                            onClick={this.onAnadirPrimerPlato}>
+                                        Añadir Primer Plato
+                                    </Button>
+                                </div>
+                            </CardBody>
+                        </Card>
+                    </Row>
 
-                <Row>
-                    <Card className="cards" block color="primary">
-                        <CardHeader style={{marginBottom: '-30px'}}>
-                            <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Segundos Platos</CardTitle>
-                        </CardHeader>
-                        <CardBody>
-                            <ul className="lista">
-                                {this.state.segundosPlatos.map(
-                                    (item, index) =>
-                                        <Plato plato={item} key={index} identificadorPlato={index}
-                                               onEliminarPlato={() => this.onEliminarSegundoPlato(index)}
-                                               onModificarNombrePlato={this.onModificarNombreSegundoPlato}
-                                               onModificarPrecioPlato={this.onModificarPrecioSegundoPlato}
-                                               onModificarIngredientesPlato={this.onModificarIngredientesSegundoPlato}
-                                               onAnadirIngredientePlato={this.onAnadirIngredienteSegundoPlato}
-                                               onEliminarIngredientePlato={this.onEliminarIngredienteSegundoPlato}
-                                        />
-                                )
-                                }
-                            </ul>
-                            <div>
-                                <Button size={"sm"} style={{marginBottom: '20px'}} block className={"botonSuccess"}
-                                        onClick={this.onAnadirSegundoPlato}>
-                                    Añadir Segundo Plato
-                                </Button>
-                            </div>
-                        </CardBody>
-                    </Card>
-                </Row>
+                    <Row>
+                        <Card className="cards" block color="primary">
+                            <CardHeader style={{marginBottom: '-30px'}}>
+                                <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Segundos Platos</CardTitle>
+                            </CardHeader>
+                            <CardBody style={{marginBottom: '-25px'}}>
+                                <ul className="lista">
+                                    {this.state.segundosPlatos.map(
+                                        (item, index) =>
+                                            <Plato plato={item} key={index} identificadorPlato={index}
+                                                   onEliminarPlato={() => this.onEliminarSegundoPlato(index)}
+                                                   onModificarNombrePlato={this.onModificarNombreSegundoPlato}
+                                                   onModificarPrecioPlato={this.onModificarPrecioSegundoPlato}
+                                                   onModificarIngredientesPlato={this.onModificarIngredientesSegundoPlato}
+                                                   onAnadirIngredientePlato={this.onAnadirIngredienteSegundoPlato}
+                                                   onEliminarIngredientePlato={this.onEliminarIngredienteSegundoPlato}
+                                            />
+                                    )
+                                    }
+                                </ul>
+                                <div>
+                                    <Button size={"sm"} style={{marginBottom: '20px'}} block className={"botonSuccess"}
+                                            onClick={this.onAnadirSegundoPlato}>
+                                        Añadir Segundo Plato
+                                    </Button>
+                                </div>
+                            </CardBody>
+                        </Card>
+                    </Row>
 
-                <Row>
-                    <Card className="cards" block color="primary">
-                        <CardHeader style={{marginBottom: '-30px'}}>
-                            <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Postres</CardTitle>
-                        </CardHeader>
-                        <CardBody>
-                            <ul className="lista">
-                                {this.state.postres.map(
-                                    (item, index) =>
-                                        <Plato plato={item} key={index} identificadorPlato={index}
-                                               onEliminarPlato={() => this.onEliminarPostre(index)}
-                                               onModificarNombrePlato={this.onModificarNombrePostre}
-                                               onModificarPrecioPlato={this.onModificarPrecioPostre}
-                                               onModificarIngredientesPlato={this.onModificarIngredientesPostre}
-                                               onAnadirIngredientePlato={this.onAnadirIngredientePostre}
-                                               onEliminarIngredientePlato={this.onEliminarIngredientePostre}
-                                        />
-                                )
-                                }
-                            </ul>
-                            <div>
-                                <Button size={"sm"} style={{marginBottom: '20px'}} block className={"botonSuccess"}
-                                        onClick={this.onAnadirPostre}>
-                                    Añadir Postre
-                                </Button>
-                            </div>
-                        </CardBody>
-                    </Card>
-                </Row>
+                    <Row>
+                        <Card className="cards" block color="primary">
+                            <CardHeader style={{marginBottom: '-30px'}}>
+                                <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Postres</CardTitle>
+                            </CardHeader>
+                            <CardBody style={{marginBottom: '-25px'}}>
+                                <ul className="lista">
+                                    {this.state.postres.map(
+                                        (item, index) =>
+                                            <Plato plato={item} key={index} identificadorPlato={index}
+                                                   onEliminarPlato={() => this.onEliminarPostre(index)}
+                                                   onModificarNombrePlato={this.onModificarNombrePostre}
+                                                   onModificarPrecioPlato={this.onModificarPrecioPostre}
+                                                   onModificarIngredientesPlato={this.onModificarIngredientesPostre}
+                                                   onAnadirIngredientePlato={this.onAnadirIngredientePostre}
+                                                   onEliminarIngredientePlato={this.onEliminarIngredientePostre}
+                                            />
+                                    )
+                                    }
+                                </ul>
+                                <div>
+                                    <Button size={"sm"} style={{marginBottom: '20px'}} block className={"botonSuccess"}
+                                            onClick={this.onAnadirPostre}>
+                                        Añadir Postre
+                                    </Button>
+                                </div>
+                            </CardBody>
+                        </Card>
+                    </Row>
 
-                <Row>
-                    <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonSuccess"}
-                            onClick={this.onCrearMenu}>Crear
-                        Menú</Button>
-                </Row>
+                    <Row>
 
-            </Container>
-        );
+                        <Col style={{paddingLeft: '1px'}} sm={3}>
+                            <Route>{
+                                ({history}) =>
+                                    <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonPrimary"}
+                                            onClick={() => history.goBack()}>Volver</Button>
+                            }</Route>
+                        </Col>
+                        <Col style={{padding: '0px'}} sm={9}>
+                            <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonSuccess"}
+                                    onClick={this.onCrearMenu}>Crear
+                                Menú</Button>
+                        </Col>
+                    </Row>
+
+                </Container>
+            );
     }
 }
 
@@ -593,11 +615,9 @@ class Plato extends Component {
                             </Col>
                         </Form.Row>
                     </Form>
-                    <Card className="cards" style={{marginTop: '20px', marginBottom: '-10px'}} className="cards"
-                          color="primary">
-
+                    <Card className="cards" style={{marginTop: '20px', marginBottom: '-10px'}} color="primary">
                         <CardHeader style={{marginBottom: '-30px'}}>
-                            <CardTitle>Ingredientes</CardTitle>
+                            <CardTitle style={{textAlign: 'center'}}>Ingredientes</CardTitle>
                         </CardHeader>
                         <CardBody style={{marginBottom: '-50px'}}>
                             <ul className="lista">

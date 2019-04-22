@@ -16,17 +16,17 @@ import {Authentication} from "../authentication";
 import {Redirect, Route} from "react-router-dom";
 
 
-export class CrearExperimento extends Component {
+export class ModificarExperimento extends Component {
     render() {
         return <Authentication>
             {
-                auth => <VistaCrearExperimento auth={auth}/>
+                auth => <VistaModificarExperimento auth={auth} idExperimento={this.props.match.params.idExperimento}/>
             }
         </Authentication>
     }
 }
 
-class VistaCrearExperimento extends Component {
+class VistaModificarExperimento extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -34,25 +34,33 @@ class VistaCrearExperimento extends Component {
             idAdministrador: this.props.auth.user.username,
             idEstablecimiento: "",
             nombreExperimento: "",
-            preguntas: [
-                {
-                    textoPregunta: "",
-                    variableAsociada: "",
-                    opciones: [
-                        {
-                            textoOpcion: ""
-                        }
-                    ]
-                }
-            ],
-            objetivos: [
-                {
-                    textoObjetivo: ""
-                }
-            ],
+            preguntas: [],
+            objetivos: [],
             variablesAsignadas: [],
             variables: ["Higiene", "Ruído", "Distancía", "Energía", "Compañía", "Atmósfera", "Calidad de Servicio", "Apariencia", "Temperatura", "Saludable", "Sabroso", "Menu Seleccionado", "Primer Plato", "Segundo Plato", "Postre"]
         }
+    }
+
+    async componentDidMount() {
+        const postRequest = await fetch(`http://localhost:9000/experimentos/verExperimento/${this.props.idExperimento}`, {
+            method: "GET",
+            //'Authorization': this.props.auth.token,
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        const postResponse = await postRequest.json()
+        this.setState(prev => ({
+            ...prev,
+            idExperimento: postResponse.idExperimento,
+            idAdministrador: postResponse.idAdministrador,
+            idEstablecimiento: postResponse.idEstablecimiento,
+            nombreExperimento: postResponse.nombreExperimento,
+            fechaCreacion: postResponse.fechaCreacion,
+            objetivos: postResponse.objetivos,
+            preguntas: postResponse.preguntas
+        }))
     }
 
     onNombreExperimentoChange = (event) => {
@@ -199,17 +207,17 @@ class VistaCrearExperimento extends Component {
         this.setState({preguntas: nuevasPreguntas});
     }
 
-    onCrearExperimento = () => {
-        this.doCrearExperimento(this.state.idAdministrador, this.state.idEstablecimiento, this.state.nombreExperimento, this.state.preguntas, this.state.objetivos)
+    onModificarExperimento = () => {
+        this.doModificarExperimento(this.state.idAdministrador, this.state.idEstablecimiento, this.state.nombreExperimento, this.state.preguntas, this.state.objetivos)
     }
 
-    doCrearExperimento = async (idAdministrador, idEstablecimiento, nombreExperimento, preguntas, objetivos) => {
+    doModificarExperimento = async (idAdministrador, idEstablecimiento, nombreExperimento, preguntas, objetivos) => {
         let idExperimento = nombreExperimento.replace(/ /g, "-");
         idExperimento = idExperimento.toLowerCase()
         idExperimento = idExperimento.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 
-        const response = await fetch(`http://localhost:9000/experimentos/`, {
-            method: 'POST',
+        const response = await fetch(`http://localhost:9000/experimentos/${this.props.idExperimento}`, {
+            method: 'PUT',
             headers: {
                 //'Authorization': this.props.token,
                 'Accept': 'application/json;charset=UTF-8',
@@ -226,9 +234,10 @@ class VistaCrearExperimento extends Component {
         })
         const codigo = response.status
 
-        if (codigo === 201) {
+        if (codigo === 200) {
             this.setState(prev => ({
                 ...prev,
+                idExperimento: idExperimento,
                 ok: true
             }))
         }
@@ -237,7 +246,7 @@ class VistaCrearExperimento extends Component {
 
     render() {
         if (this.state.ok)
-            return <Redirect to="/experimentos"/>;
+            return <Redirect to={`/experimentos/verExperimento/${this.state.idExperimento}`}/>;
         else
             return (
                 <Container>
@@ -263,7 +272,7 @@ class VistaCrearExperimento extends Component {
                             <CardHeader style={{marginBottom: '-30px'}}>
                                 <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Objetivos</CardTitle>
                             </CardHeader>
-                            <CardBody style={{marginBottom: '-25px'}}>
+                            <CardBody>
                                 <Card className="cards" color="primary">
                                     <CardBody style={{marginBottom: '-50px'}}>
                                         <ul className="lista">
@@ -291,7 +300,7 @@ class VistaCrearExperimento extends Component {
                             <CardHeader style={{marginBottom: '-30px'}}>
                                 <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Preguntas</CardTitle>
                             </CardHeader>
-                            <CardBody style={{marginBottom: '-25px'}}>
+                            <CardBody>
                                 <ul className="lista">
                                     {this.state.preguntas.map(
                                         (item, index) =>
@@ -316,18 +325,22 @@ class VistaCrearExperimento extends Component {
                             </CardBody>
                         </Card>
                     </Row>
+
                     <Row>
-                        <Col style={{paddingLeft: '1px'}} sm={3}>
+                        <Col style={{paddingLeft: '1px'}}>
                             <Route>{
                                 ({history}) =>
                                     <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonPrimary"}
                                             onClick={() => history.goBack()}>Volver</Button>
                             }</Route>
                         </Col>
-                        <Col style={{padding: '0px'}} sm={9}>
-                            <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonSuccess"}
-                                    onClick={this.onCrearExperimento}>Crear
-                                Experimento</Button>
+                        <Col style={{paddingLeft: '1px'}}>
+                            <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonWarning"}
+                                    onClick={this.onModificarExperimento}>Modificar Experimento</Button>
+                        </Col>
+                        <Col style={{padding: '0px'}}>
+                            <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonDanger"}
+                                    onClick={this.onModificarExperimento}>Eliminar Experimento</Button>
                         </Col>
                     </Row>
                 </Container>
@@ -414,7 +427,6 @@ class Pregunta extends Component {
                                        onChange={this.onTextoPreguntaChange}/>
                             </Col>
                             <Col sm={3}>
-
                                 <Input className="inputs" size={"sm"} type={"select"} placeholder="Añadir Variable"
                                        value={this.props.pregunta.variableAsociada}
                                        onChange={this.onVariableAsociadaChange}>
@@ -428,9 +440,7 @@ class Pregunta extends Component {
                             </Col>
                         </Form.Row>
                     </Form>
-                    <Card className="cards" style={{marginTop: '20px', marginBottom: '-10px'}} className="cards"
-                          color="primary">
-
+                    <Card className="cards" style={{marginTop: '20px', marginBottom: '-10px'}} color="primary">
                         <CardHeader style={{marginBottom: '-30px'}}>
                             <CardTitle>Opciones</CardTitle>
                         </CardHeader>

@@ -119,10 +119,10 @@ class VistaExperimentos extends Component {
                                 style={{
                                     fontSize: '20px',
                                     textAlign: 'center'
-                                }}>EXPERIMIENTO {item.nombreExperimento}</CardTitle>
+                                }}>{item.nombreExperimento}</CardTitle>
                         </CardHeader>
                         <CardBody style={{marginBottom: '-30px'}}>
-                            <p>Creado el: {item.fechaCreacion}</p>
+                            <p style={{textAlign: 'center'}}>Creado el: {item.fechaCreacion}</p>
                         </CardBody>
                         <CardFooter>
                             <Row>

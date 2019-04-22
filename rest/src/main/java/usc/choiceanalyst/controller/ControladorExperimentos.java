@@ -82,4 +82,43 @@ public class ControladorExperimentos {
         }
     }
 
+    @PreAuthorize("permitAll()")
+    @PutMapping(
+            path = "/{idExperimento}",
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+
+    public ResponseEntity modifyExperimento(@RequestBody ModeloExperimento experimento, @PathVariable("idExperimento") String idExperimento) {
+        if (!dbex.existsByIdExperimento(idExperimento)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            Optional<ModeloExperimento> experimentoExistente = dbex.findByIdExperimento(idExperimento);
+            if(!idExperimento.equals(experimento.getIdExperimento())){
+                experimentoExistente.get().setIdExperimento(experimento.getIdExperimento());
+                dbex.deleteByIdExperimento(idExperimento);
+            }
+            experimentoExistente.get().setNombreExperimento(experimento.getNombreExperimento());
+            experimentoExistente.get().setPreguntas(experimento.getPreguntas());
+            experimentoExistente.get().setObjetivos(experimento.getObjetivos());
+
+            dbex.save(experimentoExistente.get());
+            return ResponseEntity.ok().body(experimentoExistente.get());
+        }
+    }
+
+    @PreAuthorize("permitAll()")
+    @GetMapping(
+            path = "/verExperimento/{idExperimento}",
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+    public ResponseEntity<ModeloExperimento> getExperimento(@PathVariable("idExperimento") String idExperimento) {
+        if (dbex.existsByIdExperimento(idExperimento)) {
+            return ResponseEntity.ok().body(dbex.findByIdExperimento(idExperimento).get());
+
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

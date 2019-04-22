@@ -28,11 +28,10 @@ public class ControladorEstablecimiento {
     private RepositorioUsuario dbu;
 
 
-
     @Autowired
     public ControladorEstablecimiento(RepositorioEstablecimiento dbes, RepositorioUsuario dbu) {
         this.dbes = dbes;
-        this.dbu=dbu;
+        this.dbu = dbu;
     }
 
     @PreAuthorize("permitAll()")
@@ -66,6 +65,8 @@ public class ControladorEstablecimiento {
         if (dbes.existsByIdEstablecimiento(establecimiento.getIdEstablecimiento())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } else {
+            List<Menu> menus = new ArrayList<Menu>();
+            establecimiento.setMenus(menus);
             dbes.save(establecimiento);
             URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/establecimientos/{idEstablecimiento}").buildAndExpand(establecimiento.getIdEstablecimiento()).toUri();
             return ResponseEntity.created(location).body(establecimiento);
@@ -77,13 +78,22 @@ public class ControladorEstablecimiento {
             path = "/{idAdministrador}/menus/{fechaSeleccionada}",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public ResponseEntity<Menu> getMenusEstablecimiento(@PathVariable("idAdministrador") String idAdministrador, @PathVariable("fechaSeleccionada") String fechaSeleccionada) {
-        System.out.println(idAdministrador);
-        System.out.println(fechaSeleccionada);
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Collection<Menu>> getMenusEstablecimiento(@PathVariable("idAdministrador") String idAdministrador, @PathVariable("fechaSeleccionada") String fechaSeleccionada) {
 
+        Optional<ModeloEstablecimiento> establecimiento = dbes.findByIdAdministrador(idAdministrador);
+
+        if (establecimiento != null) {
+            Collection<Menu> menus = new ArrayList<Menu>();
+            for (int i = 0; i < establecimiento.get().getMenus().size(); i++) {
+                if (establecimiento.get().getMenus().get(i).getFechasMenu().contains(fechaSeleccionada)) {
+                    ((ArrayList<Menu>) menus).add(establecimiento.get().getMenus().get(i));
+                }
+            }
+            return ResponseEntity.ok().body(menus);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
-
 
     @PreAuthorize("permitAll()")
     @PutMapping(
@@ -118,14 +128,14 @@ public class ControladorEstablecimiento {
 
             Optional<ModeloEstablecimiento> establecimiento = dbes.findByIdAdministrador(idEstablecimiento);
 
-            if ( establecimiento.get().getMenus() != null){
-                for(int i=0; i<establecimiento.get().getMenus().size(); i++){
-                    if (establecimiento.get().getMenus().get(i).getIdMenu().equals(menu.getIdMenu())){
+            if (establecimiento.get().getMenus() != null) {
+                for (int i = 0; i < establecimiento.get().getMenus().size(); i++) {
+                    if (establecimiento.get().getMenus().get(i).getIdMenu().equals(menu.getIdMenu())) {
                         return ResponseEntity.status(HttpStatus.CONFLICT).build();
                     }
                 }
                 establecimiento.get().getMenus().add(menu);
-            }else{
+            } else {
                 List<Menu> menus = new ArrayList<Menu>();
                 menus.add(menu);
                 establecimiento.get().setMenus(menus);
@@ -138,8 +148,6 @@ public class ControladorEstablecimiento {
             return ResponseEntity.notFound().build();
         }
     }
-
-
 
 
 }

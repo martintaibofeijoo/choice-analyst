@@ -3,19 +3,18 @@ import {
     Col,
     CardFooter,
     Card,
+    Button,
     CardHeader,
     CardTitle,
     CardBody,
-    Input,
 } from 'reactstrap';
-import Button from 'react-bootstrap/Button'
-import Form from "react-bootstrap/Form";
+
 import {Calendar} from "react-calendar";
 import {Authentication} from "../authentication";
 import moment from "moment";
 import Container from "react-bootstrap/es/Container";
 import Row from "react-bootstrap/Row";
-import {Link} from "react-router-dom";
+import {Link} from 'react-router-dom';
 
 export class Menus extends Component {
     render() {
@@ -56,18 +55,38 @@ class VistaMenus extends Component {
 
     }
 
+    async doBuscarMenus(fechaSeleccionada) {
+        fechaSeleccionada = moment(this.state.fechaSeleccionada).format('DD-MM-YYYY')
+        const postRequest = await fetch(`http://localhost:9000/establecimientos/${this.props.auth.user.username}/menus/${fechaSeleccionada}`, {
+            method: "GET",
+            //'Authorization': this.props.auth.token,
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        const postResponse = await postRequest.json()
+        console.table(postResponse)
+        debugger
+        this.setState(prev => ({
+            ...prev,
+            menus: postResponse
+        }))
+    }
+
     onCambiarFechaSeleccionada = fechaSeleccionada => {
-        console.table(moment(fechaSeleccionada).format('DD/MM/YYYY'))
+        console.table(moment(fechaSeleccionada).format('DD-MM-YYYY'))
         this.setState({fechaSeleccionada: fechaSeleccionada})
+        this.doBuscarMenus(this.state.fechaSeleccionada)
     }
 
     render() {
         return <Container>
             <Row>
                 <Col xs={5}>
-                    <Card className={"cards"} color={"primary"}>
-                        <CardHeader>
-                            <CardTitle>Seleccione una Fecha</CardTitle>
+                    <Card block className="cards" color="primary">
+                        <CardHeader style={{marginBottom: '-30px'}}>
+                            <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Seleccione una Fecha</CardTitle>
                         </CardHeader>
                         <CardBody>
                             <Card className={"cards"} color={"primary"}>
@@ -78,11 +97,12 @@ class VistaMenus extends Component {
                                     />
                                 </CardBody>
                             </Card>
+                            <Button size="sm" block className={"botonSuccess"} tag={Link}
+                                    to={`/menus/crearMenu/`}>Crear Menú</Button>
                         </CardBody>
                     </Card>
                 </Col>
                 <Col xs={7}>
-
                     {this.state.menus.map(
                         (item, index) =>
                             <Card className={"cards"} block color="primary">
@@ -91,21 +111,8 @@ class VistaMenus extends Component {
                                         style={{
                                             fontSize: '20px',
                                             textAlign: 'center'
-                                        }}>Menu {item.nombreMenu}</CardTitle>
+                                        }}>{item.nombreMenu}</CardTitle>
                                 </CardHeader>
-                                <CardBody style={{marginBottom: '-30px'}}>
-                                    <Card className={"cards"} block color="primary">
-                                        <CardHeader style={{marginBottom: '-30px'}}>
-                                            <CardTitle
-                                                style={{
-                                                    fontSize: '20px',
-                                                    textAlign: 'center'
-                                                }}>Menu {item.nombreExperimento}</CardTitle>
-                                        </CardHeader>
-                                        <CardBody style={{marginBottom: '-30px'}}>
-                                        </CardBody>
-                                    </Card>
-                                </CardBody>
                                 <CardFooter>
                                     <Row>
                                         <Col>
