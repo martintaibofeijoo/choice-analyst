@@ -5,18 +5,28 @@ const AuthContext = React.createContext()
 
 
 export class AuthenticatedApp extends Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
 
-        this.state = {
-            authenticated: false,
-            user: {},
-            error: {}
-        }
+        if(sessionStorage.getItem("authState")) {
+            const stored = JSON.parse(sessionStorage.getItem("authState"))
+
+            this.state = {
+                ...stored,
+                updateLogin: setInterval(this.login, 60*60*1000, stored.user.username, stored.user.password)
+            }
+        } else
+            this.state = {
+                authenticated: false,
+                user: {},
+                error: {},
+                updateLogin: ''
+            }
 
     }
 
     login = (user, pass) => {
+        console.log("Login")
         fetch("http://localhost:9000/login", {method: 'POST', body: JSON.stringify({username: user, password: pass})})
             .then(response => {
                 const codigo = response.status;
@@ -27,12 +37,18 @@ export class AuthenticatedApp extends Component {
                     this.setState(prev => ({
                             ...prev,
                             authenticated: true,
-                            user: {username: user, rol: decodeToken.rol},
+                            user: {username: user, rol: decodeToken.rol, password: pass},
                             token: token,
                             error: {}
                         }),
                         () => {
-                        })
+                            if(this.state.updateLogin === ''){
+                                const updateLogin = setInterval(this.login, 5*1000, this.state.user.username, this.state.user.password)
+                                this.setState(prev => ({...prev, updateLogin}))
+                            }
+                            sessionStorage.setItem("authState", JSON.stringify(this.state))
+                        }
+                    )
                 } else
                     this.setState(prev => ({
                         ...prev,
@@ -42,8 +58,10 @@ export class AuthenticatedApp extends Component {
     }
 
     logout = () => {
-        this.setState(prev => ({...prev, authenticated: false, user: {}}), () => {
-            localStorage.removeItem("user")
+        console.log(this.state)
+        clearInterval(this.state.updateLogin)
+        this.setState(prev => ({...prev, authenticated: false, user: {}, updateLogin: ''}), () => {
+            sessionStorage.removeItem("authState")
         })
     }
 

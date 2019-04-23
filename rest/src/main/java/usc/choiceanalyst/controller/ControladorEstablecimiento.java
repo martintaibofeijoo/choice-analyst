@@ -80,13 +80,13 @@ public class ControladorEstablecimiento {
     )
     public ResponseEntity<Collection<Menu>> getMenusEstablecimiento(@PathVariable("idAdministrador") String idAdministrador, @PathVariable("fechaSeleccionada") String fechaSeleccionada) {
 
-        Optional<ModeloEstablecimiento> establecimiento = dbes.findByIdAdministrador(idAdministrador);
+        ModeloEstablecimiento establecimiento = dbes.findByIdAdministrador(idAdministrador).get();
 
         if (establecimiento != null) {
             Collection<Menu> menus = new ArrayList<Menu>();
-            for (int i = 0; i < establecimiento.get().getMenus().size(); i++) {
-                if (establecimiento.get().getMenus().get(i).getFechasMenu().contains(fechaSeleccionada)) {
-                    ((ArrayList<Menu>) menus).add(establecimiento.get().getMenus().get(i));
+            for (int i = 0; i < establecimiento.getMenus().size(); i++) {
+                if (establecimiento.getMenus().get(i).getFechasMenu().contains(fechaSeleccionada)) {
+                    ((ArrayList<Menu>) menus).add(establecimiento.getMenus().get(i));
                 }
             }
             return ResponseEntity.ok().body(menus);
