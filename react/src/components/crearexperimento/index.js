@@ -14,6 +14,8 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import {Authentication} from "../authentication";
 import {Redirect, Route} from "react-router-dom";
+import MultipleDatePicker from 'react-multiple-datepicker'
+import moment from "moment";
 
 
 export class CrearExperimento extends Component {
@@ -34,6 +36,7 @@ class VistaCrearExperimento extends Component {
             idAdministrador: this.props.auth.user.username,
             idEstablecimiento: "",
             nombreExperimento: "",
+            fechasExperimento: "",
             preguntas: [
                 {
                     textoPregunta: "",
@@ -200,14 +203,17 @@ class VistaCrearExperimento extends Component {
     }
 
     onCrearExperimento = () => {
-        this.doCrearExperimento(this.state.idAdministrador, this.state.idEstablecimiento, this.state.nombreExperimento, this.state.preguntas, this.state.objetivos)
+        this.doCrearExperimento(this.state.idAdministrador, this.state.idEstablecimiento, this.state.nombreExperimento, this.state.preguntas, this.state.objetivos, this.state.fechasExperimento)
     }
 
-    doCrearExperimento = async (idAdministrador, idEstablecimiento, nombreExperimento, preguntas, objetivos) => {
+    doCrearExperimento = async (idAdministrador, idEstablecimiento, nombreExperimento, preguntas, objetivos, fechasExperimento) => {
         let idExperimento = nombreExperimento.replace(/ /g, "-");
         idExperimento = idExperimento.toLowerCase()
         idExperimento = idExperimento.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-
+        let fechasCambiadas = []
+        for (let i = 0; i < fechasExperimento.length; i++) {
+            fechasCambiadas[i] = moment(fechasExperimento[i]).format('DD-MM-YYYY')
+        }
         const response = await fetch(`http://localhost:9000/experimentos/`, {
             method: 'POST',
             headers: {
@@ -222,6 +228,7 @@ class VistaCrearExperimento extends Component {
                 nombreExperimento: nombreExperimento,
                 preguntas: preguntas,
                 objetivos: objetivos,
+                fechasExperimento: fechasCambiadas
             })
         })
         const codigo = response.status
@@ -253,6 +260,25 @@ class VistaCrearExperimento extends Component {
                                         <Input className="inputs" size={"sm"} placeholder="Nombre Experimento"
                                                value={this.state.nombreExperimento}
                                                onChange={this.onNombreExperimentoChange}/>
+                                    </CardBody>
+                                </Card>
+                            </CardBody>
+                        </Card>
+                    </Row>
+                    <Row>
+                        <Card block className="cards" color="primary">
+                            <CardHeader style={{marginBottom: '-30px'}}>
+                                <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Fechas Experimento</CardTitle>
+                            </CardHeader>
+                            <CardBody>
+                                <Card block className="cards" color="primary">
+                                    <CardBody>
+                                        <MultipleDatePicker className={'datepicker'}
+                                                            size={'lg'}
+                                                            regional={'es'}
+
+                                                            onSubmit={dates => this.setState({fechasExperimento: dates})}
+                                        />
                                     </CardBody>
                                 </Card>
                             </CardBody>

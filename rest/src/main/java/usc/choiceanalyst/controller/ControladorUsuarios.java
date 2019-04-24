@@ -101,6 +101,8 @@ public class ControladorUsuarios {
 
             if (usuario.getIdEstablecimiento() != null) {
                 usuario.setRol("ADMINISTRADOR");
+            }else {
+                usuario.setRol("CLIENTE");
             }
 
             dbu.save(usuario);

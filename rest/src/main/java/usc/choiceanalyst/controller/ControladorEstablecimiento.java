@@ -150,4 +150,30 @@ public class ControladorEstablecimiento {
     }
 
 
+
+    @PreAuthorize("permitAll()")
+    @GetMapping(
+            path = "/{idEstablecimiento}/realizarExperimento/menus/{fechaSeleccionada}",
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+    public ResponseEntity<Collection<Menu>> getMenusExperimento(@PathVariable("idEstablecimiento") String idEstablecimiento, @PathVariable("fechaSeleccionada") String fechaSeleccionada) {
+
+        ModeloEstablecimiento establecimiento = dbes.findByIdEstablecimiento(idEstablecimiento).get();
+
+        if (establecimiento != null) {
+            Collection<Menu> menus = new ArrayList<Menu>();
+            for (int i = 0; i < establecimiento.getMenus().size(); i++) {
+                if (establecimiento.getMenus().get(i).getFechasMenu().contains(fechaSeleccionada)) {
+                    ((ArrayList<Menu>) menus).add(establecimiento.getMenus().get(i));
+                }
+            }
+            return ResponseEntity.ok().body(menus);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
+
 }

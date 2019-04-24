@@ -1,30 +1,23 @@
 package usc.choiceanalyst.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import usc.choiceanalyst.model.ModeloEstablecimiento;
 import usc.choiceanalyst.model.ModeloUsuario;
+import usc.choiceanalyst.model.auxiliar.Menu;
 import usc.choiceanalyst.repository.RepositorioEstablecimiento;
 import usc.choiceanalyst.repository.RepositorioExperimento;
 import usc.choiceanalyst.model.*;
 import usc.choiceanalyst.repository.RepositorioUsuario;
-
 import java.net.URI;
-import java.text.Normalizer;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -116,6 +109,33 @@ public class ControladorExperimentos {
         if (dbex.existsByIdExperimento(idExperimento)) {
             return ResponseEntity.ok().body(dbex.findByIdExperimento(idExperimento).get());
 
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
+
+
+
+
+
+
+    @PreAuthorize("permitAll()")
+    @GetMapping(
+            path = "/realizarExperimento/{idEstablecimiento}/{fechaActual}",
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+    public ResponseEntity<ModeloExperimento> getExperimentoEstablecimiento(@PathVariable("idEstablecimiento") String idEstablecimiento, @PathVariable("fechaActual") String fechaActual) {
+        if (dbes.existsByIdEstablecimiento(idEstablecimiento)) {
+            Collection<ModeloExperimento> experimentos = dbex.findByIdEstablecimiento(idEstablecimiento);
+            for (int i = 0; i < experimentos.size(); i++) {
+                if (((List<ModeloExperimento>) experimentos).get(i).getFechasExperimento().contains(fechaActual)) {
+                    return ResponseEntity.ok().body(((List<ModeloExperimento>) experimentos).get(i));
+                }
+            }
+            return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.notFound().build();
         }

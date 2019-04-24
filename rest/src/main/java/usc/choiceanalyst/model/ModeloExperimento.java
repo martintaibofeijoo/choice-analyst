@@ -18,6 +18,7 @@ public class ModeloExperimento {
     private String idEstablecimiento;
     private String nombreExperimento;
     private String fechaCreacion;
+    private List<String> fechasExperimento;
     private List<Objetivo> objetivos;
     private List<Pregunta> preguntas;
 
@@ -85,5 +86,13 @@ public class ModeloExperimento {
 
     public void setObjetivos(List<Objetivo> objetivos) {
         this.objetivos = objetivos;
+    }
+
+    public List<String> getFechasExperimento() {
+        return fechasExperimento;
+    }
+
+    public void setFechasExperimento(List<String> fechasExperimento) {
+        this.fechasExperimento = fechasExperimento;
     }
 }
