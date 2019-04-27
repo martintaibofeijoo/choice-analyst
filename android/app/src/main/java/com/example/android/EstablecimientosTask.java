@@ -57,7 +57,7 @@ public class EstablecimientosTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         if (mResponse!=null && mResponse.code()==200)
-            asyncResponse.processFinishOK(mre);
+            asyncResponse.processFinishOK(mResponse);
         else asyncResponse.processFinishERR();
     }
 
