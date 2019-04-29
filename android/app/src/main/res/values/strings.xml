@@ -1,3 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="app_name">Choice-Analyst</string>
+    <string-array name="sexo_array">
+        <item>Hombre</item>
+        <item>Mujer</item>
+        <item>Sin Especificar</item>
+    </string-array>
+
+    <string-array name="origen_array">
+        <item>Europeo</item>
+        <item>Americano</item>
+        <item>Africano</item>
+    </string-array>
+
+    <string-array name="nivelestudios_array">
+        <item>Alto</item>
+        <item>Medio</item>
+        <item>Bajo</item>
+    </string-array>
 </resources>
+

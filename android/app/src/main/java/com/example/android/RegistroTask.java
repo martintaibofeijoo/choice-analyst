@@ -5,11 +5,10 @@ import android.util.Log;
 
 import com.example.android.Auxiliar.AsyncResponse;
 import com.example.android.Auxiliar.Credentials;
-import com.example.android.Auxiliar.Establecimiento;
+import com.example.android.Auxiliar.Usuario;
 import com.example.android.Remote.IRemote;
 
 import java.io.IOException;
-import java.util.Collection;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -18,15 +17,15 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class EstablecimientosTask extends AsyncTask<Void, Void, Void> {
-    private String nombreEstablecimiento;
+public class RegistroTask extends AsyncTask<Void, Void, Void> {
+    private Usuario usuario;
+
+    private Response<Void> mResponse = null;
     private String token;
-    private Response<Collection<Establecimiento>> mResponse = null;
     private AsyncResponse asyncResponse = null;
 
-    public EstablecimientosTask(String nombreEstablecimiento, String token) {
-        this.nombreEstablecimiento = nombreEstablecimiento;
-        this.token = token;
+    public RegistroTask(Usuario usuario) {
+        this.usuario = usuario;
     }
 
 
@@ -45,9 +44,11 @@ public class EstablecimientosTask extends AsyncTask<Void, Void, Void> {
 
         IRemote service = retrofit.create(IRemote.class);
 
-        Call<Collection<Establecimiento>> call = service.establecimientos(nombreEstablecimiento, token);
+        Call<Void> call = service.registro(usuario);
         try {
             mResponse = call.execute();
+            token = mResponse.headers().get("Authorization");
+            Log.i("TOKEN", "El token es: " + token);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,7 +58,7 @@ public class EstablecimientosTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         if (mResponse!=null && mResponse.code()==200)
-            asyncResponse.processFinishERR();
+            asyncResponse.processFinishOK(token);
         else asyncResponse.processFinishERR();
     }
 

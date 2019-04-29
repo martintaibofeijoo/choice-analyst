@@ -219,7 +219,7 @@ class VistaModificarExperimento extends Component {
         const response = await fetch(`http://localhost:9000/experimentos/${this.props.idExperimento}`, {
             method: 'PUT',
             headers: {
-                //'Authorization': this.props.token,
+                'Authorization': this.props.token,
                 'Accept': 'application/json;charset=UTF-8',
                 'Content-Type': 'application/json;charset=UTF-8'
             },

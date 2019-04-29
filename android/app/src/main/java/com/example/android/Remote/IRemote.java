@@ -4,6 +4,7 @@ package com.example.android.Remote;
 
 import com.example.android.Auxiliar.Credentials;
 import com.example.android.Auxiliar.Establecimiento;
+import com.example.android.Auxiliar.Usuario;
 
 import java.util.Collection;
 
@@ -19,6 +20,9 @@ public interface IRemote {
 
     @POST("login")
     Call<Void> login(@Body Credentials credentials);
+
+    @POST("usuarios")
+    Call<Void> registro(@Body Usuario usuario);
 
     @GET("establecimientos")
     Call<Collection<Establecimiento>> establecimientos(@Body String nombreEstablecimiento, @Header("token") String token);

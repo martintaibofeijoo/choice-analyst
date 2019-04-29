@@ -38,9 +38,9 @@ class VistaVerExperimento extends Component {
     async componentDidMount() {
         const postRequest = await fetch(`http://localhost:9000/experimentos/verExperimento/${this.props.idExperimento}`, {
             method: "GET",
-            //'Authorization': this.props.auth.token,
             mode: "cors",
             headers: {
+                'Authorization': this.props.auth.token,
                 "Content-Type": "application/json"
             }
         })

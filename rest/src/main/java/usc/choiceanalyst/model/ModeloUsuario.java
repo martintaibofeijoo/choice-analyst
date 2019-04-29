@@ -15,7 +15,7 @@ public class ModeloUsuario extends Credentials {
     private String nombre;
     private String apellidos;
     private String fechaRegistro;
-    private Integer edad;
+    private String fechaNacimiento;
     private String sexo;
     private String origen;
     private String nivelEstudios;
@@ -83,12 +83,12 @@ public class ModeloUsuario extends Credentials {
         this.fechaRegistro = fechaRegistro;
     }
 
-    public Integer getEdad() {
-        return edad;
+    public String getFechaNacimiento() {
+        return fechaNacimiento;
     }
 
-    public void setEdad(Integer edad) {
-        this.edad = edad;
+    public void setFechaNacimiento(String fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
     }
 
     public String getSexo() {

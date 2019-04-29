@@ -40,9 +40,9 @@ class VistaMenus extends Component {
         let fechaSeleccionada = moment(this.state.fechaSeleccionada).format('DD-MM-YYYY')
         const postRequest = await fetch(`http://localhost:9000/establecimientos/${this.props.auth.user.username}/menus/${fechaSeleccionada}`, {
             method: "GET",
-            //'Authorization': this.props.auth.token,
             mode: "cors",
             headers: {
+                'Authorization': this.props.auth.token,
                 "Content-Type": "application/json"
             }
         })

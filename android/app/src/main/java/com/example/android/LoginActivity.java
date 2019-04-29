@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.example.android.Auxiliar.AsyncResponse;
 
@@ -26,7 +25,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        botonLogin=findViewById(R.id.botonLogin);
+        botonLogin=findViewById(R.id.botonRegistro);
         textoUsuario=findViewById(R.id.textoUsuario);
         textoContrasena=findViewById(R.id.textoContrasena);
         builder = new AlertDialog.Builder(this);

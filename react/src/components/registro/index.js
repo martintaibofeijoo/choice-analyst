@@ -109,8 +109,6 @@ export default class VistaRegistro extends Component {
             .then(response => {
                 const codigo = response.status;
                 if (codigo === 201) {
-                    console.table(response)
-                    debugger
                     fetch("http://localhost:9000/usuarios", {
                         method: 'POST',
                         headers: {
