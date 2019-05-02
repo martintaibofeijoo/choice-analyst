@@ -42,7 +42,7 @@ class VistaMenus extends Component {
             method: "GET",
             mode: "cors",
             headers: {
-                'Authorization': this.props.auth.token,
+                //'Authorization': this.props.auth.token,
                 "Content-Type": "application/json"
             }
         })

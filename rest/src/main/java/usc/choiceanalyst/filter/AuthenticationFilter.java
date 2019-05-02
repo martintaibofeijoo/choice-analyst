@@ -50,7 +50,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         Long now = System.currentTimeMillis();
 
-        String authorities = authResult.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
+        String authorities = authResult.getAuthorities().stream().map(x -> "ROLE_"+x.getAuthority()).collect(Collectors.joining(","));
 
         JwtBuilder tokenBuilder = Jwts.builder()
                 .setSubject(((User)(authResult.getPrincipal())).getUsername())

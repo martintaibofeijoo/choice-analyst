@@ -90,7 +90,7 @@ public class ControladorUsuarios {
             consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
 
-    public ResponseEntity createUser(@RequestBody ModeloUsuario usuario) {
+    public ResponseEntity createAdministrador(@RequestBody ModeloUsuario usuario) {
         if (dbu.existsByUsername(usuario.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } else {
@@ -98,15 +98,8 @@ public class ControladorUsuarios {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
             usuario.setFechaRegistro(simpleDateFormat.format(new Date()));
             usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-
-            if (usuario.getIdEstablecimiento() != null) {
-                usuario.setRol("ADMINISTRADOR");
-            }else {
-                usuario.setRol("CLIENTE");
-            }
-
+            usuario.setRol("ADMINISTRADOR");
             dbu.save(usuario);
-
             URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/usuarios/{username}").buildAndExpand(usuario.getUsername()).toUri();
             return ResponseEntity.created(location).body(usuario.setPassword("*********"));
         }

@@ -24,9 +24,6 @@ export default class VistaRegistro extends Component {
             telefonoContacto: "",
             nombre: "",
             apellidos: "",
-            nombreEstablecimiento: "",
-            localizacionEstablecimiento: "",
-            tipoEstablecimiento: "Restaurante",
             validated: false
         }
     }
@@ -61,21 +58,6 @@ export default class VistaRegistro extends Component {
         this.setState(prev => ({...prev, apellidos: value}))
     }
 
-    onNombreEstablecimientoChange = event => {
-        let value = event.target !== null ? event.target.value : ""
-        this.setState(prev => ({...prev, nombreEstablecimiento: value}))
-    }
-
-    onLocalizacionEstablecimientoChange = event => {
-        let value = event.target !== null ? event.target.value : ""
-        this.setState(prev => ({...prev, localizacionEstablecimiento: value}))
-    }
-
-    onTipoEstablecimientoChange = event => {
-        let value = event.target !== null ? event.target.value : ""
-        this.setState(prev => ({...prev, tipoEstablecimiento: value}))
-    }
-
     onRegisterButtonClick = (event) => {
         this.setState({validated: true});
         const form = event.currentTarget;
@@ -83,63 +65,37 @@ export default class VistaRegistro extends Component {
             event.preventDefault();
             event.stopPropagation();
         } else {
-            this.doRegister(this.state.username, this.state.password, this.state.correoElectronico, this.state.telefonoContacto, this.state.nombre, this.state.apellidos, this.state.nombreEstablecimiento, this.state.tipoEstablecimiento, this.state.localizacionEstablecimiento)
+            this.doRegister(this.state.username, this.state.password, this.state.correoElectronico, this.state.telefonoContacto, this.state.nombre, this.state.apellidos)
             event.preventDefault();
             event.stopPropagation();
         }
     }
 
-    doRegister = (username, password, correoElectronico, telefonoContacto, nombre, apellidos, nombreEstablecimiento, tipoEstablecimiento, localizacionEstablecimiento) => {
-        let idEstablecimiento = nombreEstablecimiento.replace(/ /g, "-");
-        console.table(idEstablecimiento)
-        idEstablecimiento = idEstablecimiento.toLowerCase()
-        idEstablecimiento = idEstablecimiento.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-
-        fetch("http://localhost:9000/establecimientos", {
+    doRegister = (username, password, correoElectronico, telefonoContacto, nombre, apellidos) => {
+        fetch("http://localhost:9000/usuarios/", {
             method: 'POST',
-            headers: {'Accept': 'application/json;charset=UTF-8', 'Content-Type': 'application/json;charset=UTF-8'},
+            headers: {
+                'Accept': 'application/json;charset=UTF-8',
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
             body: JSON.stringify({
-                idEstablecimiento: idEstablecimiento,
-                idAdministrador: username,
-                nombreEstablecimiento: nombreEstablecimiento,
-                localizacionEstablecimiento: localizacionEstablecimiento,
-                tipoEstablecimiento: tipoEstablecimiento
+                username: username,
+                password: password,
+                correoElectronico: correoElectronico,
+                telefonoContacto: telefonoContacto,
+                nombre: nombre,
+                apellidos: apellidos,
             })
         })
             .then(response => {
                 const codigo = response.status;
+                console.table(response.status)
                 if (codigo === 201) {
-                    fetch("http://localhost:9000/usuarios", {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/json;charset=UTF-8',
-                            'Content-Type': 'application/json;charset=UTF-8'
-                        },
-                        body: JSON.stringify({
-                            username: username,
-                            password: password,
-                            correoElectronico: correoElectronico,
-                            telefonoContacto: telefonoContacto,
-                            nombre: nombre,
-                            apellidos: apellidos,
-                            idEstablecimiento: idEstablecimiento,
-                        })
-                    })
-                        .then(response => {
-                            const codigo = response.status;
-                            if (codigo === 201) {
-                                this.props.login(this.state.username, this.state.password)
-                            } else if (codigo === 409) {
-                                this.setState(prev => ({
-                                    ...prev,
-                                    alert: {status: "Error", message: "Usuario ya existente"}
-                                }))
-                            }
-                        })
+                    this.props.login(this.state.username, this.state.password)
                 } else if (codigo === 409) {
                     this.setState(prev => ({
                         ...prev,
-                        alert: {status: "Error", message: "Establecimiento ya existente"}
+                        alert: {status: "Error", message: "Usuario ya existente"}
                     }))
                 }
             })
@@ -225,43 +181,6 @@ export default class VistaRegistro extends Component {
                                     </Form.Control.Feedback>
                                 </Form.Group>
                             </Form.Row>
-                            <Form.Row>
-                                <Form.Group as={Col}>
-                                    <Label>Nombre Establecimiento</Label>
-                                    <Form.Control size={"sm"} value={this.state.nombreEstablecimiento}
-                                                  pattern="[a-z0-9A-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-z0-9A-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-Z0-9À-ÿ\u00f1\u00d1]+"
-                                                  onChange={this.onNombreEstablecimientoChange} required/>
-                                    <Form.Control.Feedback type="invalid">
-                                        Introduce el nombre del establecimiento
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-                                <Form.Group as={Col}>
-                                    <Label>Tipo Establecimiento</Label>
-                                    <Form.Control style={{fontSize: 'x-small', width: '100%', height: '47%'}}
-                                                  size={"sm"} as="select" value={this.state.tipoEstablecimiento}
-                                                  onChange={this.onTipoEstablecimientoChange} required>
-                                        <option>Restaurante</option>
-                                        <option>Cafeteria</option>
-                                        <option>Supermercado</option>
-                                    </Form.Control>
-                                    <Form.Control.Feedback type="invalid">
-                                        Introduce el nombre del establecimiento
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-                            </Form.Row>
-
-                            <Form.Group>
-                                <Label>Localización Establecimiento</Label>
-                                <Form.Control size={"sm"} value={this.state.localizacionEstablecimiento}
-
-                                              onChange={this.onLocalizacionEstablecimientoChange} required/>
-                                <Form.Control.Feedback type="invalid">
-                                    Introduce el nombre del establecimiento
-                                </Form.Control.Feedback>
-
-
-                            </Form.Group>
-
                             <Alert
                                 color={this.state.alert.status === "OK" ? "success" : "danger"}
                                 isOpen={this.state.alert.status !== ""}

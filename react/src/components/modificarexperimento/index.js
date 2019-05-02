@@ -246,7 +246,13 @@ class VistaModificarExperimento extends Component {
 
     render() {
         if (this.state.ok)
-            return <Redirect to={`/experimentos/verExperimento/${this.state.idExperimento}`}/>;
+            return <Redirect to={{
+                pathname: `/experimentos/verExperimento/${this.state.idExperimento}`,
+                state: {
+                    mensaje:"modificado",
+                    status:true
+                }
+            }}/>;
         else
             return (
                 <Container>

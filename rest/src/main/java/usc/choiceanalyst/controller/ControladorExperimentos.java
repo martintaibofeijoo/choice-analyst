@@ -33,7 +33,7 @@ public class ControladorExperimentos {
         this.dbu=dbu;
     }
 
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('ADMINISTRADOR') and principal==#username")
     @GetMapping(
             path = "/{username}",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
@@ -55,7 +55,7 @@ public class ControladorExperimentos {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } else {
             Optional<ModeloUsuario> usuario = dbu.findByUsername(experimento.getIdAdministrador());
-            experimento.setIdEstablecimiento(usuario.get().getIdEstablecimiento());
+            //experimento.setIdEstablecimiento(usuario.get().getIdEstablecimiento());
             dbex.save(experimento);
             URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/experimentos/{idExperimento}").buildAndExpand(experimento.getIdExperimento()).toUri();
             return ResponseEntity.created(location).body(experimento);
@@ -120,7 +120,7 @@ public class ControladorExperimentos {
 
 
 
-    @PreAuthorize("permitAll()")
+   /* @PreAuthorize("permitAll()")
     @GetMapping(
             path = "/realizarExperimento/{idEstablecimiento}/{fechaActual}",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
@@ -138,5 +138,7 @@ public class ControladorExperimentos {
             return ResponseEntity.notFound().build();
         }
     }
+
+    */
 
 }

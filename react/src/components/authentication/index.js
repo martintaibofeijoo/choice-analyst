@@ -7,10 +7,8 @@ const AuthContext = React.createContext()
 export class AuthenticatedApp extends Component {
     constructor(props) {
         super(props)
-
         if(sessionStorage.getItem("authState")) {
             const stored = JSON.parse(sessionStorage.getItem("authState"))
-
             this.state = {
                 ...stored,
                 updateLogin: setInterval(this.login, 60*60*1000, stored.user.username, stored.user.password)
@@ -22,7 +20,6 @@ export class AuthenticatedApp extends Component {
                 error: {},
                 updateLogin: ''
             }
-
     }
 
     login = (user, pass) => {

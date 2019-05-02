@@ -20,7 +20,7 @@ export class VerExperimento extends Component {
     render() {
         return <Authentication>
             {
-                auth => <VistaVerExperimento auth={auth} idExperimento={this.props.match.params.idExperimento}/>
+                auth => <VistaVerExperimento auth={auth} idExperimento={this.props.match.params.idExperimento} mensaje={this.props.location.state}/>
             }
         </Authentication>
     }
@@ -59,8 +59,11 @@ class VistaVerExperimento extends Component {
 
 
     render() {
+        console.table(this.props)
+
         return (
             <Container>
+
                 <Row>
                     <Card block className="cards" color="primary">
                         <CardHeader style={{marginBottom: '-30px'}}>

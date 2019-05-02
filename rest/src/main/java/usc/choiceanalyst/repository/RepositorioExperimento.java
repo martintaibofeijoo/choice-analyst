@@ -14,7 +14,6 @@ public interface RepositorioExperimento extends MongoRepository<ModeloExperiment
     Optional<ModeloExperimento> findByIdExperimento(String idExperimento);
     List<ModeloExperimento> findAll();
     List<ModeloExperimento> findByIdAdministrador(String idAdministrador);
-    List<ModeloExperimento> findByIdEstablecimiento(String idEstablecimiento);
     Page<ModeloExperimento> findAll(Pageable pageable);
     ModeloExperimento save(ModeloExperimento entity);
 }

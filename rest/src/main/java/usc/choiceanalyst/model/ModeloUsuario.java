@@ -1,9 +1,12 @@
 package usc.choiceanalyst.model;
 
 import usc.choiceanalyst.model.auth.Credentials;
+
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
+import java.util.List;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "usuarios")
@@ -19,19 +22,19 @@ public class ModeloUsuario extends Credentials {
     private String sexo;
     private String origen;
     private String nivelEstudios;
-    private String idEstablecimiento;
+    private List<String> idsEstablecimientos;
 
 
-    public ModeloUsuario(){
-        
+    public ModeloUsuario() {
+
     }
 
-    public ModeloUsuario(String rol){
+    public ModeloUsuario(String rol) {
         String pattern = "dd-MM-yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         String date = simpleDateFormat.format(new Date());
-        this.fechaRegistro =date;
-        this.rol=rol;
+        this.fechaRegistro = date;
+        this.rol = rol;
     }
 
 
@@ -115,11 +118,11 @@ public class ModeloUsuario extends Credentials {
         this.nivelEstudios = nivelEstudios;
     }
 
-    public String getIdEstablecimiento() {
-        return idEstablecimiento;
+    public List<String> getIdsEstablecimientos() {
+        return idsEstablecimientos;
     }
 
-    public void setIdEstablecimiento(String idEstablecimiento) {
-        this.idEstablecimiento = idEstablecimiento;
+    public void setIdsEstablecimientos(List<String> idsEstablecimientos) {
+        this.idsEstablecimientos = idsEstablecimientos;
     }
 }

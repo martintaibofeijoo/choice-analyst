@@ -11,7 +11,6 @@ import {Link} from 'react-router-dom'
 import {AuthenticatedOnly, UnauthenticatedOnly} from "../authentication";
 import choiceanalyst_navbar from "../imagenes/choiceanalyst_navbar.png";
 import {Image} from "react-bootstrap";
-import NavDropdown from "react-bootstrap/NavDropdown";
 
 
 export default class NavigationBar extends Component {
@@ -31,12 +30,17 @@ export default class NavigationBar extends Component {
             <Nav className="ml-auto" navbar>
                 <AuthenticatedOnly>
                     <NavItem>
-                        <NavLink tag={Link} to="/crearExperimento">Añadir Experimento</NavLink>
+                        <NavLink tag={Link} to="/crearExperimento">Crear Experimento</NavLink>
                     </NavItem>
                 </AuthenticatedOnly>
                 <AuthenticatedOnly>
                     <NavItem>
                         <NavLink tag={Link} to="/menus">Menus</NavLink>
+                    </NavItem>
+                </AuthenticatedOnly>
+                <AuthenticatedOnly>
+                    <NavItem>
+                        <NavLink tag={Link} to="/establecimientos">Establecimientos</NavLink>
                     </NavItem>
                 </AuthenticatedOnly>
                 <AuthenticatedOnly>

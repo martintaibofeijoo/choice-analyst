@@ -16,6 +16,8 @@ import {Authentication} from "../authentication";
 import {Redirect, Route} from "react-router-dom";
 import MultipleDatePicker from 'react-multiple-datepicker'
 import moment from "moment";
+import Picky from 'react-picky';
+import 'react-picky/dist/picky.css';
 
 
 export class CrearExperimento extends Component {
@@ -33,6 +35,8 @@ class VistaCrearExperimento extends Component {
         super(props);
         this.state = {
             ok: false,
+            listaEstablecimientos: [],
+            listaEstablecimientosSeleccionados: [],
             idAdministrador: this.props.auth.user.username,
             idEstablecimiento: "",
             nombreExperimento: "",
@@ -57,6 +61,27 @@ class VistaCrearExperimento extends Component {
             variables: ["Higiene", "Ruído", "Distancía", "Energía", "Compañía", "Atmósfera", "Calidad de Servicio", "Apariencia", "Temperatura", "Saludable", "Sabroso", "Menu Seleccionado", "Primer Plato", "Segundo Plato", "Postre"]
         }
     }
+
+    async componentDidMount() {
+        const postRequest = await fetch(`http://localhost:9000/establecimientos`, {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': this.props.auth.token
+            }
+        })
+        const postResponse = await postRequest.json()
+
+
+        this.setState(prev => ({
+            ...prev,
+            listaEstablecimientos: postResponse
+        }))
+
+        console.table(this.state.listaEstablecimientos)
+    }
+
 
     onNombreExperimentoChange = (event) => {
         let value = event.target !== null ? event.target.value : ""
@@ -202,6 +227,10 @@ class VistaCrearExperimento extends Component {
         this.setState({preguntas: nuevasPreguntas});
     }
 
+    onListaEstablecimientosChange = (value) => {
+        this.setState({ listaEstablecimientosSeleccionados: value });
+    }
+
     onCrearExperimento = () => {
         this.doCrearExperimento(this.state.idAdministrador, this.state.idEstablecimiento, this.state.nombreExperimento, this.state.preguntas, this.state.objetivos, this.state.fechasExperimento)
     }
@@ -246,7 +275,8 @@ class VistaCrearExperimento extends Component {
         if (this.state.ok)
             return <Redirect to="/experimentos"/>;
         else
-            return (
+        return (
+
                 <Container>
                     <Row>
                         <Card block className="cards" color="primary">
@@ -273,11 +303,41 @@ class VistaCrearExperimento extends Component {
                             <CardBody>
                                 <Card block className="cards" color="primary">
                                     <CardBody>
+                                        <Input type = "date" onChange = { evt => this.setState(prev => ({...prev, fechas: [...prev.fechas, evt.target.value]}))}/>
                                         <MultipleDatePicker className={'datepicker'}
                                                             size={'lg'}
                                                             regional={'es'}
 
                                                             onSubmit={dates => this.setState({fechasExperimento: dates})}
+                                        />
+                                    </CardBody>
+                                </Card>
+                            </CardBody>
+                        </Card>
+                    </Row>
+                    <Row>
+                        <Card block className="cards" color="primary">
+                            <CardHeader style={{marginBottom: '-30px'}}>
+                                <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Establecimientos</CardTitle>
+                            </CardHeader>
+                            <CardBody>
+                                <Card block className="cards" color="primary">
+                                    <CardBody>
+                                        <Picky
+                                            value={this.state.listaEstablecimientosSeleccionados}
+                                            options={this.state.listaEstablecimientos}
+                                            onChange={this.onListaEstablecimientosChange}
+                                            open={false}
+                                            valueKey="idEstablecimiento"
+                                            placeholder={"Ningún Establecimiento Seleccionado"}
+                                            labelKey="nombreEstablecimiento"
+                                            multiple={true}
+                                            selectAllText={"Seleccionar Todos"}
+                                            filterPlaceholder={"Buscar por Nombre..."}
+                                            includeSelectAll={true}
+                                            includeFilter={true}
+                                            dropdownHeight={600}
+                                            block
                                         />
                                     </CardBody>
                                 </Card>

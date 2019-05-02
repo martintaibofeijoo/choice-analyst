@@ -13,15 +13,15 @@ import java.util.List;
 
 public class ModeloExperimento {
 
-    @Id private String idExperimento;
+    @Id
+    private String idExperimento;
     private String idAdministrador;
-    private String idEstablecimiento;
     private String nombreExperimento;
     private String fechaCreacion;
     private List<String> fechasExperimento;
     private List<Objetivo> objetivos;
     private List<Pregunta> preguntas;
-
+    private List<String> idsEstablecimientos;
 
 
     public ModeloExperimento(){
@@ -46,14 +46,6 @@ public class ModeloExperimento {
 
     public void setIdAdministrador(String idAdministrador) {
         this.idAdministrador = idAdministrador;
-    }
-
-    public String getIdEstablecimiento() {
-        return idEstablecimiento;
-    }
-
-    public void setIdEstablecimiento(String idEstablecimiento) {
-        this.idEstablecimiento = idEstablecimiento;
     }
 
     public String getNombreExperimento() {
@@ -95,4 +87,13 @@ public class ModeloExperimento {
     public void setFechasExperimento(List<String> fechasExperimento) {
         this.fechasExperimento = fechasExperimento;
     }
+
+    public List<String> getIdsEstablecimientos() {
+        return idsEstablecimientos;
+    }
+
+    public void setIdsEstablecimientos(List<String> idsEstablecimientos) {
+        this.idsEstablecimientos = idsEstablecimientos;
+    }
+
 }

@@ -1,5 +1,5 @@
 import React, {PureComponent as Component} from 'react'
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
 import {
     Alert,
     Button, Card, CardBody, CardFooter, CardHeader, CardTitle,
@@ -96,58 +96,74 @@ class VistaExperimentos extends Component {
     }
 
     render() {
-        return <Container>
-            <h1>Experimentos</h1>
-            <Alert
-                color={this.state.alert.status === "OK" ? "success" : "danger"}
-                isOpen={this.state.alert.status !== ""}
-                toggle={() => this.setState(prev => ({...prev, alert: {status: ""}}))}
-            >
-                {this.state.alert.message}
-            </Alert>
-            <VistaConfirmacion
-                nombreExperimentoEliminar={this.state.nombreExperimentoEliminar}
-                show={this.state.mostrarVistaConfirmacion}
-                onHide={this.onCerrarVistaConfirmacion}
-                eliminarExperimento={this.doEliminarExperimento}
-            />
-            {this.state.experimentos.map(
-                (item, index) =>
-                    <Card className={"cards"} block color="primary">
-                        <CardHeader style={{marginBottom: '-30px'}}>
-                            <CardTitle
-                                style={{
-                                    fontSize: '20px',
-                                    textAlign: 'center'
-                                }}>{item.nombreExperimento}</CardTitle>
-                        </CardHeader>
-                        <CardBody style={{marginBottom: '-30px'}}>
-                            <p style={{textAlign: 'center'}}>Creado el: {item.fechaCreacion}</p>
-                        </CardBody>
-                        <CardFooter>
-                            <Row>
-                                <Col>
-                                    <Button size="sm" block className={"botonSuccess"} tag={Link}
-                                            to={`/experimentos/verExperimento/${item.idExperimento}`}>Ver</Button>
-                                </Col>
-                                <Col>
-                                    <Button size="sm" block className={"botonWarning"} tag={Link}
-                                            to={`/experimentos/modificarExperimento/${item.idExperimento}`}>Modificar</Button>
-                                </Col>
-                                <Col>
-                                    <Button size={"sm"} block className={"botonDanger"}
-                                            onClick={() => this.setState({
-                                                mostrarVistaConfirmacion: true,
-                                                nombreExperimentoEliminar: item.nombreExperimento,
-                                                idExperimentoEliminar: item.idExperimento
-                                            })}>Eliminar</Button>
-                                </Col>
-                            </Row>
-                        </CardFooter>
-                    </Card>
-            )
-            }
-        </Container>
+        if (this.state.experimentos.length === 0)
+            return <Container>
+                <h1 style={{textAlign: 'center', marginTop: '150px'}}>Ups aún no existen experimentos...</h1>
+                <h2 style={{textAlign: 'center', marginBottom: '50px'}}>Puedes crear tu primer experimento pulsando el
+                    siguiente botón.</h2>
+                <Row>
+                    <Col/>
+                    <Col>
+                        <Button className={"botonPrimary"} block size={"lg"} tag={Link}
+                                to={`/crearExperimento`}>Crear Experimento</Button>
+                    </Col>
+                    <Col/>
+                </Row>
+            </Container>
+
+        else
+            return <Container>
+                <h1>Experimentos</h1>
+                <Alert
+                    color={this.state.alert.status === "OK" ? "success" : "danger"}
+                    isOpen={this.state.alert.status !== ""}
+                    toggle={() => this.setState(prev => ({...prev, alert: {status: ""}}))}
+                >
+                    {this.state.alert.message}
+                </Alert>
+                <VistaConfirmacion
+                    nombreExperimentoEliminar={this.state.nombreExperimentoEliminar}
+                    show={this.state.mostrarVistaConfirmacion}
+                    onHide={this.onCerrarVistaConfirmacion}
+                    eliminarExperimento={this.doEliminarExperimento}
+                />
+                {this.state.experimentos.map(
+                    (item, index) =>
+                        <Card className={"cards"} block color="primary">
+                            <CardHeader style={{marginBottom: '-30px'}}>
+                                <CardTitle
+                                    style={{
+                                        fontSize: '20px',
+                                        textAlign: 'center'
+                                    }}>{item.nombreExperimento}</CardTitle>
+                            </CardHeader>
+                            <CardBody style={{marginBottom: '-30px'}}>
+                                <p style={{textAlign: 'center'}}>Creado el: {item.fechaCreacion}</p>
+                            </CardBody>
+                            <CardFooter>
+                                <Row>
+                                    <Col>
+                                        <Button size="sm" block className={"botonSuccess"} tag={Link}
+                                                to={`/experimentos/verExperimento/${item.idExperimento}`}>Ver</Button>
+                                    </Col>
+                                    <Col>
+                                        <Button size="sm" block className={"botonWarning"} tag={Link}
+                                                to={`/experimentos/modificarExperimento/${item.idExperimento}`}>Modificar</Button>
+                                    </Col>
+                                    <Col>
+                                        <Button size={"sm"} block className={"botonDanger"}
+                                                onClick={() => this.setState({
+                                                    mostrarVistaConfirmacion: true,
+                                                    nombreExperimentoEliminar: item.nombreExperimento,
+                                                    idExperimentoEliminar: item.idExperimento
+                                                })}>Eliminar</Button>
+                                    </Col>
+                                </Row>
+                            </CardFooter>
+                        </Card>
+                )
+                }
+            </Container>
     }
 }
 
