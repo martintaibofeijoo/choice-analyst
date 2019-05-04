@@ -12,6 +12,7 @@ import {CrearMenu} from "../crearmenu";
 import {VerExperimento} from "../verexperimento";
 import {ModificarExperimento} from "../modificarexperimento";
 import {Establecimientos} from "../establecimientos";
+import {VerMenu} from "../vermenu";
 
 export default class Layout extends Component {
     render() {
@@ -19,6 +20,7 @@ export default class Layout extends Component {
             <NavigationBar/>
             <Container className="pt-3" tag="main">
                 <Switch>
+                    <Route path="/establecimientos/:idEstablecimiento/menus/verMenu/:idMenu" component={VerMenu}/>
                     <Route path="/establecimientos/:idEstablecimiento/menus/crearMenu" component={CrearMenu}/>
                     <Route path="/establecimientos/:idEstablecimiento/menus" component={Menus}/>
                     <Route path="/establecimientos" component={Establecimientos}/>

@@ -1,15 +1,11 @@
 import React, {PureComponent as Component} from 'react'
 import {
-    Col,
-    CardFooter,
     Card,
     CardHeader,
     CardTitle,
     CardBody,
-    Input
 } from 'reactstrap';
 import Button from 'react-bootstrap/Button'
-import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import {Authentication} from "../authentication";
@@ -20,7 +16,7 @@ export class VerMenu extends Component {
     render() {
         return <Authentication>
             {
-                auth => <VistaVerMenu auth={auth} idExperimento={this.props.match.params.idExperimento}/>
+                auth => <VistaVerMenu auth={auth} idEstablecimiento={this.props.match.params.idEstablecimiento} idMenu={this.props.match.params.idMenu}/>
             }
         </Authentication>
     }
@@ -38,9 +34,9 @@ class VistaVerMenu extends Component {
     async componentDidMount() {
         const postRequest = await fetch(`http://localhost:9000/experimentos/verExperimento/${this.props.idExperimento}`, {
             method: "GET",
-            //'Authorization': this.props.auth.token,
             mode: "cors",
             headers: {
+                'Authorization': this.props.auth.token,
                 "Content-Type": "application/json"
             }
         })
@@ -59,8 +55,11 @@ class VistaVerMenu extends Component {
 
 
     render() {
+        console.table(this.props)
+
         return (
             <Container>
+
                 <Row>
                     <Card block className="cards" color="primary">
                         <CardHeader style={{marginBottom: '-30px'}}>

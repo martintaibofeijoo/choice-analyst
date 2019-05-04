@@ -12,7 +12,6 @@ public interface RepositorioEstablecimiento extends MongoRepository<ModeloEstabl
     boolean existsByIdEstablecimiento(String idEstablecimiento);
     void deleteByIdEstablecimiento(String idEstablecimiento);
     Optional<ModeloEstablecimiento> findByIdEstablecimiento(String idEstablecimiento);
-    Optional<ModeloEstablecimiento> findByIdAdministrador(String idAdministrador);
     List<ModeloEstablecimiento> findAll();
     Page<ModeloEstablecimiento> findAll(Pageable pageable);
     ModeloEstablecimiento save(ModeloEstablecimiento entity);
