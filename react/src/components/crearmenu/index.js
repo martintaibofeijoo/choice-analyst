@@ -22,7 +22,7 @@ export class CrearMenu extends Component {
     render() {
         return <Authentication>
             {
-                auth => <VistaCrearMenu auth={auth}/>
+                auth => <VistaCrearMenu auth={auth} idEstablecimiento={this.props.match.params.idEstablecimiento}/>
             }
         </Authentication>
     }
@@ -34,7 +34,7 @@ class VistaCrearMenu extends Component {
         this.state = {
             ok: false,
             nombreMenu: "",
-            idAdministrador: this.props.auth.user.username,
+            idEstablecimiento: this.props.idEstablecimiento,
             fechas: "",
             primerosPlatos: [
                 {
@@ -338,10 +338,10 @@ class VistaCrearMenu extends Component {
     }
 
     onCrearMenu = () => {
-        this.doCrearMenu(this.state.nombreMenu, this.state.primerosPlatos, this.state.segundosPlatos, this.state.postres, this.state.idAdministrador, this.state.fechasMenu)
+        this.doCrearMenu(this.state.nombreMenu, this.state.primerosPlatos, this.state.segundosPlatos, this.state.postres, this.state.idEstablecimiento, this.state.fechasMenu)
     }
 
-    doCrearMenu = async (nombreMenu, primerosPlatos, segundosPlatos, postres, idAdministrador, fechasMenu) => {
+    doCrearMenu = async (nombreMenu, primerosPlatos, segundosPlatos, postres, idEstablecimiento, fechasMenu) => {
         console.table(fechasMenu)
         let fechasCambiadas = []
         for (let i = 0; i < fechasMenu.length; i++) {
@@ -352,7 +352,7 @@ class VistaCrearMenu extends Component {
         let idMenu = nombreMenu.replace(/ /g, "-");
         idMenu = idMenu.toLowerCase()
         idMenu = idMenu.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-        const response = await fetch(`http://localhost:9000/establecimientos/${idAdministrador}/menus`, {
+        const response = await fetch(`http://localhost:9000/establecimientos/${idEstablecimiento}/menus`, {
             method: 'POST',
             headers: {
                 //'Authorization': this.props.token,
@@ -379,7 +379,7 @@ class VistaCrearMenu extends Component {
 
     render() {
         if (this.state.ok)
-            return <Redirect to="/experimentos"/>;
+            return <Redirect to={`/establecimientos/${this.props.idEstablecimiento}/menus`}/>;
         else
             return (
                 <Container>
@@ -508,9 +508,7 @@ class VistaCrearMenu extends Component {
                             </CardBody>
                         </Card>
                     </Row>
-
                     <Row>
-
                         <Col style={{paddingLeft: '1px'}} sm={3}>
                             <Route>{
                                 ({history}) =>

@@ -73,7 +73,6 @@ class VistaCrearExperimento extends Component {
         })
         const postResponse = await postRequest.json()
 
-
         this.setState(prev => ({
             ...prev,
             listaEstablecimientos: postResponse
@@ -228,7 +227,7 @@ class VistaCrearExperimento extends Component {
     }
 
     onListaEstablecimientosChange = (value) => {
-        this.setState({ listaEstablecimientosSeleccionados: value });
+        this.setState({listaEstablecimientosSeleccionados: value});
     }
 
     onCrearExperimento = () => {
@@ -275,8 +274,7 @@ class VistaCrearExperimento extends Component {
         if (this.state.ok)
             return <Redirect to="/experimentos"/>;
         else
-        return (
-
+            return (
                 <Container>
                     <Row>
                         <Card block className="cards" color="primary">
@@ -298,12 +296,16 @@ class VistaCrearExperimento extends Component {
                     <Row>
                         <Card block className="cards" color="primary">
                             <CardHeader style={{marginBottom: '-30px'}}>
-                                <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Fechas Experimento</CardTitle>
+                                <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Fechas
+                                    Experimento</CardTitle>
                             </CardHeader>
                             <CardBody>
                                 <Card block className="cards" color="primary">
                                     <CardBody>
-                                        <Input type = "date" onChange = { evt => this.setState(prev => ({...prev, fechas: [...prev.fechas, evt.target.value]}))}/>
+                                        <Input type="date" onChange={evt => this.setState(prev => ({
+                                            ...prev,
+                                            fechas: [...prev.fechas, evt.target.value]
+                                        }))}/>
                                         <MultipleDatePicker className={'datepicker'}
                                                             size={'lg'}
                                                             regional={'es'}

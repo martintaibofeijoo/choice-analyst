@@ -35,11 +35,6 @@ export default class NavigationBar extends Component {
                 </AuthenticatedOnly>
                 <AuthenticatedOnly>
                     <NavItem>
-                        <NavLink tag={Link} to="/menus">Menus</NavLink>
-                    </NavItem>
-                </AuthenticatedOnly>
-                <AuthenticatedOnly>
-                    <NavItem>
                         <NavLink tag={Link} to="/establecimientos">Establecimientos</NavLink>
                     </NavItem>
                 </AuthenticatedOnly>

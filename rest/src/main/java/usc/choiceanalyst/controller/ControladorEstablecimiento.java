@@ -1,6 +1,7 @@
 package usc.choiceanalyst.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -49,8 +50,12 @@ public class ControladorEstablecimiento {
     @GetMapping(
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public ResponseEntity<Collection<ModeloEstablecimiento>> getAllEstablecimientos() {
-        return ResponseEntity.ok(dbes.findAll());
+    public ResponseEntity<Collection<ModeloEstablecimiento>> getAllEstablecimientos(@RequestParam(value = "idAdministrador", defaultValue = "") String idAdministrador) {
+        ModeloEstablecimiento establecimiento = new ModeloEstablecimiento();
+        if (!idAdministrador.isEmpty()) {
+            establecimiento.setIdAdministrador(idAdministrador);
+        }
+        return ResponseEntity.ok(dbes.findAll(Example.of(establecimiento)));
     }
 
     @PreAuthorize("permitAll()")
@@ -73,12 +78,12 @@ public class ControladorEstablecimiento {
 
     @PreAuthorize("permitAll()")
     @GetMapping(
-            path = "/{idAdministrador}/menus/{fechaSeleccionada}",
+            path = "/{idEstablecimiento}/menus/{fechaSeleccionada}",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public ResponseEntity<Collection<Menu>> getMenusEstablecimiento(@PathVariable("idAdministrador") String idAdministrador, @PathVariable("fechaSeleccionada") String fechaSeleccionada) {
+    public ResponseEntity<Collection<Menu>> getMenusEstablecimiento(@PathVariable("idEstablecimiento") String idEstablecimiento, @PathVariable("fechaSeleccionada") String fechaSeleccionada) {
 
-        ModeloEstablecimiento establecimiento = dbes.findByIdAdministrador(idAdministrador).get();
+        ModeloEstablecimiento establecimiento = dbes.findByIdEstablecimiento(idEstablecimiento).get();
 
         if (establecimiento != null) {
             Collection<Menu> menus = new ArrayList<Menu>();
@@ -122,56 +127,51 @@ public class ControladorEstablecimiento {
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
     public ResponseEntity<ModeloEstablecimiento> createMenu(@PathVariable("idEstablecimiento") String idEstablecimiento, @RequestBody Menu menu) {
-        if (dbu.existsByUsername(idEstablecimiento)) {
-
-            Optional<ModeloEstablecimiento> establecimiento = dbes.findByIdAdministrador(idEstablecimiento);
-
-            if (establecimiento.get().getMenus() != null) {
-                for (int i = 0; i < establecimiento.get().getMenus().size(); i++) {
-                    if (establecimiento.get().getMenus().get(i).getIdMenu().equals(menu.getIdMenu())) {
-                        return ResponseEntity.status(HttpStatus.CONFLICT).build();
-                    }
+        if (dbes.existsByIdEstablecimiento(idEstablecimiento)) {
+            Optional<ModeloEstablecimiento> establecimiento = dbes.findByIdEstablecimiento(idEstablecimiento);
+            for (int i = 0; i < establecimiento.get().getMenus().size(); i++) {
+                if (establecimiento.get().getMenus().get(i).getIdMenu().equals(menu.getIdMenu())) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT).build();
                 }
-                establecimiento.get().getMenus().add(menu);
-            } else {
-                List<Menu> menus = new ArrayList<Menu>();
-                menus.add(menu);
-                establecimiento.get().setMenus(menus);
             }
-
+            establecimiento.get().getMenus().add(menu);
             dbes.save(establecimiento.get());
-
-            return ResponseEntity.ok().body(dbes.findByIdAdministrador(idEstablecimiento).get());
+            return ResponseEntity.ok().body(dbes.findByIdEstablecimiento(idEstablecimiento).get());
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
+    @PreAuthorize("permitAll()")
+    @DeleteMapping(
+            path = "/{idEstablecimiento}/menus/{idMenu}",
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+    public ResponseEntity deleteMenu(@PathVariable("idEstablecimiento") String idEstablecimiento, @PathVariable("idMenu") String idMenu) {
+        if (dbes.existsByIdEstablecimiento(idEstablecimiento)) {
+            Optional<ModeloEstablecimiento> establecimiento = dbes.findByIdEstablecimiento(idEstablecimiento);
+            for (int i = 0; i < establecimiento.get().getMenus().size(); i++) {
+                if (establecimiento.get().getMenus().get(i).getIdMenu().equals(idMenu)) {
+                    establecimiento.get().getMenus().remove(i);
+                }
+            }
+            dbes.save(establecimiento.get());
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 
     @PreAuthorize("permitAll()")
-    @GetMapping(
-            path = "/{idEstablecimiento}/realizarExperimento/menus/{fechaSeleccionada}",
-            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
-    )
-    public ResponseEntity<Collection<Menu>> getMenusExperimento(@PathVariable("idEstablecimiento") String idEstablecimiento, @PathVariable("fechaSeleccionada") String fechaSeleccionada) {
-
-        ModeloEstablecimiento establecimiento = dbes.findByIdEstablecimiento(idEstablecimiento).get();
-
-        if (establecimiento != null) {
-            Collection<Menu> menus = new ArrayList<Menu>();
-            for (int i = 0; i < establecimiento.getMenus().size(); i++) {
-                if (establecimiento.getMenus().get(i).getFechasMenu().contains(fechaSeleccionada)) {
-                    ((ArrayList<Menu>) menus).add(establecimiento.getMenus().get(i));
-                }
-            }
-            return ResponseEntity.ok().body(menus);
-        } else {
+    @DeleteMapping(path = "/{idEstablecimiento}")
+    public ResponseEntity deleteEstablecimiento(@PathVariable("idEstablecimiento") String idEstablecimiento) {
+        if (!dbes.existsByIdEstablecimiento(idEstablecimiento)) {
             return ResponseEntity.notFound().build();
+        } else {
+            dbes.deleteByIdEstablecimiento(idEstablecimiento);
+            return ResponseEntity.noContent().build();
         }
     }
-
-
-
 
 }

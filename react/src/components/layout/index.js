@@ -19,6 +19,8 @@ export default class Layout extends Component {
             <NavigationBar/>
             <Container className="pt-3" tag="main">
                 <Switch>
+                    <Route path="/establecimientos/:idEstablecimiento/menus/crearMenu" component={CrearMenu}/>
+                    <Route path="/establecimientos/:idEstablecimiento/menus" component={Menus}/>
                     <Route path="/establecimientos" component={Establecimientos}/>
                     <Route path="/experimentos/verExperimento/:idExperimento" component={VerExperimento}/>
                     <Route path="/experimentos/modificarExperimento/:idExperimento" component={ModificarExperimento}/>
@@ -26,8 +28,6 @@ export default class Layout extends Component {
                     <Route path="/inicio" component={Inicio}/>
                     <Route path="/logout" component={Logout}/>
                     <Route path="/verPerfil" component={VerPerfil}/>
-                    <Route path="/menus/crearMenu" component={CrearMenu}/>
-                    <Route path="/menus" component={Menus}/>
 
                     <Route path="/crearExperimento" component={CrearExperimento}/>
 
