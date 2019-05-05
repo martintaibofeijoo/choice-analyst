@@ -37,6 +37,10 @@ class VistaExperimentos extends Component {
     }
 
     async componentDidMount() {
+        this.actualizarExperimentos();
+    }
+
+    async actualizarExperimentos() {
         const postRequest = await fetch(`http://localhost:9000/experimentos/${this.props.auth.user.username}`, {
             method: "GET",
             mode: "cors",
@@ -73,23 +77,10 @@ class VistaExperimentos extends Component {
             }
         })
         const codigo = response.status;
-
+        debugger
         if (codigo === 204) {
             this.setState(prev => ({...prev, alert: {status: "OK", message: "Experimento Eliminado Correctamente"}}))
-            const postRequest = await fetch(`http://localhost:9000/experimentos/${this.props.auth.user.username}`, {
-                method: "GET",
-                //'Authorization': this.props.auth.token,
-                mode: "cors",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-            const postResponse = await postRequest.json()
-
-            this.setState(prev => ({
-                ...prev,
-                experimentos: postResponse
-            }))
+           this.actualizarExperimentos()
         } else {
             this.setState(prev => ({...prev, alert: {status: "Error", message: "Error Eliminando Experimento"}}))
         }

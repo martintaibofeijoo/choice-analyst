@@ -175,7 +175,7 @@ class VistaEstablecimientos extends Component {
             }
         })
         const codigo = response.status;
-
+        debugger
         if (codigo === 204) {
             this.setState(prev => ({
                 ...prev,

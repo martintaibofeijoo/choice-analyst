@@ -46,7 +46,7 @@ class VistaMenus extends Component {
 
     async componentDidMount() {
         let fechaSeleccionada = moment(this.state.fechaSeleccionada).format('DD-MM-YYYY')
-        const postRequest = await fetch(`http://localhost:9000/establecimientos/${this.props.idEstablecimiento}/menus/${fechaSeleccionada}`, {
+        const postRequest = await fetch(`http://localhost:9000/establecimientos/${this.props.idEstablecimiento}/menus?fechaSeleccionada=${fechaSeleccionada}`, {
             method: "GET",
             mode: "cors",
             headers: {
@@ -65,7 +65,7 @@ class VistaMenus extends Component {
 
     async doBuscarMenus(fechaSeleccionada) {
         fechaSeleccionada = moment(this.state.fechaSeleccionada).format('DD-MM-YYYY')
-        const postRequest = await fetch(`http://localhost:9000/establecimientos/${this.props.idEstablecimiento}/menus/${fechaSeleccionada}`, {
+        const postRequest = await fetch(`http://localhost:9000/establecimientos/${this.props.idEstablecimiento}/menus?fechaSeleccionada=${fechaSeleccionada}`, {
             method: "GET",
             //'Authorization': this.props.auth.token,
             mode: "cors",
@@ -183,7 +183,7 @@ class VistaMenus extends Component {
                                     <Row>
                                         <Col>
                                             <Button size="sm" block className={"botonSuccess"} tag={Link}
-                                                    to={`/experimentos/verExperimento/${item.idExperimento}`}>Ver en
+                                                    to={`/establecimientos/${this.props.idEstablecimiento}/menus/verMenu/${item.idMenu}`}>Ver en
                                                 Detalle</Button>
                                         </Col>
                                         <Col>

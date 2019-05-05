@@ -78,11 +78,10 @@ public class ControladorEstablecimiento {
 
     @PreAuthorize("permitAll()")
     @GetMapping(
-            path = "/{idEstablecimiento}/menus/{fechaSeleccionada}",
+            path = "/{idEstablecimiento}/menus",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public ResponseEntity<Collection<Menu>> getMenusEstablecimiento(@PathVariable("idEstablecimiento") String idEstablecimiento, @PathVariable("fechaSeleccionada") String fechaSeleccionada) {
-
+    public ResponseEntity<Collection<Menu>> getMenusEstablecimiento(@PathVariable("idEstablecimiento") String idEstablecimiento,  @RequestParam(value = "fechaSeleccionada", defaultValue = "") String fechaSeleccionada) {
         ModeloEstablecimiento establecimiento = dbes.findByIdEstablecimiento(idEstablecimiento).get();
 
         if (establecimiento != null) {
@@ -174,4 +173,23 @@ public class ControladorEstablecimiento {
         }
     }
 
+
+    @PreAuthorize("permitAll()")
+    @GetMapping(
+            path = "/{idEstablecimiento}/menus/{idMenu}",
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+    public ResponseEntity<Menu> getMenuEstablecimiento(@PathVariable("idEstablecimiento") String idEstablecimiento, @PathVariable("idMenu") String idMenu) {
+        if (dbes.existsByIdEstablecimiento(idEstablecimiento)) {
+            ModeloEstablecimiento establecimiento=dbes.findByIdEstablecimiento(idEstablecimiento).get();
+            for (int i = 0; i < establecimiento.getMenus().size(); i++) {
+                if (establecimiento.getMenus().get(i).getIdMenu().equals(idMenu)) {
+                    return ResponseEntity.ok().body(establecimiento.getMenus().get(i));
+                }
+            }
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

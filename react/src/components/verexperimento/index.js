@@ -31,7 +31,8 @@ class VistaVerExperimento extends Component {
         super(props);
         this.state = {
             preguntas: [],
-            objetivos: []
+            objetivos: [],
+            fechasExperimento: ""
         }
     }
 
@@ -45,6 +46,15 @@ class VistaVerExperimento extends Component {
             }
         })
         const postResponse = await postRequest.json()
+        let fechasExperimento = postResponse.fechasExperimento;
+        let fechas = "";
+        for (let j = 0; j < fechasExperimento.length; j++) {
+            if (j === 0) {
+                fechas = fechasExperimento[j];
+            } else {
+                fechas = fechas + ", " + fechasExperimento[j];
+            }
+        }
         this.setState(prev => ({
             ...prev,
             idExperimento: postResponse.idExperimento,
@@ -53,7 +63,8 @@ class VistaVerExperimento extends Component {
             nombreExperimento: postResponse.nombreExperimento,
             fechaCreacion: postResponse.fechaCreacion,
             objetivos: postResponse.objetivos,
-            preguntas: postResponse.preguntas
+            preguntas: postResponse.preguntas,
+            fechasExperimento: fechas
         }))
     }
 
@@ -74,6 +85,19 @@ class VistaVerExperimento extends Component {
                         </CardHeader>
                         <CardBody style={{marginBottom: '-30px'}}>
                             <p style={{textAlign: 'center'}}>Creado el: {this.state.fechaCreacion}</p>
+                        </CardBody>
+                    </Card>
+                </Row>
+                <Row>
+                    <Card block className="cards" color="primary">
+                        <CardHeader style={{marginBottom: '-30px'}}>
+                            <CardTitle style={{
+                                fontSize: '20px',
+                                textAlign: 'center'
+                            }}>Fechas Experimento</CardTitle>
+                        </CardHeader>
+                        <CardBody style={{marginBottom: '-30px'}}>
+                            <p style={{textAlign: 'center'}}>{this.state.fechasExperimento}</p>
                         </CardBody>
                     </Card>
                 </Row>

@@ -9,14 +9,15 @@ import Button from 'react-bootstrap/Button'
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import {Authentication} from "../authentication";
-import {Redirect, Route} from "react-router-dom";
+import {Route} from "react-router-dom";
 
 
 export class VerMenu extends Component {
     render() {
         return <Authentication>
             {
-                auth => <VistaVerMenu auth={auth} idEstablecimiento={this.props.match.params.idEstablecimiento} idMenu={this.props.match.params.idMenu}/>
+                auth => <VistaVerMenu auth={auth} idEstablecimiento={this.props.match.params.idEstablecimiento}
+                                      idMenu={this.props.match.params.idMenu}/>
             }
         </Authentication>
     }
@@ -26,30 +27,61 @@ class VistaVerMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            preguntas: [],
-            objetivos: []
+            idMenu: "",
+            nombreMenu: "",
+            fechasMenu: "",
+            precioMenu: "",
+            primerosPlatos: [],
+            segundosPlatos: [],
+            postres: [],
+            objetivos: [],
+            preguntas: []
         }
     }
 
     async componentDidMount() {
-        const postRequest = await fetch(`http://localhost:9000/experimentos/verExperimento/${this.props.idExperimento}`, {
+        const postRequest = await fetch(`http://localhost:9000/establecimientos/${this.props.idEstablecimiento}/menus/${this.props.idMenu}`, {
             method: "GET",
             mode: "cors",
             headers: {
-                'Authorization': this.props.auth.token,
+                //'Authorization': this.props.auth.token,
                 "Content-Type": "application/json"
             }
         })
         const postResponse = await postRequest.json()
+        let platos = postResponse.platos;
+        let primerosPlatos = [];
+        let segundosPlatos = [];
+        let postres = [];
+        for (let i = 0; i < platos.length; i++) {
+            if (platos[i].tipoPlato === "PrimerPlato") {
+                primerosPlatos = [...primerosPlatos, platos[i]];
+            } else if (platos[i].tipoPlato === "SegundoPlato") {
+                segundosPlatos = [...segundosPlatos, platos[i]];
+            } else if (platos[i].tipoPlato === "Postre") {
+                postres = [...postres, platos[i]];
+            }
+        }
+
+        let fechasMenu = postResponse.fechasMenu;
+        let fechas = "";
+        for (let j = 0; j < fechasMenu.length; j++) {
+            if (j === 0) {
+                fechas = fechasMenu[j];
+            } else {
+                fechas = fechas + ", " + fechasMenu[j];
+            }
+        }
+
         this.setState(prev => ({
             ...prev,
-            idExperimento: postResponse.idExperimento,
-            idAdministrador: postResponse.idAdministrador,
-            idEstablecimiento: postResponse.idEstablecimiento,
-            nombreExperimento: postResponse.nombreExperimento,
-            fechaCreacion: postResponse.fechaCreacion,
-            objetivos: postResponse.objetivos,
-            preguntas: postResponse.preguntas
+            idMenu: postResponse.idMenu,
+            nombreMenu: postResponse.nombreMenu,
+            fechasMenu: fechas,
+            precioMenu: postResponse.precioMenu,
+            primerosPlatos: primerosPlatos,
+            segundosPlatos: segundosPlatos,
+            postres: postres
         }))
     }
 
@@ -66,23 +98,46 @@ class VistaVerMenu extends Component {
                             <CardTitle style={{
                                 fontSize: '20px',
                                 textAlign: 'center'
-                            }}>{this.state.nombreExperimento}</CardTitle>
+                            }}>{this.state.nombreMenu}</CardTitle>
                         </CardHeader>
                         <CardBody style={{marginBottom: '-30px'}}>
-                            <p style={{textAlign: 'center'}}>Creado el: {this.state.fechaCreacion}</p>
+                            <p style={{textAlign: 'center'}}>Fechas Menú</p>
+                            <p style={{textAlign: 'center'}}>{this.state.fechasMenu}</p>
                         </CardBody>
                     </Card>
                 </Row>
                 <Row>
                     <Card block className="cards" color="primary">
                         <CardHeader style={{marginBottom: '-30px'}}>
-                            <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Objetivos</CardTitle>
+                            <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Primeros Platos</CardTitle>
                         </CardHeader>
                         <CardBody>
                             <ul>
-                                {this.state.objetivos.map(
+                                {this.state.primerosPlatos.map(
                                     (item, index) =>
-                                        <li type="square">{item.textoObjetivo}</li>
+                                        <Card block style={{marginLeft: '-30px'}} className="cards" color="primary">
+                                            <CardHeader style={{marginBottom: '-30px'}}>
+                                                <CardTitle style={{
+                                                    fontSize: '15px',
+                                                }}>{item.nombrePlato}</CardTitle>
+                                                <p style={{textAlign: 'center'}}>Precio Plato: {item.precioPlato} €</p>
+                                            </CardHeader>
+                                            <CardBody style={{marginBottom: '-30px'}}>
+                                                <Card block className="cards" color="primary">
+                                                    <CardHeader style={{marginBottom: '-30px'}}>
+                                                        <CardTitle style={{
+                                                            fontSize: '15px', textAlign: 'center'
+                                                        }}>Ingredientes</CardTitle>
+                                                    </CardHeader>
+                                                    <CardBody style={{marginBottom: '-15px'}}>
+                                                        {item.ingredientes.map(
+                                                            (item1, index1) =>
+                                                                <li type="square">{item1.textoIngrediente}</li>
+                                                        )}
+                                                    </CardBody>
+                                                </Card>
+                                            </CardBody>
+                                        </Card>
                                 )
                                 }
                             </ul>
@@ -92,31 +147,68 @@ class VistaVerMenu extends Component {
                 <Row>
                     <Card block className="cards" color="primary">
                         <CardHeader style={{marginBottom: '-30px'}}>
-                            <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Preguntas</CardTitle>
+                            <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Segundos Platos</CardTitle>
                         </CardHeader>
                         <CardBody>
                             <ul>
-                                {this.state.preguntas.map(
+                                {this.state.segundosPlatos.map(
                                     (item, index) =>
                                         <Card block style={{marginLeft: '-30px'}} className="cards" color="primary">
                                             <CardHeader style={{marginBottom: '-30px'}}>
                                                 <CardTitle style={{
                                                     fontSize: '15px',
-                                                }}>{item.textoPregunta}</CardTitle>
-                                                <p style={{textAlign: 'center'}}>Variable
-                                                    Asociada: {item.variableAsociada}</p>
+                                                }}>{item.nombrePlato}</CardTitle>
+                                                <p style={{textAlign: 'center'}}>Precio Plato: {item.precioPlato} €</p>
                                             </CardHeader>
                                             <CardBody style={{marginBottom: '-30px'}}>
                                                 <Card block className="cards" color="primary">
                                                     <CardHeader style={{marginBottom: '-30px'}}>
                                                         <CardTitle style={{
                                                             fontSize: '15px', textAlign: 'center'
-                                                        }}>Opciones</CardTitle>
+                                                        }}>Ingredientes</CardTitle>
                                                     </CardHeader>
                                                     <CardBody style={{marginBottom: '-15px'}}>
-                                                        {item.opciones.map(
+                                                        {item.ingredientes.map(
                                                             (item1, index1) =>
-                                                                <li type="square">{item1.textoOpcion}</li>
+                                                                <li type="square">{item1.textoIngrediente}</li>
+                                                        )}
+                                                    </CardBody>
+                                                </Card>
+                                            </CardBody>
+                                        </Card>
+                                )
+                                }
+                            </ul>
+                        </CardBody>
+                    </Card>
+                </Row>
+                <Row>
+                    <Card block className="cards" color="primary">
+                        <CardHeader style={{marginBottom: '-30px'}}>
+                            <CardTitle style={{fontSize: '20px', textAlign: 'center'}}>Postres</CardTitle>
+                        </CardHeader>
+                        <CardBody>
+                            <ul>
+                                {this.state.postres.map(
+                                    (item, index) =>
+                                        <Card block style={{marginLeft: '-30px'}} className="cards" color="primary">
+                                            <CardHeader style={{marginBottom: '-30px'}}>
+                                                <CardTitle style={{
+                                                    fontSize: '15px',
+                                                }}>{item.nombrePlato}</CardTitle>
+                                                <p style={{textAlign: 'center'}}>Precio Plato: {item.precioPlato} €</p>
+                                            </CardHeader>
+                                            <CardBody style={{marginBottom: '-30px'}}>
+                                                <Card block className="cards" color="primary">
+                                                    <CardHeader style={{marginBottom: '-30px'}}>
+                                                        <CardTitle style={{
+                                                            fontSize: '15px', textAlign: 'center'
+                                                        }}>Ingredientes</CardTitle>
+                                                    </CardHeader>
+                                                    <CardBody style={{marginBottom: '-15px'}}>
+                                                        {item.ingredientes.map(
+                                                            (item1, index1) =>
+                                                                <li type="square">{item1.textoIngrediente}</li>
                                                         )}
                                                     </CardBody>
                                                 </Card>
