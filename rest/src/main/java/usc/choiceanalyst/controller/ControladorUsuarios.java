@@ -1,6 +1,7 @@
 package usc.choiceanalyst.controller;
 
 import usc.choiceanalyst.model.ModeloEstablecimiento;
+import usc.choiceanalyst.model.ModeloExperimento;
 import usc.choiceanalyst.model.ModeloUsuario;
 
 import java.net.URI;
@@ -42,7 +43,7 @@ public class ControladorUsuarios {
 
     }
 
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('CLIENTE') and principal==#username")
     @GetMapping(
             path = "/{username}",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
@@ -73,7 +74,7 @@ public class ControladorUsuarios {
     }
 
 
-    @PreAuthorize("principal == #username || hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('CLIENTE') and principal==#username")
     @DeleteMapping(path = "/{username}")
     public ResponseEntity deleteUser(@PathVariable("username") String username) {
         if (!dbu.existsByUsername(username)) {
@@ -105,7 +106,7 @@ public class ControladorUsuarios {
         }
     }
 
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('CLIENTE') and principal==#username")
     @PutMapping(
             path = "/{username}",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},

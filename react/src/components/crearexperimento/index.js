@@ -67,7 +67,8 @@ class VistaCrearExperimento extends Component {
             method: "GET",
             mode: "cors",
             headers: {
-                "Content-Type": "application/json",
+                'Accept': 'application/json;charset=UTF-8',
+                'Content-Type': 'application/json;charset=UTF-8',
                 'Authorization': this.props.auth.token
             }
         })
@@ -245,7 +246,7 @@ class VistaCrearExperimento extends Component {
         const response = await fetch(`http://localhost:9000/experimentos/`, {
             method: 'POST',
             headers: {
-                //'Authorization': this.props.token,
+                'Authorization': this.props.auth.token,
                 'Accept': 'application/json;charset=UTF-8',
                 'Content-Type': 'application/json;charset=UTF-8'
             },

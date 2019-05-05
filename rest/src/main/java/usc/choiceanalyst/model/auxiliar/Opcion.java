@@ -3,7 +3,6 @@ package usc.choiceanalyst.model.auxiliar;
 public class Opcion {
     private String textoOpcion;
 
-
     public String getTextoOpcion() {
         return textoOpcion;
     }

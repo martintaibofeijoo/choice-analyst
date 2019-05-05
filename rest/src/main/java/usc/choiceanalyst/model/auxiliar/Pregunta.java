@@ -7,7 +7,6 @@ public class Pregunta {
     private String textoPregunta;
     private List<Opcion> opciones;
 
-
     public String getVariableAsociada() {
         return variableAsociada;
     }

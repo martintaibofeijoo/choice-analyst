@@ -3,10 +3,12 @@ package usc.choiceanalyst.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import usc.choiceanalyst.model.ModeloUsuario;
@@ -14,6 +16,7 @@ import usc.choiceanalyst.repository.RepositorioEstablecimiento;
 import usc.choiceanalyst.repository.RepositorioExperimento;
 import usc.choiceanalyst.model.*;
 import usc.choiceanalyst.repository.RepositorioUsuario;
+
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -28,9 +31,9 @@ public class ControladorExperimentos {
 
     @Autowired
     public ControladorExperimentos(RepositorioExperimento dbex, RepositorioEstablecimiento dbes, RepositorioUsuario dbu) {
-        this.dbex= dbex;
+        this.dbex = dbex;
         this.dbes = dbes;
-        this.dbu=dbu;
+        this.dbu = dbu;
     }
 
     @PreAuthorize("hasRole('ADMINISTRADOR') and principal==#username")
@@ -44,36 +47,43 @@ public class ControladorExperimentos {
         return ResponseEntity.ok(dbex.findByIdAdministrador(username));
     }
 
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping(
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
 
     public ResponseEntity createExperimento(@RequestBody ModeloExperimento experimento) {
-        if (dbex.existsByIdExperimento(experimento.getIdExperimento())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        if (experimento.getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
+            if (dbex.existsByIdExperimento(experimento.getIdExperimento())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            } else {
+                dbex.save(experimento);
+                URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/experimentos/{idExperimento}").buildAndExpand(experimento.getIdExperimento()).toUri();
+                return ResponseEntity.created(location).body(experimento);
+            }
         } else {
-            Optional<ModeloUsuario> usuario = dbu.findByUsername(experimento.getIdAdministrador());
-            //experimento.setIdEstablecimiento(usuario.get().getIdEstablecimiento());
-            dbex.save(experimento);
-            URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/experimentos/{idExperimento}").buildAndExpand(experimento.getIdExperimento()).toUri();
-            return ResponseEntity.created(location).body(experimento);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping(path = "/{idExperimento}")
     public ResponseEntity deleteExperimento(@PathVariable("idExperimento") String idExperimento) {
         if (!dbex.existsByIdExperimento(idExperimento)) {
             return ResponseEntity.notFound().build();
         } else {
-            dbex.deleteByIdExperimento(idExperimento);
+            ModeloExperimento experimento = dbex.findByIdExperimento(idExperimento).get();
+            if (experimento.getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
+                dbex.deleteByIdExperimento(idExperimento);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
             return ResponseEntity.noContent().build();
         }
     }
 
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PutMapping(
             path = "/{idExperimento}",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},
@@ -85,28 +95,36 @@ public class ControladorExperimentos {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
             Optional<ModeloExperimento> experimentoExistente = dbex.findByIdExperimento(idExperimento);
-            if(!idExperimento.equals(experimento.getIdExperimento())){
-                experimentoExistente.get().setIdExperimento(experimento.getIdExperimento());
-                dbex.deleteByIdExperimento(idExperimento);
-            }
-            experimentoExistente.get().setNombreExperimento(experimento.getNombreExperimento());
-            experimentoExistente.get().setPreguntas(experimento.getPreguntas());
-            experimentoExistente.get().setObjetivos(experimento.getObjetivos());
+            if (experimentoExistente.get().getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
+                if (!idExperimento.equals(experimento.getIdExperimento())) {
+                    experimentoExistente.get().setIdExperimento(experimento.getIdExperimento());
+                    dbex.deleteByIdExperimento(idExperimento);
+                }
+                experimentoExistente.get().setNombreExperimento(experimento.getNombreExperimento());
+                experimentoExistente.get().setPreguntas(experimento.getPreguntas());
+                experimentoExistente.get().setObjetivos(experimento.getObjetivos());
 
-            dbex.save(experimentoExistente.get());
-            return ResponseEntity.ok().body(experimentoExistente.get());
+                dbex.save(experimentoExistente.get());
+                return ResponseEntity.ok().body(experimentoExistente.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
         }
     }
 
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @GetMapping(
             path = "/verExperimento/{idExperimento}",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
     public ResponseEntity<ModeloExperimento> getExperimento(@PathVariable("idExperimento") String idExperimento) {
         if (dbex.existsByIdExperimento(idExperimento)) {
-            return ResponseEntity.ok().body(dbex.findByIdExperimento(idExperimento).get());
-
+            ModeloExperimento experimento = dbex.findByIdExperimento(idExperimento).get();
+            if (experimento.getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
+                return ResponseEntity.ok().body(experimento);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
         } else {
             return ResponseEntity.notFound().build();
         }

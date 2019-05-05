@@ -122,7 +122,5 @@ public class ModeloUsuario extends Credentials {
         return idsEstablecimientos;
     }
 
-    public void setIdsEstablecimientos(List<String> idsEstablecimientos) {
-        this.idsEstablecimientos = idsEstablecimientos;
-    }
+    public void setIdsEstablecimientos(List<String> idsEstablecimientos) { this.idsEstablecimientos = idsEstablecimientos; }
 }

@@ -44,8 +44,10 @@ class VistaVerPerfil extends Component {
             //'Authorization': this.props.auth.token,
             mode: "cors",
             headers: {
-                "Content-Type": "application/json"
-            }
+                'Accept': 'application/json;charset=UTF-8',
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Authorization': this.props.auth.token
+            },
         })
         const postResponse = await postRequest.json()
 
@@ -103,7 +105,8 @@ class VistaVerPerfil extends Component {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json;charset=UTF-8',
-                'Content-Type': 'application/json;charset=UTF-8'
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Authorization': this.props.auth.token
             },
             body: JSON.stringify({
                 username: username,

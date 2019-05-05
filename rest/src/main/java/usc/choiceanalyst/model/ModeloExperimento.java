@@ -92,8 +92,6 @@ public class ModeloExperimento {
         return idsEstablecimientos;
     }
 
-    public void setIdsEstablecimientos(List<String> idsEstablecimientos) {
-        this.idsEstablecimientos = idsEstablecimientos;
-    }
+    public void setIdsEstablecimientos(List<String> idsEstablecimientos) { this.idsEstablecimientos = idsEstablecimientos; }
 
 }

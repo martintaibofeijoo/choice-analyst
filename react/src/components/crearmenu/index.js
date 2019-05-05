@@ -355,11 +355,10 @@ class VistaCrearMenu extends Component {
         const response = await fetch(`http://localhost:9000/establecimientos/${idEstablecimiento}/menus`, {
             method: 'POST',
             headers: {
-                //'Authorization': this.props.token,
                 'Accept': 'application/json;charset=UTF-8',
-                'Content-Type': 'application/json;charset=UTF-8'
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Authorization': this.props.auth.token
             },
-
             body: JSON.stringify({
                 idMenu: idMenu,
                 nombreMenu: nombreMenu,

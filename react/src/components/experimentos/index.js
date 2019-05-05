@@ -45,7 +45,8 @@ class VistaExperimentos extends Component {
             method: "GET",
             mode: "cors",
             headers: {
-                "Content-Type": "application/json",
+                'Accept': 'application/json;charset=UTF-8',
+                'Content-Type': 'application/json;charset=UTF-8',
                 'Authorization': this.props.auth.token
             }
         })
@@ -73,11 +74,11 @@ class VistaExperimentos extends Component {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json;charset=UTF-8',
-                'Content-Type': 'application/json;charset=UTF-8'
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Authorization': this.props.auth.token
             }
         })
         const codigo = response.status;
-        debugger
         if (codigo === 204) {
             this.setState(prev => ({...prev, alert: {status: "OK", message: "Experimento Eliminado Correctamente"}}))
            this.actualizarExperimentos()
@@ -104,7 +105,7 @@ class VistaExperimentos extends Component {
 
         else
             return <Container>
-                <h1>Experimentos</h1>
+                <h1 style={{textAlign: 'center'}}>Experimentos</h1>
                 <Alert
                     color={this.state.alert.status === "OK" ? "success" : "danger"}
                     isOpen={this.state.alert.status !== ""}

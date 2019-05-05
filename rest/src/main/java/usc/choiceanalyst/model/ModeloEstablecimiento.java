@@ -20,19 +20,6 @@ public class ModeloEstablecimiento {
     private String tipoEstablecimiento;
     private List<Menu> menus;
 
-
-    public ModeloEstablecimiento() {
-    }
-
-    public ModeloEstablecimiento(String idEstablecimiento, String idAdministrador, String nombreEstablecimiento, String localizacionEstablecimiento, String tipoEstablecimiento) {
-        this.idEstablecimiento = idEstablecimiento;
-        this.idAdministrador = idAdministrador;
-        this.nombreEstablecimiento = nombreEstablecimiento;
-        this.localizacionEstablecimiento = localizacionEstablecimiento;
-        this.tipoEstablecimiento = tipoEstablecimiento;
-    }
-
-
     public String getIdEstablecimiento() {
         return idEstablecimiento;
     }

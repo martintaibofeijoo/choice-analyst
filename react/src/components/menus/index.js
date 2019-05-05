@@ -50,9 +50,10 @@ class VistaMenus extends Component {
             method: "GET",
             mode: "cors",
             headers: {
-                //'Authorization': this.props.auth.token,
-                "Content-Type": "application/json"
-            }
+                'Accept': 'application/json;charset=UTF-8',
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Authorization': this.props.auth.token
+            },
         })
         const postResponse = await postRequest.json()
 
@@ -70,8 +71,10 @@ class VistaMenus extends Component {
             //'Authorization': this.props.auth.token,
             mode: "cors",
             headers: {
-                "Content-Type": "application/json"
-            }
+                'Accept': 'application/json;charset=UTF-8',
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Authorization': this.props.auth.token
+            },
         })
         const postResponse = await postRequest.json()
 
@@ -101,7 +104,8 @@ class VistaMenus extends Component {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json;charset=UTF-8',
-                'Content-Type': 'application/json;charset=UTF-8'
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Authorization': this.props.auth.token
             }
         })
         const codigo = response.status;

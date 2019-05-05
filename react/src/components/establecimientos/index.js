@@ -74,7 +74,8 @@ class VistaEstablecimientos extends Component {
             method: "GET",
             mode: "cors",
             headers: {
-                "Content-Type": "application/json",
+                'Accept': 'application/json;charset=UTF-8',
+                'Content-Type': 'application/json;charset=UTF-8',
                 'Authorization': this.props.auth.token
             }
         })
@@ -120,7 +121,11 @@ class VistaEstablecimientos extends Component {
 
         fetch("http://localhost:9000/establecimientos", {
             method: 'POST',
-            headers: {'Accept': 'application/json;charset=UTF-8', 'Content-Type': 'application/json;charset=UTF-8'},
+            headers: {
+                'Accept': 'application/json;charset=UTF-8',
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Authorization': this.props.auth.token
+            },
             body: JSON.stringify({
                 idEstablecimiento: idEstablecimiento,
                 idAdministrador: this.props.auth.user.username,
@@ -144,7 +149,8 @@ class VistaEstablecimientos extends Component {
                         method: "GET",
                         mode: "cors",
                         headers: {
-                            "Content-Type": "application/json",
+                            'Accept': 'application/json;charset=UTF-8',
+                            'Content-Type': 'application/json;charset=UTF-8',
                             'Authorization': this.props.auth.token
                         }
                     })
@@ -171,8 +177,9 @@ class VistaEstablecimientos extends Component {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json;charset=UTF-8',
-                'Content-Type': 'application/json;charset=UTF-8'
-            }
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Authorization': this.props.auth.token
+            },
         })
         const codigo = response.status;
         debugger
@@ -372,12 +379,14 @@ class VistaModificarEstablecimiento extends Component {
         }
     }
 
-    async componentDidUpdate() {
+    async componentDidMount() {
         const postRequest = await fetch(`http://localhost:9000/establecimientos/${this.props.idEstablecimientoModificar}`, {
             method: "GET",
             mode: "cors",
             headers: {
-                "Content-Type": "application/json",
+                'Accept': 'application/json;charset=UTF-8',
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Authorization': this.props.auth.token
             }
         })
         const postResponse = await postRequest.json()
@@ -389,7 +398,6 @@ class VistaModificarEstablecimiento extends Component {
             localizacionEstablecimientoModificar: postResponse.localizacionEstablecimientoc
         }))
     }
-
 
     onNombreEstablecimientoModificarChange = event => {
         let value = event.target !== null ? event.target.value : ""
@@ -426,7 +434,11 @@ class VistaModificarEstablecimiento extends Component {
 
         fetch("http://localhost:9000/establecimientos", {
             method: 'POST',
-            headers: {'Accept': 'application/json;charset=UTF-8', 'Content-Type': 'application/json;charset=UTF-8'},
+            headers: {
+                'Accept': 'application/json;charset=UTF-8',
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Authorization': this.props.auth.token
+            },
             body: JSON.stringify({
                 idEstablecimiento: idEstablecimientoModificar,
                 idAdministrador: this.props.auth.user.username,

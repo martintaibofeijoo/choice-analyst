@@ -41,9 +41,10 @@ class VistaVerExperimento extends Component {
             method: "GET",
             mode: "cors",
             headers: {
-                'Authorization': this.props.auth.token,
-                "Content-Type": "application/json"
-            }
+                'Accept': 'application/json;charset=UTF-8',
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Authorization': this.props.auth.token
+            },
         })
         const postResponse = await postRequest.json()
         let fechasExperimento = postResponse.fechasExperimento;
