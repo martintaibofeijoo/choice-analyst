@@ -1,7 +1,6 @@
 package usc.choiceanalyst.controller;
 
-import usc.choiceanalyst.model.ModeloEstablecimiento;
-import usc.choiceanalyst.model.ModeloExperimento;
+
 import usc.choiceanalyst.model.ModeloUsuario;
 
 import java.net.URI;
@@ -18,13 +17,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Example;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.text.Normalizer;
 
 @RestController
 @RequestMapping("usuarios")

@@ -75,7 +75,6 @@ class VistaVerExperimento extends Component {
 
         return (
             <Container>
-
                 <Row>
                     <Card block className="cards" color="primary">
                         <CardHeader style={{marginBottom: '-30px'}}>

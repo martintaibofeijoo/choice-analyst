@@ -6,7 +6,7 @@ import {
     CardHeader,
     CardTitle,
     CardBody,
-    Input
+    Input, Alert
 } from 'reactstrap';
 import Button from 'react-bootstrap/Button'
 import Form from "react-bootstrap/Form";
@@ -34,6 +34,10 @@ class VistaCrearExperimento extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            alert: {
+                status: "",
+                message: []
+            },
             ok: false,
             listaEstablecimientos: [],
             listaEstablecimientosSeleccionados: [],
@@ -41,29 +45,15 @@ class VistaCrearExperimento extends Component {
             idEstablecimiento: "",
             nombreExperimento: "",
             fechasExperimento: "",
-            preguntas: [
-                {
-                    textoPregunta: "",
-                    variableAsociada: "",
-                    opciones: [
-                        {
-                            textoOpcion: ""
-                        }
-                    ]
-                }
-            ],
-            objetivos: [
-                {
-                    textoObjetivo: ""
-                }
-            ],
+            preguntas: [],
+            objetivos: [],
             variablesAsignadas: [],
-            variables: ["Higiene", "Ruído", "Distancía", "Energía", "Compañía", "Atmósfera", "Calidad de Servicio", "Apariencia", "Temperatura", "Saludable", "Sabroso", "Menu Seleccionado", "Primer Plato", "Segundo Plato", "Postre"]
+            variables: ["Higiene", "Ruído", "Distancía", "Energía", "Compañía", "Atmósfera", "Calidad de Servicio", "Apariencia", "Temperatura", "Saludable", "Sabroso"]
         }
     }
 
     async componentDidMount() {
-        const postRequest = await fetch(`http://localhost:9000/establecimientos`, {
+        const postRequest = await fetch(`http://localhost:9000/establecimientos?idAdministrador=${this.props.auth.user.username}`, {
             method: "GET",
             mode: "cors",
             headers: {
@@ -78,8 +68,6 @@ class VistaCrearExperimento extends Component {
             ...prev,
             listaEstablecimientos: postResponse
         }))
-
-        console.table(this.state.listaEstablecimientos)
     }
 
 
@@ -232,43 +220,65 @@ class VistaCrearExperimento extends Component {
     }
 
     onCrearExperimento = () => {
-        this.doCrearExperimento(this.state.idAdministrador, this.state.idEstablecimiento, this.state.nombreExperimento, this.state.preguntas, this.state.objetivos, this.state.fechasExperimento)
+        this.doCrearExperimento(this.state.idAdministrador, this.state.idEstablecimiento, this.state.nombreExperimento, this.state.preguntas, this.state.objetivos, this.state.fechasExperimento, this.state.listaEstablecimientosSeleccionados)
     }
 
-    doCrearExperimento = async (idAdministrador, idEstablecimiento, nombreExperimento, preguntas, objetivos, fechasExperimento) => {
-        let idExperimento = nombreExperimento.replace(/ /g, "-");
-        idExperimento = idExperimento.toLowerCase()
-        idExperimento = idExperimento.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-        let fechasCambiadas = []
-        for (let i = 0; i < fechasExperimento.length; i++) {
-            fechasCambiadas[i] = moment(fechasExperimento[i]).format('DD-MM-YYYY')
+    doCrearExperimento = async (idAdministrador, idEstablecimiento, nombreExperimento, preguntas, objetivos, fechasExperimento, listaEstablecimientosSeleccionados) => {
+        //Comprobación de los parametros
+        let crear = true;
+        let mensaje= [];
+        if (nombreExperimento === "") {
+            crear = false;
+            mensaje = [...mensaje, "El nombre del establecimiento no puede estar vacio."];
         }
-        const response = await fetch(`http://localhost:9000/experimentos/`, {
-            method: 'POST',
-            headers: {
-                'Authorization': this.props.auth.token,
-                'Accept': 'application/json;charset=UTF-8',
-                'Content-Type': 'application/json;charset=UTF-8'
-            },
+        if(objetivos.length === 0 ){
+            mensaje = [...mensaje, "El experimento debe tener como mínimo un objetivo."];
+        }
 
-            body: JSON.stringify({
-                idExperimento: idExperimento,
-                idAdministrador: idAdministrador,
-                nombreExperimento: nombreExperimento,
-                preguntas: preguntas,
-                objetivos: objetivos,
-                fechasExperimento: fechasCambiadas
+        if (crear === true) {
+            let idExperimento = nombreExperimento.replace(/ /g, "-");
+            idExperimento = idExperimento.toLowerCase()
+            idExperimento = idExperimento.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+            let fechasCambiadas = []
+            for (let i = 0; i < fechasExperimento.length; i++) {
+                fechasCambiadas[i] = moment(fechasExperimento[i]).format('DD-MM-YYYY')
+            }
+            let establecimientosSeleccionados=[];
+            for (let i = 0; i < listaEstablecimientosSeleccionados.length; i++) {
+                establecimientosSeleccionados[i] = listaEstablecimientosSeleccionados[i].idEstablecimiento;
+            }
+
+            const response = await fetch(`http://localhost:9000/experimentos/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': this.props.auth.token,
+                    'Accept': 'application/json;charset=UTF-8',
+                    'Content-Type': 'application/json;charset=UTF-8'
+                },
+
+                body: JSON.stringify({
+                    idExperimento: idExperimento,
+                    idAdministrador: idAdministrador,
+                    nombreExperimento: nombreExperimento,
+                    preguntas: preguntas,
+                    objetivos: objetivos,
+                    fechasExperimento: fechasCambiadas,
+                    idsEstablecimientos: establecimientosSeleccionados
+                })
             })
-        })
-        const codigo = response.status
+            const codigo = response.status
 
-        if (codigo === 201) {
-            this.setState(prev => ({
-                ...prev,
-                ok: true
-            }))
+            if (codigo === 201) {
+                this.setState(prev => ({
+                    ...prev,
+                    ok: true
+                }))
+            } else {
+                this.setState(prev => ({...prev, alert: {status: "Error", message: "Error Creando Experimento"}}))
+            }
+        } else {
+            this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
         }
-
     }
 
     render() {
@@ -277,6 +287,7 @@ class VistaCrearExperimento extends Component {
         else
             return (
                 <Container>
+                    <h1 style={{textAlign: 'center'}}>Crear Experimento</h1>
                     <Row>
                         <Card block className="cards" color="primary">
                             <CardHeader style={{marginBottom: '-30px'}}>
@@ -288,7 +299,8 @@ class VistaCrearExperimento extends Component {
                                     <CardBody>
                                         <Input className="inputs" size={"sm"} placeholder="Nombre Experimento"
                                                value={this.state.nombreExperimento}
-                                               onChange={this.onNombreExperimentoChange}/>
+                                               onChange={this.onNombreExperimentoChange}
+                                               required/>
                                     </CardBody>
                                 </Card>
                             </CardBody>
@@ -303,14 +315,9 @@ class VistaCrearExperimento extends Component {
                             <CardBody>
                                 <Card block className="cards" color="primary">
                                     <CardBody>
-                                        <Input type="date" onChange={evt => this.setState(prev => ({
-                                            ...prev,
-                                            fechas: [...prev.fechas, evt.target.value]
-                                        }))}/>
                                         <MultipleDatePicker className={'datepicker'}
                                                             size={'lg'}
                                                             regional={'es'}
-
                                                             onSubmit={dates => this.setState({fechasExperimento: dates})}
                                         />
                                     </CardBody>
@@ -405,6 +412,17 @@ class VistaCrearExperimento extends Component {
                             </CardBody>
                         </Card>
                     </Row>
+                    <Alert
+                        color={this.state.alert.status === "OK" ? "success" : "danger"}
+                        isOpen={this.state.alert.status !== ""}
+                        toggle={() => this.setState(prev => ({...prev, alert: {status: ""}}))}
+                    >
+                        {this.state.alert.message.map(
+                            (item, index) =>
+                                <p>{item}</p>
+                        )
+                        }
+                    </Alert>
                     <Row>
                         <Col style={{paddingLeft: '1px'}} sm={3}>
                             <Route>{
