@@ -108,6 +108,7 @@ class VistaEstablecimientos extends Component {
     }
 
     onCerrarVistaModificarExperimento = () => {
+        this.actualizarEstablecimientos();
         this.setState({
             mostrarVistaModificarExperimento: false
         });
@@ -273,54 +274,63 @@ class VistaEstablecimientos extends Component {
                         onHide={this.onCerrarVistaEliminarExperimento}
                         eliminarEstablecimiento={this.doEliminarEstablecimiento}
                     />
-                    <VistaModificarEstablecimiento
-                        idEstablecimientoModificar={this.state.idEstablecimientoModificar}
-                        show={this.state.mostrarVistaModificarExperimento}
-                        onHide={this.onCerrarVistaModificarExperimento}
-                    />
-                    {this.state.establecimientos.map(
-                        (item, index) =>
-                            <Card className={"cards"} block color="primary">
-                                <CardHeader style={{marginBottom: '-30px'}}>
-                                    <CardTitle
-                                        style={{
-                                            fontSize: '20px',
-                                            textAlign: 'center'
-                                        }}>{item.nombreEstablecimiento}</CardTitle>
-                                </CardHeader>
-                                <CardBody style={{marginBottom: '-30px'}}>
-                                    <p style={{textAlign: 'center'}}>{item.tipoEstablecimiento}</p>
-                                    <p style={{textAlign: 'center'}}>{item.localizacionEstablecimiento}</p>
-                                </CardBody>
-                                <CardFooter>
-                                    <Row>
-                                        <Col>
-                                            <Button size="sm" block className={"botonSuccess"} tag={Link}
-                                                    to={`/establecimientos/${item.idEstablecimiento}/menus`}>Ver
-                                                Menús</Button>
-                                        </Col>
-                                        <Col>
-                                            <Button size={"sm"} block className={"botonWarning"}
-                                                    onClick={() => this.setState({
-                                                        mostrarVistaModificarExperimento: true,
-                                                        nombreEstablecimientoModificar: item.nombreEstablecimiento,
-                                                        tipoEstablecimientoModificar: item.tipoEstablecimiento,
-                                                        localizacionEstablecimientoModificar: item.localizacionEstablecimiento
-                                                    })}>Modificar Establecimiento</Button>
-                                        </Col>
-                                        <Col>
-                                            <Button size={"sm"} block className={"botonDanger"}
-                                                    onClick={() => this.setState({
-                                                        mostrarVistaEliminarExperimento: true,
-                                                        nombreEstablecimientoEliminar: item.nombreEstablecimiento,
-                                                        idEstablecimientoEliminar: item.idEstablecimiento
-                                                    })}>Eliminar Establecimiento</Button>
-                                        </Col>
-                                    </Row>
-                                </CardFooter>
-                            </Card>
-                    )
+                    {this.state.mostrarVistaModificarExperimento === true &&
+                        <VistaModificarEstablecimiento
+                            nombreEstablecimientoModificar ={this.state.nombreEstablecimientoModificar}
+                            tipoEstablecimientoModificar={this.state.tipoEstablecimientoModificar}
+                            localizacionEstablecimientoModificar={this.state.localizacionEstablecimientoModificar}
+                            auth={this.props.auth}
+                            show={this.state.mostrarVistaModificarExperimento}
+                            onHide={this.onCerrarVistaModificarExperimento}
+                        />
                     }
+                    {(this.state.establecimientos.length === 0) ? (
+                        <h2 style={{marginTop: '50px', textAlign: 'center'}}>!Aún no existe ningún establecimiento,
+                            puedes crearlo aquí!</h2>
+                    ) : (
+                        this.state.establecimientos.map(
+                            (item, index) =>
+                                <Card className={"cards"} block color="primary">
+                                    <CardHeader style={{marginBottom: '-30px'}}>
+                                        <CardTitle
+                                            style={{
+                                                fontSize: '20px',
+                                                textAlign: 'center'
+                                            }}>{item.nombreEstablecimiento}</CardTitle>
+                                    </CardHeader>
+                                    <CardBody style={{marginBottom: '-30px'}}>
+                                        <p style={{textAlign: 'center'}}>{item.tipoEstablecimiento}</p>
+                                        <p style={{textAlign: 'center'}}>{item.localizacionEstablecimiento}</p>
+                                    </CardBody>
+                                    <CardFooter>
+                                        <Row>
+                                            <Col>
+                                                <Button size="sm" block className={"botonSuccess"} tag={Link}
+                                                        to={`/establecimientos/${item.idEstablecimiento}/menus`}>Ver
+                                                    Menús</Button>
+                                            </Col>
+                                            <Col>
+                                                <Button size={"sm"} block className={"botonWarning"}
+                                                        onClick={() => this.setState({
+                                                            mostrarVistaModificarExperimento: true,
+                                                            nombreEstablecimientoModificar: item.nombreEstablecimiento,
+                                                            tipoEstablecimientoModificar: item.tipoEstablecimiento,
+                                                            localizacionEstablecimientoModificar: item.localizacionEstablecimiento
+                                                        })}>Modificar Establecimiento</Button>
+                                            </Col>
+                                            <Col>
+                                                <Button size={"sm"} block className={"botonDanger"}
+                                                        onClick={() => this.setState({
+                                                            mostrarVistaEliminarExperimento: true,
+                                                            nombreEstablecimientoEliminar: item.nombreEstablecimiento,
+                                                            idEstablecimientoEliminar: item.idEstablecimiento
+                                                        })}>Eliminar Establecimiento</Button>
+                                            </Col>
+                                        </Row>
+                                    </CardFooter>
+                                </Card>
+                        )
+                    )}
                 </Col>
             </Row>
         </Container>
@@ -372,32 +382,13 @@ class VistaModificarEstablecimiento extends Component {
                 status: ""
             },
 
-            nombreEstablecimientoModificar: "",
-            localizacionEstablecimientoModificar: "",
-            tipoEstablecimientoModificar: "",
+            nombreEstablecimientoModificar: this.props.nombreEstablecimientoModificar,
+            localizacionEstablecimientoModificar: this.props.localizacionEstablecimientoModificar,
+            tipoEstablecimientoModificar: this.props.tipoEstablecimientoModificar,
             validated: false
         }
     }
 
-    async componentDidMount() {
-        const postRequest = await fetch(`http://localhost:9000/establecimientos/${this.props.idEstablecimientoModificar}`, {
-            method: "GET",
-            mode: "cors",
-            headers: {
-                'Accept': 'application/json;charset=UTF-8',
-                'Content-Type': 'application/json;charset=UTF-8',
-                'Authorization': this.props.auth.token
-            }
-        })
-        const postResponse = await postRequest.json()
-        console.table(postResponse)
-        this.setState(prev => ({
-            ...prev,
-            nombreEstablecimientoModificar: postResponse.nombreEstablecimiento,
-            tipoEstablecimientoModificar: postResponse.tipoEstablecimiento,
-            localizacionEstablecimientoModificar: postResponse.localizacionEstablecimientoc
-        }))
-    }
 
     onNombreEstablecimientoModificarChange = event => {
         let value = event.target !== null ? event.target.value : ""
@@ -432,8 +423,8 @@ class VistaModificarEstablecimiento extends Component {
         idEstablecimientoModificar = idEstablecimientoModificar.toLowerCase()
         idEstablecimientoModificar = idEstablecimientoModificar.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 
-        fetch("http://localhost:9000/establecimientos", {
-            method: 'POST',
+        fetch(`http://localhost:9000/establecimientos/${idEstablecimientoModificar}`, {
+            method: 'PUT',
             headers: {
                 'Accept': 'application/json;charset=UTF-8',
                 'Content-Type': 'application/json;charset=UTF-8',
@@ -449,14 +440,13 @@ class VistaModificarEstablecimiento extends Component {
         })
             .then(async response => {
                 const codigo = response.status;
-                if (codigo === 201) {
+                if (codigo === 200) {
                     this.setState(prev => ({
                         ...prev,
                         alertaExperimentos: {status: "OK", message: "Establecimiento Modificado Correctamente"},
-                        validated: false,
-                        mostrarVistaModificarExperimento: false
+                        validated: false
                     }))
-                    this.actualizarEstablecimientos();
+                    this.props.onHide();
                 } else if (codigo === 409) {
                     this.setState(prev => ({
                         ...prev,

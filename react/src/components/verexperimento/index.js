@@ -20,7 +20,8 @@ export class VerExperimento extends Component {
     render() {
         return <Authentication>
             {
-                auth => <VistaVerExperimento auth={auth} idExperimento={this.props.match.params.idExperimento} mensaje={this.props.location.state}/>
+                auth => <VistaVerExperimento auth={auth} idExperimento={this.props.match.params.idExperimento}
+                                             mensaje={this.props.location.state}/>
             }
         </Authentication>
     }
@@ -32,7 +33,7 @@ class VistaVerExperimento extends Component {
         this.state = {
             preguntas: [],
             objetivos: [],
-            fechasExperimento: ""
+            nombresEstablecimientos: ""
         }
     }
 
@@ -60,19 +61,50 @@ class VistaVerExperimento extends Component {
             ...prev,
             idExperimento: postResponse.idExperimento,
             idAdministrador: postResponse.idAdministrador,
-            idEstablecimiento: postResponse.idEstablecimiento,
             nombreExperimento: postResponse.nombreExperimento,
             fechaCreacion: postResponse.fechaCreacion,
             objetivos: postResponse.objetivos,
             preguntas: postResponse.preguntas,
             fechasExperimento: fechas
         }))
+
+        const establecimientosRequest = await fetch(`http://localhost:9000/establecimientos?idAdministrador=${this.props.auth.user.username}`, {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                'Accept': 'application/json;charset=UTF-8',
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Authorization': this.props.auth.token
+            }
+        })
+        const establecimientosResponse = await establecimientosRequest.json()
+        let nombresEstablecimientos = [];
+
+        for (let i = 0; i < establecimientosResponse.length; i++) {
+            for (let j = 0; j < postResponse.idsEstablecimientos.length; j++) {
+                if (establecimientosResponse[i].idEstablecimiento === postResponse.idsEstablecimientos[j]) {
+                    nombresEstablecimientos = [...nombresEstablecimientos, establecimientosResponse[i].nombreEstablecimiento];
+                }
+            }
+        }
+        let textoNombresEstablecimiento="";
+        for (let j = 0; j < nombresEstablecimientos.length; j++) {
+            if (j === 0) {
+                textoNombresEstablecimiento = nombresEstablecimientos[j];
+            } else {
+                textoNombresEstablecimiento = textoNombresEstablecimiento + ", " + nombresEstablecimientos[j];
+            }
+        }
+        this.setState(prev => ({
+            ...prev,
+            nombresEstablecimientos: textoNombresEstablecimiento
+        }))
+
     }
 
 
     render() {
-        console.table(this.props)
-
+        console.table(this.state.nombresEstablecimientos)
         return (
             <Container>
                 <Row>
@@ -98,6 +130,19 @@ class VistaVerExperimento extends Component {
                         </CardHeader>
                         <CardBody style={{marginBottom: '-30px'}}>
                             <p style={{textAlign: 'center'}}>{this.state.fechasExperimento}</p>
+                        </CardBody>
+                    </Card>
+                </Row>
+                <Row>
+                    <Card block className="cards" color="primary">
+                        <CardHeader style={{marginBottom: '-30px'}}>
+                            <CardTitle style={{
+                                fontSize: '20px',
+                                textAlign: 'center'
+                            }}>Establecimientos</CardTitle>
+                        </CardHeader>
+                        <CardBody style={{marginBottom: '-30px'}}>
+                            <p style={{textAlign: 'center'}}>{this.state.nombresEstablecimientos}</p>
                         </CardBody>
                     </Card>
                 </Row>

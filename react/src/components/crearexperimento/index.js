@@ -5,15 +5,14 @@ import {
     Card,
     CardHeader,
     CardTitle,
-    CardBody,
+    CardBody, Button,
     Input, Alert
 } from 'reactstrap';
-import Button from 'react-bootstrap/Button'
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import {Authentication} from "../authentication";
-import {Redirect, Route} from "react-router-dom";
+import {Link, Redirect, Route} from "react-router-dom";
 import MultipleDatePicker from 'react-multiple-datepicker'
 import moment from "moment";
 import Picky from 'react-picky';
@@ -45,8 +44,22 @@ class VistaCrearExperimento extends Component {
             idEstablecimiento: "",
             nombreExperimento: "",
             fechasExperimento: "",
-            preguntas: [],
-            objetivos: [],
+            preguntas: [
+                {
+                    textoPregunta: "",
+                    variableAsociada: "",
+                    opciones: [
+                        {
+                            textoOpcion: ""
+                        }
+                    ]
+                }
+            ],
+            objetivos: [
+                {
+                    textoObjetivo: ""
+                }
+            ],
             variablesAsignadas: [],
             variables: ["Higiene", "Ruído", "Distancía", "Energía", "Compañía", "Atmósfera", "Calidad de Servicio", "Apariencia", "Temperatura", "Saludable", "Sabroso"]
         }
@@ -225,17 +238,53 @@ class VistaCrearExperimento extends Component {
 
     doCrearExperimento = async (idAdministrador, idEstablecimiento, nombreExperimento, preguntas, objetivos, fechasExperimento, listaEstablecimientosSeleccionados) => {
         //Comprobación de los parametros
-        let crear = true;
-        let mensaje= [];
+        let ejecutar = true;
+        let mensajeCampoVacio = false;
+        let mensaje = [];
         if (nombreExperimento === "") {
-            crear = false;
-            mensaje = [...mensaje, "El nombre del establecimiento no puede estar vacio."];
+            ejecutar = false;
+            mensajeCampoVacio = true;
         }
-        if(objetivos.length === 0 ){
+        if (objetivos.length === 0) {
+            ejecutar = false;
             mensaje = [...mensaje, "El experimento debe tener como mínimo un objetivo."];
+        } else {
+            for (let i = 0; i < objetivos.length; i++) {
+                if (objetivos[i].textoObjetivo === "") {
+                    mensajeCampoVacio = true;
+                }
+            }
+        }
+        if (fechasExperimento.length === 0) {
+            ejecutar = false;
+            mensaje = [...mensaje, "El experimento debe tener como mínimo una fecha asociada."];
+        }
+        if (preguntas.length === 0) {
+            ejecutar = false;
+            mensaje = [...mensaje, "El experimento debe tener como mínimo una pregunta."];
+        } else {
+            for (let i = 0; i < preguntas.length; i++) {
+                if (preguntas[i].textoPregunta === "" || preguntas[i].variableAsociada === "") {
+                    mensajeCampoVacio = true;
+                }
+                if (preguntas[i].opciones.length === 0) {
+                    ejecutar = false;
+                    mensaje = [...mensaje, "Todas las preguntas deben tener como mínimo una opción."];
+                } else {
+                    for (let j = 0; j < preguntas[i].opciones.length; j++) {
+                        if (preguntas[i].opciones[j].textoOpcion === "") {
+                            mensajeCampoVacio = true;
+                        }
+                    }
+                }
+            }
+        }
+        if (mensajeCampoVacio === true) {
+            ejecutar = false;
+            mensaje = [...mensaje, "No puede haber ningún campo vacio."];
         }
 
-        if (crear === true) {
+        if (ejecutar === true) {
             let idExperimento = nombreExperimento.replace(/ /g, "-");
             idExperimento = idExperimento.toLowerCase()
             idExperimento = idExperimento.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
@@ -243,7 +292,7 @@ class VistaCrearExperimento extends Component {
             for (let i = 0; i < fechasExperimento.length; i++) {
                 fechasCambiadas[i] = moment(fechasExperimento[i]).format('DD-MM-YYYY')
             }
-            let establecimientosSeleccionados=[];
+            let establecimientosSeleccionados = [];
             for (let i = 0; i < listaEstablecimientosSeleccionados.length; i++) {
                 establecimientosSeleccionados[i] = listaEstablecimientosSeleccionados[i].idEstablecimiento;
             }
@@ -318,6 +367,7 @@ class VistaCrearExperimento extends Component {
                                         <MultipleDatePicker className={'datepicker'}
                                                             size={'lg'}
                                                             regional={'es'}
+                                                            block
                                                             onSubmit={dates => this.setState({fechasExperimento: dates})}
                                         />
                                     </CardBody>
@@ -333,22 +383,31 @@ class VistaCrearExperimento extends Component {
                             <CardBody>
                                 <Card block className="cards" color="primary">
                                     <CardBody>
-                                        <Picky
-                                            value={this.state.listaEstablecimientosSeleccionados}
-                                            options={this.state.listaEstablecimientos}
-                                            onChange={this.onListaEstablecimientosChange}
-                                            open={false}
-                                            valueKey="idEstablecimiento"
-                                            placeholder={"Ningún Establecimiento Seleccionado"}
-                                            labelKey="nombreEstablecimiento"
-                                            multiple={true}
-                                            selectAllText={"Seleccionar Todos"}
-                                            filterPlaceholder={"Buscar por Nombre..."}
-                                            includeSelectAll={true}
-                                            includeFilter={true}
-                                            dropdownHeight={600}
-                                            block
-                                        />
+                                        {(this.state.listaEstablecimientos.length === 0) ? (
+                                            <div>
+                                                <p style={{textAlign: 'center'}}>¡Aún no existe ningún establecimiento,
+                                                    puedes crearlo aquí!</p>
+                                                <Button size="sm" block className={"botonSuccess"} tag={Link}
+                                                        to={`/establecimientos`}>Crear Establecimiento</Button>
+                                            </div>
+                                        ) : (
+                                            <Picky
+                                                value={this.state.listaEstablecimientosSeleccionados}
+                                                options={this.state.listaEstablecimientos}
+                                                onChange={this.onListaEstablecimientosChange}
+                                                open={false}
+                                                valueKey="idEstablecimiento"
+                                                placeholder={"Ningún Establecimiento Seleccionado"}
+                                                labelKey="nombreEstablecimiento"
+                                                multiple={true}
+                                                selectAllText={"Seleccionar Todos"}
+                                                filterPlaceholder={"Buscar por Nombre..."}
+                                                includeSelectAll={true}
+                                                includeFilter={true}
+                                                dropdownHeight={600}
+                                                block
+                                            />
+                                        )}
                                     </CardBody>
                                 </Card>
                             </CardBody>
@@ -415,13 +474,12 @@ class VistaCrearExperimento extends Component {
                     <Alert
                         color={this.state.alert.status === "OK" ? "success" : "danger"}
                         isOpen={this.state.alert.status !== ""}
-                        toggle={() => this.setState(prev => ({...prev, alert: {status: ""}}))}
+                        toggle={() => this.setState(prev => ({...prev, alert: {status: "", message: []}}))}
                     >
                         {this.state.alert.message.map(
                             (item, index) =>
                                 <p>{item}</p>
-                        )
-                        }
+                        )}
                     </Alert>
                     <Row>
                         <Col style={{paddingLeft: '1px'}} sm={3}>
@@ -521,7 +579,6 @@ class Pregunta extends Component {
                                        onChange={this.onTextoPreguntaChange}/>
                             </Col>
                             <Col sm={3}>
-
                                 <Input className="inputs" size={"sm"} type={"select"} placeholder="Añadir Variable"
                                        value={this.props.pregunta.variableAsociada}
                                        onChange={this.onVariableAsociadaChange}>

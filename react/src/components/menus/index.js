@@ -173,40 +173,47 @@ class VistaMenus extends Component {
                         onHide={this.onCerrarVistaEliminarMenu}
                         eliminarMenu={this.doEliminarMenu}
                     />
-                    {this.state.menus.map(
-                        (item, index) =>
-                            <Card className={"cards"} block color="primary">
-                                <CardHeader style={{marginBottom: '-30px'}}>
-                                    <CardTitle
-                                        style={{
-                                            fontSize: '20px',
-                                            textAlign: 'center'
-                                        }}>{item.nombreMenu}</CardTitle>
-                                </CardHeader>
-                                <CardFooter>
-                                    <Row>
-                                        <Col>
-                                            <Button size="sm" block className={"botonSuccess"} tag={Link}
-                                                    to={`/establecimientos/${this.props.idEstablecimiento}/menus/verMenu/${item.idMenu}`}>Ver en
-                                                Detalle</Button>
-                                        </Col>
-                                        <Col>
-                                            <Button size="sm" block className={"botonWarning"} tag={Link}
-                                                    to={`/experimentos/modificarExperimento/${item.idExperimento}`}>Modificar</Button>
-                                        </Col>
-                                        <Col>
-                                            <Button size={"sm"} block className={"botonDanger"}
-                                                    onClick={() => this.setState({
-                                                        mostrarVistaEliminarMenu: true,
-                                                        nombreMenuEliminar: item.nombreMenu,
-                                                        idMenuEliminar: item.idMenu
-                                                    })}>Eliminar</Button>
-                                        </Col>
-                                    </Row>
-                                </CardFooter>
-                            </Card>
-                    )
-                    }
+                    {(this.state.menus.length === 0) ? (
+                        <h2 style={{marginTop: '50px', textAlign: 'center'}}>!No existe ningún menú para el día
+                            seleccionado,
+                            puedes crearlo aquí!</h2>
+                    ) : (
+                        this.state.menus.map(
+                            (item, index) =>
+                                <Card className={"cards"} block color="primary">
+                                    <CardHeader style={{marginBottom: '-30px'}}>
+                                        <CardTitle
+                                            style={{
+                                                fontSize: '20px',
+                                                textAlign: 'center'
+                                            }}>{item.nombreMenu}</CardTitle>
+                                    </CardHeader>
+                                    <CardFooter>
+                                        <Row>
+                                            <Col>
+                                                <Button size="sm" block className={"botonSuccess"} tag={Link}
+                                                        to={`/establecimientos/${this.props.idEstablecimiento}/menus/verMenu/${item.idMenu}`}>Ver
+                                                    en
+                                                    Detalle</Button>
+                                            </Col>
+                                            <Col>
+                                                <Button size="sm" block className={"botonWarning"} tag={Link}
+                                                        to={`/experimentos/modificarExperimento/${item.idExperimento}`}>Modificar</Button>
+                                            </Col>
+                                            <Col>
+                                                <Button size={"sm"} block className={"botonDanger"}
+                                                        onClick={() => this.setState({
+                                                            mostrarVistaEliminarMenu: true,
+                                                            nombreMenuEliminar: item.nombreMenu,
+                                                            idMenuEliminar: item.idMenu
+                                                        })}>Eliminar</Button>
+                                            </Col>
+                                        </Row>
+                                    </CardFooter>
+                                </Card>
+                        )
+
+                    )}
                 </Col>
             </Row>
         </Container>

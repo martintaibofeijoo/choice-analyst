@@ -7,7 +7,7 @@ import {
     CardHeader,
     CardTitle,
     CardBody,
-    Input,
+    Input, Alert,
 } from 'reactstrap';
 import Button from 'react-bootstrap/Button'
 import Form from "react-bootstrap/Form";
@@ -32,10 +32,14 @@ class VistaCrearMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            alert: {
+                status: "",
+                message: []
+            },
             ok: false,
             nombreMenu: "",
             idEstablecimiento: this.props.idEstablecimiento,
-            fechas: "",
+            fechasMenu: [],
             primerosPlatos: [
                 {
                     nombrePlato: "",
@@ -342,37 +346,140 @@ class VistaCrearMenu extends Component {
     }
 
     doCrearMenu = async (nombreMenu, primerosPlatos, segundosPlatos, postres, idEstablecimiento, fechasMenu) => {
-        console.table(fechasMenu)
-        let fechasCambiadas = []
-        for (let i = 0; i < fechasMenu.length; i++) {
-            fechasCambiadas[i] = moment(fechasMenu[i]).format('DD-MM-YYYY')
+        let ejecutar = true;
+        let mensajeCampoVacio = false;
+        let mensajeNoNumero = false;
+        let mensajeIngredientes= false;
+        let mensaje = [];
+        debugger
+        if (nombreMenu === "") {
+            ejecutar = false;
+            mensajeCampoVacio = true;
         }
-        let platos = primerosPlatos.concat(segundosPlatos)
-        platos = platos.concat(postres)
-        let idMenu = nombreMenu.replace(/ /g, "-");
-        idMenu = idMenu.toLowerCase()
-        idMenu = idMenu.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-        const response = await fetch(`http://localhost:9000/establecimientos/${idEstablecimiento}/menus`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json;charset=UTF-8',
-                'Content-Type': 'application/json;charset=UTF-8',
-                'Authorization': this.props.auth.token
-            },
-            body: JSON.stringify({
-                idMenu: idMenu,
-                nombreMenu: nombreMenu,
-                fechasMenu: fechasCambiadas,
-                platos: platos
-            })
-        })
-        const codigo = response.status
+        if (fechasMenu.length === 0) {
+            ejecutar = false;
+            mensaje = [...mensaje, "Un menú debe tener como mínimo una fecha asociada."];
+        }
+        if (primerosPlatos.length === 0) {
+            ejecutar = false;
+            mensaje = [...mensaje, "El menú debe tener como mínimo un primer plato."];
+        } else {
+            for (let i = 0; i < primerosPlatos.length; i++) {
+                if (primerosPlatos[i].nombrePlato === "" || primerosPlatos[i].precioPlato === "") {
+                    mensajeCampoVacio = true;
+                }
+                if (isNaN(primerosPlatos[i].precioPlato)) {
+                    ejecutar = false;
+                    mensajeNoNumero = false;
+                }
+                if (primerosPlatos[i].ingredientes.length === 0) {
+                    ejecutar = false;
+                    mensajeIngredientes= true;
+                } else {
+                    for (let j = 0; j < primerosPlatos[i].ingredientes.length; j++) {
+                        if (primerosPlatos[i].ingredientes[j].textoIngrediente === "") {
+                            mensajeCampoVacio = true;
+                        }
+                    }
+                }
+            }
+        }
+        if (segundosPlatos.length === 0) {
+            ejecutar = false;
+            mensaje = [...mensaje, "El menú debe tener como mínimo un segundo plato."];
+        } else {
+            for (let i = 0; i < segundosPlatos.length; i++) {
+                if (segundosPlatos[i].nombrePlato === "" || segundosPlatos[i].precioPlato === "") {
+                    mensajeCampoVacio = true;
+                }
+                if (isNaN(segundosPlatos[i].precioPlato)) {
+                    ejecutar = false;
+                    mensajeNoNumero = false;
+                }
+                if (segundosPlatos[i].ingredientes.length === 0) {
+                    ejecutar = false;
+                    mensajeIngredientes= true;
+                } else {
+                    for (let j = 0; j < segundosPlatos[i].ingredientes.length; j++) {
+                        if (segundosPlatos[i].ingredientes[j].textoIngrediente === "") {
+                            mensajeCampoVacio = true;
+                        }
+                    }
+                }
+            }
+        }
 
-        if (codigo === 200) {
-            this.setState(prev => ({
-                ...prev,
-                ok: true
-            }))
+        if (postres.length === 0) {
+            ejecutar = false;
+            mensaje = [...mensaje, "El menú debe tener como mínimo un postre."];
+        } else {
+            for (let i = 0; i < postres.length; i++) {
+                if (postres[i].nombrePlato === "" || postres[i].precioPlato === "") {
+                    mensajeCampoVacio = true;
+                }
+                if (isNaN(postres[i].precioPlato)) {
+                    ejecutar = false;
+                    mensajeNoNumero = false;
+                }
+                if (postres[i].ingredientes.length === 0) {
+                    ejecutar = false;
+                    mensajeIngredientes= true;
+                } else {
+                    for (let j = 0; j < postres[i].ingredientes.length; j++) {
+                        if (postres[i].ingredientes[j].textoIngrediente === "") {
+                            mensajeCampoVacio = true;
+                        }
+                    }
+                }
+            }
+        }
+        if (mensajeNoNumero === true) {
+            ejecutar = false;
+            mensaje = [...mensaje, "El precio del plato deben ser de tipo númerico.."];
+        }
+        if (mensajeIngredientes === true) {
+            ejecutar = false;
+            mensaje = [...mensaje, "Todos los platos deben tener como mínimo un ingrediente."];
+        }
+        if (mensajeCampoVacio === true) {
+            ejecutar = false;
+            mensaje = [...mensaje, "No puede haber ningún campo vacio."];
+        }
+
+        if (ejecutar === true) {
+            let fechasCambiadas = []
+            for (let i = 0; i < fechasMenu.length; i++) {
+                fechasCambiadas[i] = moment(fechasMenu[i]).format('DD-MM-YYYY')
+            }
+            let platos = primerosPlatos.concat(segundosPlatos)
+            platos = platos.concat(postres)
+            let idMenu = nombreMenu.replace(/ /g, "-");
+            idMenu = idMenu.toLowerCase()
+            idMenu = idMenu.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+            const response = await fetch(`http://localhost:9000/establecimientos/${idEstablecimiento}/menus`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json;charset=UTF-8',
+                    'Content-Type': 'application/json;charset=UTF-8',
+                    'Authorization': this.props.auth.token
+                },
+                body: JSON.stringify({
+                    idMenu: idMenu,
+                    nombreMenu: nombreMenu,
+                    fechasMenu: fechasCambiadas,
+                    platos: platos
+                })
+            })
+            const codigo = response.status
+
+            if (codigo === 200) {
+                this.setState(prev => ({
+                    ...prev,
+                    ok: true
+                }))
+            }
+        } else {
+            this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
         }
     }
 
@@ -507,6 +614,16 @@ class VistaCrearMenu extends Component {
                             </CardBody>
                         </Card>
                     </Row>
+                    <Alert
+                        color={this.state.alert.status === "OK" ? "success" : "danger"}
+                        isOpen={this.state.alert.status !== ""}
+                        toggle={() => this.setState(prev => ({...prev, alert: {status: "", message: []}}))}
+                    >
+                        {this.state.alert.message.map(
+                            (item, index) =>
+                                <p>{item}</p>
+                        )}
+                    </Alert>
                     <Row>
                         <Col style={{paddingLeft: '1px'}} sm={3}>
                             <Route>{
@@ -606,7 +723,7 @@ class Plato extends Component {
                                        onChange={this.onNombrePlatoChange}/>
                             </Col>
                             <Col>
-                                <Input size={"sm"} className="inputs" placeholder="Precio del Plato"
+                                <Input size={"sm"} className="inputs" placeholder="Precio del Plato (€)"
                                        value={this.props.plato.precio}
                                        onChange={this.onPrecioPlatoChange}/>
                             </Col>

@@ -122,13 +122,12 @@ public class ControladorEstablecimiento {
     )
 
     public ResponseEntity modifyEstablecimiento(@RequestBody ModeloEstablecimiento establecimiento, @PathVariable("idEstablecimiento") String idEstablecimiento) {
-        if (!dbes.existsByIdEstablecimiento(idEstablecimiento) && !dbu.existsByUsername(establecimiento.getIdAdministrador())) {
+        if (!dbes.existsByIdEstablecimiento(idEstablecimiento)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
             Optional<ModeloEstablecimiento> establecimientoExistente = dbes.findByIdEstablecimiento(idEstablecimiento);
             if (establecimientoExistente.get().getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
                 establecimientoExistente.get().setIdEstablecimiento(establecimiento.getIdEstablecimiento());
-                establecimientoExistente.get().setIdAdministrador(establecimiento.getIdAdministrador());
                 establecimientoExistente.get().setLocalizacionEstablecimiento(establecimiento.getLocalizacionEstablecimiento());
                 establecimientoExistente.get().setNombreEstablecimiento(establecimiento.getNombreEstablecimiento());
                 establecimientoExistente.get().setTipoEstablecimiento(establecimiento.getTipoEstablecimiento());
