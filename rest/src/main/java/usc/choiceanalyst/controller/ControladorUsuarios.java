@@ -103,6 +103,29 @@ public class ControladorUsuarios {
         }
     }
 
+    @PreAuthorize("permitAll()")
+    @PostMapping(
+            path = "/clientes",
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+
+    public ResponseEntity createCliente(@RequestBody ModeloUsuario usuario) {
+        if (dbu.existsByUsername(usuario.getUsername())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } else {
+            String pattern = "dd-MM-yyyy";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            usuario.setFechaRegistro(simpleDateFormat.format(new Date()));
+            usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+            usuario.setRol("CLIENTE");
+            dbu.save(usuario);
+            URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/usuarios/clientes/{username}").buildAndExpand(usuario.getUsername()).toUri();
+            return ResponseEntity.created(location).body(usuario.setPassword("*********"));
+        }
+    }
+
+
     @PreAuthorize("hasRole('CLIENTE') and principal==#username")
     @PutMapping(
             path = "/{username}",

@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class Usuario extends Credentials {
 
-
     @SerializedName("correoElectronico")
     private String correoElectronico;
     @SerializedName("telefonoContacto")

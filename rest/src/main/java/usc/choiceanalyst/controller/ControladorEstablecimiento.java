@@ -15,10 +15,7 @@ import usc.choiceanalyst.repository.RepositorioEstablecimiento;
 import usc.choiceanalyst.repository.RepositorioUsuario;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("establecimientos")
@@ -56,7 +53,7 @@ public class ControladorEstablecimiento {
         }
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR') and principal==#idAdministrador")
+    @PreAuthorize("hasRole('CLIENTE')")
     @GetMapping(
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
@@ -65,7 +62,8 @@ public class ControladorEstablecimiento {
         if (!idAdministrador.isEmpty()) {
             establecimiento.setIdAdministrador(idAdministrador);
         }
-        return ResponseEntity.ok(dbes.findAll(Example.of(establecimiento)));
+        Collection<ModeloEstablecimiento> establecimientos = dbes.findAll(Example.of(establecimiento));
+        return ResponseEntity.ok(establecimientos);
     }
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")

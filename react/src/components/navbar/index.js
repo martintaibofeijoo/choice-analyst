@@ -11,6 +11,7 @@ import {Link} from 'react-router-dom'
 import {AuthenticatedOnly, UnauthenticatedOnly} from "../authentication";
 import choiceanalyst_navbar from "../imagenes/choiceanalyst_navbar.png";
 import {Image} from "react-bootstrap";
+import NavDropdown from "react-bootstrap/NavDropdown";
 
 
 export default class NavigationBar extends Component {
@@ -18,12 +19,12 @@ export default class NavigationBar extends Component {
     render() {
         return <Navbar sticky="top" expand dark color="primary">
             <AuthenticatedOnly>
-                <NavbarBrand tag={Link} to="/">
+                <NavbarBrand style={{marginLeft:'20px'}} tag={Link} to="/">
                     <Image src={choiceanalyst_navbar}/>
                 </NavbarBrand>
             </AuthenticatedOnly>
             <UnauthenticatedOnly>
-                <NavbarBrand tag={Link} to="/inicio">
+                <NavbarBrand style={{marginLeft:'20px'}} tag={Link} to="/inicio">
                     <Image src={choiceanalyst_navbar}/>
                 </NavbarBrand>
             </UnauthenticatedOnly>
@@ -39,12 +40,11 @@ export default class NavigationBar extends Component {
                     </NavItem>
                 </AuthenticatedOnly>
                 <AuthenticatedOnly>
-                    <NavItem>
-                        <NavLink tag={Link} to="/verPerfil">Ver Perfil</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink tag={Link} to="/logout">Cerrar Sesión</NavLink>
-                    </NavItem>
+                    <NavDropdown title="Mi Perfil" id={"item"} style={{marginRight:'50px'}}>
+                        <NavDropdown.Item href="/verPerfil">Ver Perfil</NavDropdown.Item>
+                        <NavDropdown.Divider style={{borderColor: 'black', borderRadius: '4px'}}/>
+                        <NavDropdown.Item href="/logout">Cerrar Sesión</NavDropdown.Item>
+                    </NavDropdown>
                 </AuthenticatedOnly>
             </Nav>
         </Navbar>

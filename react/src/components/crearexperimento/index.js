@@ -297,6 +297,31 @@ class VistaCrearExperimento extends Component {
                 establecimientosSeleccionados[i] = listaEstablecimientosSeleccionados[i].idEstablecimiento;
             }
 
+            let preguntasExperimento = [
+                ...preguntas,
+                {
+                    textoPregunta: "¿Que menú seleccionaste?",
+                    variableAsociada: "Menú Seleccionado",
+                    opciones:[]
+                },
+                {
+                    textoPregunta: "¿Que primer plato seleccionaste?",
+                    variableAsociada: "Primer Plato",
+                    opciones:[]
+                },
+                {
+                    textoPregunta: "¿Que segundo plato seleccionaste?",
+                    variableAsociada: "Segundo Plato",
+                    opciones:[]
+                },
+                {
+                    textoPregunta: "¿Que postre seleccionaste?",
+                    variableAsociada: "Postre",
+                    opciones:[]
+                }
+            ];
+
+
             const response = await fetch(`http://localhost:9000/experimentos/`, {
                 method: 'POST',
                 headers: {
@@ -309,7 +334,7 @@ class VistaCrearExperimento extends Component {
                     idExperimento: idExperimento,
                     idAdministrador: idAdministrador,
                     nombreExperimento: nombreExperimento,
-                    preguntas: preguntas,
+                    preguntas: preguntasExperimento,
                     objetivos: objetivos,
                     fechasExperimento: fechasCambiadas,
                     idsEstablecimientos: establecimientosSeleccionados
@@ -338,42 +363,48 @@ class VistaCrearExperimento extends Component {
                 <Container>
                     <h1 style={{textAlign: 'center'}}>Crear Experimento</h1>
                     <Row>
-                        <Card block className="cards" color="primary">
-                            <CardHeader style={{marginBottom: '-30px'}}>
-                                <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Nombre
-                                    Experimento</CardTitle>
-                            </CardHeader>
-                            <CardBody>
-                                <Card block className="cards" color="primary">
-                                    <CardBody>
-                                        <Input className="inputs" size={"sm"} placeholder="Nombre Experimento"
-                                               value={this.state.nombreExperimento}
-                                               onChange={this.onNombreExperimentoChange}
-                                               required/>
-                                    </CardBody>
-                                </Card>
-                            </CardBody>
-                        </Card>
-                    </Row>
-                    <Row>
-                        <Card block className="cards" color="primary">
-                            <CardHeader style={{marginBottom: '-30px'}}>
-                                <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Fechas
-                                    Experimento</CardTitle>
-                            </CardHeader>
-                            <CardBody>
-                                <Card block className="cards" color="primary">
-                                    <CardBody>
-                                        <MultipleDatePicker className={'datepicker'}
-                                                            size={'lg'}
-                                                            regional={'es'}
-                                                            block
-                                                            onSubmit={dates => this.setState({fechasExperimento: dates})}
-                                        />
-                                    </CardBody>
-                                </Card>
-                            </CardBody>
-                        </Card>
+                        <Col sm={8}
+                             style={{paddingTop: '0px', paddingBottom: '0px', paddingLeft: '0px', paddingRight: '5px'}}>
+                            <Card block className="cards" color="primary">
+                                <CardHeader style={{marginBottom: '-30px'}}>
+                                    <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Nombre
+                                        Experimento</CardTitle>
+                                </CardHeader>
+                                <CardBody>
+                                    <Card block className="cards" color="primary">
+                                        <CardBody>
+                                            <Input className="inputs" size={"sm"} placeholder="Nombre Experimento"
+                                                   value={this.state.nombreExperimento}
+                                                   onChange={this.onNombreExperimentoChange}
+                                                   required/>
+                                        </CardBody>
+                                    </Card>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                        <Col sm={4}
+                             style={{paddingTop: '0px', paddingBottom: '0px', paddingLeft: '5px', paddingRight: '0px'}}>
+                            <Card block className="cards" color="primary">
+                                <CardHeader style={{marginBottom: '-30px'}}>
+                                    <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Fechas
+                                        Experimento</CardTitle>
+                                </CardHeader>
+                                <CardBody>
+                                    <Card block className="cards" color="primary">
+                                        <CardBody>
+                                            <div style={{marginLeft: '15px'}}>
+                                                <MultipleDatePicker className={'datepicker'}
+                                                                    size={'lg'}
+                                                                    regional={'es'}
+                                                                    block
+                                                                    onSubmit={dates => this.setState({fechasExperimento: dates})}
+                                                />
+                                            </div>
+                                        </CardBody>
+                                    </Card>
+                                </CardBody>
+                            </Card>
+                        </Col>
                     </Row>
                     <Row>
                         <Card block className="cards" color="primary">

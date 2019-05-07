@@ -349,7 +349,7 @@ class VistaCrearMenu extends Component {
         let ejecutar = true;
         let mensajeCampoVacio = false;
         let mensajeNoNumero = false;
-        let mensajeIngredientes= false;
+        let mensajeIngredientes = false;
         let mensaje = [];
         debugger
         if (nombreMenu === "") {
@@ -374,7 +374,7 @@ class VistaCrearMenu extends Component {
                 }
                 if (primerosPlatos[i].ingredientes.length === 0) {
                     ejecutar = false;
-                    mensajeIngredientes= true;
+                    mensajeIngredientes = true;
                 } else {
                     for (let j = 0; j < primerosPlatos[i].ingredientes.length; j++) {
                         if (primerosPlatos[i].ingredientes[j].textoIngrediente === "") {
@@ -398,7 +398,7 @@ class VistaCrearMenu extends Component {
                 }
                 if (segundosPlatos[i].ingredientes.length === 0) {
                     ejecutar = false;
-                    mensajeIngredientes= true;
+                    mensajeIngredientes = true;
                 } else {
                     for (let j = 0; j < segundosPlatos[i].ingredientes.length; j++) {
                         if (segundosPlatos[i].ingredientes[j].textoIngrediente === "") {
@@ -423,7 +423,7 @@ class VistaCrearMenu extends Component {
                 }
                 if (postres[i].ingredientes.length === 0) {
                     ejecutar = false;
-                    mensajeIngredientes= true;
+                    mensajeIngredientes = true;
                 } else {
                     for (let j = 0; j < postres[i].ingredientes.length; j++) {
                         if (postres[i].ingredientes[j].textoIngrediente === "") {
@@ -489,41 +489,48 @@ class VistaCrearMenu extends Component {
         else
             return (
                 <Container>
+                    <h1 style={{textAlign: 'center'}}>Crear Menú</h1>
                     <Row>
-                        <Card block className="cards" color="primary">
-                            <CardHeader style={{marginBottom: '-30px'}}>
-                                <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Nombre
-                                    Menu</CardTitle>
-                            </CardHeader>
-                            <CardBody>
-                                <Card block className="cards" color="primary">
-                                    <CardBody>
-                                        <Input size={"sm"} className="inputs" size={"sm"} placeholder="Nombre Menu"
-                                               value={this.state.nombreMenu}
-                                               onChange={this.onNombreMenuChange}/>
-                                    </CardBody>
-                                </Card>
-                            </CardBody>
-                        </Card>
-                    </Row>
-                    <Row>
-                        <Card block className="cards" color="primary">
-                            <CardHeader style={{marginBottom: '-30px'}}>
-                                <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Fechas Menu</CardTitle>
-                            </CardHeader>
-                            <CardBody>
-                                <Card block className="cards" color="primary">
-                                    <CardBody>
-                                        <MultipleDatePicker className={'datepicker'}
-                                                            size={'lg'}
-                                                            regional={'es'}
+                        <Col sm={8}
+                             style={{paddingTop: '0px', paddingBottom: '0px', paddingLeft: '0px', paddingRight: '5px'}}>
+                            <Card block className="cards" color="primary">
+                                <CardHeader style={{marginBottom: '-30px'}}>
+                                    <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Nombre
+                                        Menu</CardTitle>
+                                </CardHeader>
+                                <CardBody>
+                                    <Card block className="cards" color="primary">
+                                        <CardBody>
+                                            <Input size={"sm"} className="inputs" size={"sm"} placeholder="Nombre Menu"
+                                                   value={this.state.nombreMenu}
+                                                   onChange={this.onNombreMenuChange}/>
+                                        </CardBody>
+                                    </Card>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                        <Col sm={4}
+                             style={{paddingTop: '0px', paddingBottom: '0px', paddingLeft: '5px', paddingRight: '0px'}}>
+                            <Card block className="cards" color="primary">
+                                <CardHeader style={{marginBottom: '-30px'}}>
+                                    <CardTitle style={{fontSize: '20px', textAlign: 'center'}}> Fechas Menu</CardTitle>
+                                </CardHeader>
+                                <CardBody>
+                                    <Card block className="cards" color="primary">
+                                        <CardBody>
+                                            <div style={{marginLeft: '15px'}}>
+                                                <MultipleDatePicker className={'datepicker'}
+                                                                    size={'lg'}
+                                                                    regional={'es'}
 
-                                                            onSubmit={dates => this.setState({fechasMenu: dates})}
-                                        />
-                                    </CardBody>
-                                </Card>
-                            </CardBody>
-                        </Card>
+                                                                    onSubmit={dates => this.setState({fechasMenu: dates})}
+                                                />
+                                            </div>
+                                        </CardBody>
+                                    </Card>
+                                </CardBody>
+                            </Card>
+                        </Col>
                     </Row>
                     <Row>
                         <Card className="cards" block color="primary">

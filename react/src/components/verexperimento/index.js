@@ -87,7 +87,7 @@ class VistaVerExperimento extends Component {
                 }
             }
         }
-        let textoNombresEstablecimiento="";
+        let textoNombresEstablecimiento = "";
         for (let j = 0; j < nombresEstablecimientos.length; j++) {
             if (j === 0) {
                 textoNombresEstablecimiento = nombresEstablecimientos[j];
@@ -187,9 +187,15 @@ class VistaVerExperimento extends Component {
                                                         }}>Opciones</CardTitle>
                                                     </CardHeader>
                                                     <CardBody style={{marginBottom: '-15px'}}>
-                                                        {item.opciones.map(
-                                                            (item1, index1) =>
-                                                                <li type="square">{item1.textoOpcion}</li>
+                                                        {(item.opciones.length === 0) ? (
+                                                            <p style={{textAlign: 'center'}}>Esta pregunta no tiene
+                                                                opciones, se autogeneran a partir de los menús del
+                                                                día.</p>
+                                                        ) : (
+                                                            item.opciones.map(
+                                                                (item1, index1) =>
+                                                                    <li type="square">{item1.textoOpcion}</li>
+                                                            )
                                                         )}
                                                     </CardBody>
                                                 </Card>

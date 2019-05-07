@@ -47,8 +47,8 @@ export class Inicio extends Component {
                         </Row>
                         <Row>
                             <h2 style={{textAlign: 'center', marginTop: '50px'}}>Somos una plataforma mediante la que
-                                podrás crear experimentos asociados a tu establecimiento para analizar los platos y
-                                menús elegidos por tus clientes en función de sus respuestas </h2>
+                                podrás crear experimentos asociados a establecimientos para analizar los platos y
+                                menús elegidos por los clientes en función de sus respuestas </h2>
                         </Row>
                         <Row style={{marginTop: '50px'}}>
                             <Col>
