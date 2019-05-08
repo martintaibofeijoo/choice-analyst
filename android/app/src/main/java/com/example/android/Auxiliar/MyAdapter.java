@@ -1,5 +1,6 @@
 package com.example.android.Auxiliar;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.android.EstablecimientosActivity;
+import com.example.android.MainActivity;
 import com.example.android.R;
 
 import java.util.ArrayList;
@@ -17,6 +20,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     public MyAdapter(ArrayList<Establecimiento> establecimientos){
         listadoEstablecimientos = establecimientos;
+    }
+
+    public void setListadoEstablecimientos(ArrayList<Establecimiento> listadoEstablecimientos) {
+        this.listadoEstablecimientos = listadoEstablecimientos;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -43,9 +50,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder viewHolder, int i) {
-        Establecimiento establecimiento = listadoEstablecimientos.get(i);
+        final Establecimiento establecimiento = listadoEstablecimientos.get(i);
         viewHolder.textViewLocalizacionEstablecimiento.setText(establecimiento.getLocalizacionEstablecimiento());
         viewHolder.textViewNombreEstablecimiento.setText(establecimiento.getNombreEstablecimiento());
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentMain = new Intent(v.getContext(), MainActivity.class);
+                intentMain.putExtra("establecimiento", establecimiento);
+                v.getContext().startActivity(intentMain);
+            }
+        });
     }
 
     @Override

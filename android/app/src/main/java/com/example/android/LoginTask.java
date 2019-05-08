@@ -1,11 +1,9 @@
 package com.example.android;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.android.Auxiliar.AsyncResponse;
+import com.example.android.Auxiliar.LoginTaskResponse;
 import com.example.android.Auxiliar.Credentials;
 import com.example.android.Remote.IRemote;
 
@@ -14,7 +12,6 @@ import java.io.IOException;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -24,7 +21,7 @@ public class LoginTask extends AsyncTask<Void, Void, Void> {
     private String contrasena;
     private Response<Void> mResponse = null;
     private String token;
-    private AsyncResponse asyncResponse = null;
+    private LoginTaskResponse loginTaskResponse = null;
 
     public LoginTask(String usuario, String contrasena) {
         this.usuario = usuario;
@@ -62,15 +59,15 @@ public class LoginTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         if (mResponse!=null && mResponse.code()==200)
-            asyncResponse.processFinishOK(token);
-        else asyncResponse.processFinishERR();
+            loginTaskResponse.LoginFinishOK(token);
+        else loginTaskResponse.LoginFinishERR();
     }
 
-    public AsyncResponse getAsyncResponse() {
-        return asyncResponse;
+    public LoginTaskResponse getLoginTaskResponse() {
+        return loginTaskResponse;
     }
 
-    public void setAsyncResponse(AsyncResponse asyncResponse) {
-        this.asyncResponse = asyncResponse;
+    public void setLoginTaskResponse(LoginTaskResponse loginTaskResponse) {
+        this.loginTaskResponse = loginTaskResponse;
     }
 }

@@ -3,6 +3,8 @@ package com.example.android;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.android.Auxiliar.Establecimiento;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -10,5 +12,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Establecimiento establecimiento = (Establecimiento) getIntent().getSerializableExtra("establecimiento");
     }
 }

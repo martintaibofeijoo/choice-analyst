@@ -53,7 +53,19 @@ public class ControladorEstablecimiento {
         }
     }
 
-    @PreAuthorize("hasRole('CLIENTE')")
+    @PreAuthorize("permitAll()")
+    @GetMapping(
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+    public ResponseEntity<Collection<ModeloEstablecimiento>> getAllEstablecimientos(@RequestParam(value = "nombreEstablecimiento", defaultValue = "") String idAdministrador) {
+        ModeloEstablecimiento establecimiento = new ModeloEstablecimiento();
+        if (!idAdministrador.isEmpty()) {
+           // establecimiento.setIdAdministrador(idAdministrador);
+        }
+        Collection<ModeloEstablecimiento> establecimientos = dbes.findAll(Example.of(establecimiento));
+        return ResponseEntity.ok(establecimientos);
+    }
+/*    @PreAuthorize("hasRole('CLIENTE')")
     @GetMapping(
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
@@ -64,7 +76,8 @@ public class ControladorEstablecimiento {
         }
         Collection<ModeloEstablecimiento> establecimientos = dbes.findAll(Example.of(establecimiento));
         return ResponseEntity.ok(establecimientos);
-    }
+    }*/
+
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping(

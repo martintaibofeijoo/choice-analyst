@@ -2,9 +2,10 @@ package com.example.android.Auxiliar;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Establecimiento {
+public class Establecimiento implements Serializable {
 
     @SerializedName("idEstablecimiento")
     private String idEstablecimiento;

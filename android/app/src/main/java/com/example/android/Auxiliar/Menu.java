@@ -2,9 +2,10 @@ package com.example.android.Auxiliar;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Menu {
+public class Menu implements Serializable {
     @SerializedName("idMenu")
     private String idMenu;
     @SerializedName("nombreMenu")

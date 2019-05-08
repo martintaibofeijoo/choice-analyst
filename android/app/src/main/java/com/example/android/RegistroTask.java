@@ -1,10 +1,9 @@
 package com.example.android;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.example.android.Auxiliar.AsyncResponse;
-import com.example.android.Auxiliar.Credentials;
+import com.example.android.Auxiliar.LoginTaskResponse;
+import com.example.android.Auxiliar.RegistroTaskResponse;
 import com.example.android.Auxiliar.Usuario;
 import com.example.android.Remote.IRemote;
 
@@ -22,7 +21,7 @@ public class RegistroTask extends AsyncTask<Void, Void, Void> {
 
     private Response<Void> mResponse = null;
     private String token;
-    private AsyncResponse asyncResponse = null;
+    private RegistroTaskResponse registroTaskResponse = null;
 
     public RegistroTask(Usuario usuario) {
         this.usuario = usuario;
@@ -47,8 +46,7 @@ public class RegistroTask extends AsyncTask<Void, Void, Void> {
         Call<Void> call = service.registro(usuario);
         try {
             mResponse = call.execute();
-            token = mResponse.headers().get("Authorization");
-            Log.i("TOKEN", "El token es: " + token);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,16 +55,16 @@ public class RegistroTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        if (mResponse!=null && mResponse.code()==200)
-            asyncResponse.processFinishOK(token);
-        else asyncResponse.processFinishERR();
+        if (mResponse!=null && mResponse.code()==201)
+            registroTaskResponse.RegistroFinishOK();
+        else registroTaskResponse.RegistroFinishERR();
     }
 
-    public AsyncResponse getAsyncResponse() {
-        return asyncResponse;
+    public RegistroTaskResponse getRegistroTaskResponse() {
+        return registroTaskResponse;
     }
 
-    public void setAsyncResponse(AsyncResponse asyncResponse) {
-        this.asyncResponse = asyncResponse;
+    public void setLoginTaskResponse(RegistroTaskResponse registroTaskResponse) {
+        this.registroTaskResponse = registroTaskResponse;
     }
 }

@@ -8,17 +8,17 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.example.android.Auxiliar.AsyncResponse;
+import com.example.android.Auxiliar.LoginTaskResponse;
+import com.example.android.Auxiliar.RegistroTaskResponse;
 import com.example.android.Auxiliar.Usuario;
 
-public class RegistroActivity extends AppCompatActivity implements AsyncResponse, AdapterView.OnItemSelectedListener {
+public class RegistroActivity extends AppCompatActivity implements LoginTaskResponse, RegistroTaskResponse {
 
     private Button botonRegistro;
     private EditText textoUsuario;
@@ -31,6 +31,7 @@ public class RegistroActivity extends AppCompatActivity implements AsyncResponse
     private Spinner spinnerSexo;
     private Spinner spinnerOrigen;
     private Spinner spinnerNivelEstudios;
+    private LinearLayout linearLayout;
     ArrayAdapter<CharSequence> adapterSpinnerSexo;
     ArrayAdapter<CharSequence> adapterSpinnerOrigen;
     ArrayAdapter<CharSequence> adapterSpinnerNivelEstudios;
@@ -41,7 +42,7 @@ public class RegistroActivity extends AppCompatActivity implements AsyncResponse
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_registro);
         botonRegistro=findViewById(R.id.botonRegistro);
         textoUsuario=findViewById(R.id.textoUsuario);
         textoContrasena=findViewById(R.id.textoContrasena);
@@ -63,22 +64,29 @@ public class RegistroActivity extends AppCompatActivity implements AsyncResponse
         adapterSpinnerNivelEstudios = ArrayAdapter.createFromResource(this, R.array.nivelestudios_array, android.R.layout.simple_spinner_item);
         adapterSpinnerNivelEstudios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerNivelEstudios.setAdapter(adapterSpinnerNivelEstudios);
-
+        linearLayout = findViewById(R.id.linearLayout);
 
         botonRegistro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Usuario usuario = new Usuario(textoUsuario.getText().toString(),textoContrasena.getText().toString(),textoCorreoElectronico.getText().toString(),textoTelefonoContacto.getText().toString(),textoNombre.getText().toString(),textoApellidos.getText().toString(), textoFechaNacimiento.getText().toString(), "sexo", "origen", "nivelEstudios");
+                Usuario usuario = new Usuario(textoUsuario.getText().toString(),textoContrasena.getText().toString(),
+                        textoCorreoElectronico.getText().toString(),textoTelefonoContacto.getText().toString(),textoNombre.getText().toString(),
+                        textoApellidos.getText().toString(), textoFechaNacimiento.getText().toString(),
+                        spinnerSexo.getSelectedItem().toString(), spinnerOrigen.getSelectedItem().toString(), spinnerNivelEstudios.getSelectedItem().toString());
                 registroTask = new RegistroTask(usuario);
-                registroTask.setAsyncResponse(RegistroActivity.this);
+                registroTask.setLoginTaskResponse(RegistroActivity.this);
                 registroTask.execute();
             }
         });
 
+        linearLayout.addView(new Spinner(this));
+
     }
 
+
+
     @Override
-    public void processFinishOK(String token) {
+    public void LoginFinishOK(String token) {
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("token", token);
@@ -88,7 +96,7 @@ public class RegistroActivity extends AppCompatActivity implements AsyncResponse
     }
 
     @Override
-    public void processFinishERR() {
+    public void LoginFinishERR() {
 
         builder.setMessage("Error de Registro")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -102,17 +110,17 @@ public class RegistroActivity extends AppCompatActivity implements AsyncResponse
         alertDialog.show();
     }
 
+
+
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        position = position;
-        String selection = parent.getItemAtPosition(position).toString();
-
-        Toast.makeText(this,"Selección actual: "+selection,Toast.LENGTH_SHORT).show();
-
+    public void RegistroFinishOK() {
+        LoginTask loginTask = new LoginTask(textoUsuario.getText().toString(),textoContrasena.getText().toString());
+        loginTask.setLoginTaskResponse(RegistroActivity.this);
+        loginTask.execute();
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
+    public void RegistroFinishERR() {
 
     }
 }

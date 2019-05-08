@@ -13,6 +13,7 @@ import retrofit2.http.Body;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 public interface IRemote {
 
@@ -21,10 +22,10 @@ public interface IRemote {
     @POST("login")
     Call<Void> login(@Body Credentials credentials);
 
-    @POST("usuarios")
+    @POST("usuarios/clientes")
     Call<Void> registro(@Body Usuario usuario);
 
     @GET("establecimientos")
-    Call<Collection<Establecimiento>> establecimientos(@Body String nombreEstablecimiento, @Header("token") String token);
+    Call<Collection<Establecimiento>> establecimientos(@Query("nombreEstablecimiento") String nombreEstablecimiento, @Header("token") String token);
 
 }

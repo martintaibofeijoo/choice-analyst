@@ -1,10 +1,9 @@
 package com.example.android;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.example.android.Auxiliar.AsyncResponse;
-import com.example.android.Auxiliar.Credentials;
+import com.example.android.Auxiliar.EstablecimientosTaskResponse;
+import com.example.android.Auxiliar.LoginTaskResponse;
 import com.example.android.Auxiliar.Establecimiento;
 import com.example.android.Remote.IRemote;
 
@@ -22,7 +21,7 @@ public class EstablecimientosTask extends AsyncTask<Void, Void, Void> {
     private String nombreEstablecimiento;
     private String token;
     private Response<Collection<Establecimiento>> mResponse = null;
-    private AsyncResponse asyncResponse = null;
+    private EstablecimientosTaskResponse establecimientosTaskResponse = null;
 
     public EstablecimientosTask(String nombreEstablecimiento, String token) {
         this.nombreEstablecimiento = nombreEstablecimiento;
@@ -56,16 +55,17 @@ public class EstablecimientosTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        if (mResponse!=null && mResponse.code()==200)
-            asyncResponse.processFinishERR();
-        else asyncResponse.processFinishERR();
+        if (mResponse!=null && mResponse.code()==200) {
+            establecimientosTaskResponse.EstablecimientosFinishOK(mResponse.body());
+        }
+        else establecimientosTaskResponse.EstablecimientosFinishERR();
     }
 
-    public AsyncResponse getAsyncResponse() {
-        return asyncResponse;
+    public EstablecimientosTaskResponse getEstablecimientosTaskResponse() {
+        return establecimientosTaskResponse;
     }
 
-    public void setAsyncResponse(AsyncResponse asyncResponse) {
-        this.asyncResponse = asyncResponse;
+    public void setEstablecimientosTaskResponse(EstablecimientosTaskResponse establecimientosTaskResponse) {
+        this.establecimientosTaskResponse = establecimientosTaskResponse;
     }
 }

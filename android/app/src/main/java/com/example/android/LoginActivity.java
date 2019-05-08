@@ -10,14 +10,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
-import com.example.android.Auxiliar.AsyncResponse;
+import com.example.android.Auxiliar.LoginTaskResponse;
 
-public class LoginActivity extends AppCompatActivity implements AsyncResponse {
+public class LoginActivity extends AppCompatActivity implements LoginTaskResponse {
 
     private Button botonLogin;
     private EditText textoUsuario;
     private EditText textoContrasena;
+    private TextView textViewRegistro;
     private AlertDialog.Builder builder;
     private LoginTask loginTask;
 
@@ -28,6 +30,7 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse {
         botonLogin=findViewById(R.id.botonRegistro);
         textoUsuario=findViewById(R.id.textoUsuario);
         textoContrasena=findViewById(R.id.textoContrasena);
+        textViewRegistro=findViewById(R.id.textViewRegistro);
         builder = new AlertDialog.Builder(this);
 
 
@@ -35,25 +38,33 @@ public class LoginActivity extends AppCompatActivity implements AsyncResponse {
             @Override
             public void onClick(View v) {
                 loginTask = new LoginTask(textoUsuario.getText().toString(),textoContrasena.getText().toString());
-                loginTask.setAsyncResponse(LoginActivity.this);
+                loginTask.setLoginTaskResponse(LoginActivity.this);
                 loginTask.execute();
+            }
+        });
+
+        textViewRegistro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentRegistro = new Intent(getApplicationContext(), RegistroActivity.class);
+                startActivity(intentRegistro);
             }
         });
 
     }
 
     @Override
-    public void processFinishOK(String token) {
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+    public void LoginFinishOK(String token) {
+        SharedPreferences sharedPref = this.getSharedPreferences("Prefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("token", token);
         editor.apply();
-        Intent intentMain = new Intent(this, MainActivity.class);
-        startActivity(intentMain);
+        Intent intentEstablecimientos = new Intent(this, EstablecimientosActivity.class);
+        startActivity(intentEstablecimientos);
     }
 
     @Override
-    public void processFinishERR() {
+    public void LoginFinishERR() {
 
         builder.setMessage("Error de login")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
