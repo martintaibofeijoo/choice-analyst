@@ -15,6 +15,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity android:name=".EstablecimientosActivity"></activity>
+        <activity android:name=".ExperimentoActivity"></activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".RegistroActivity" />
         <activity android:name=".LoginActivity">

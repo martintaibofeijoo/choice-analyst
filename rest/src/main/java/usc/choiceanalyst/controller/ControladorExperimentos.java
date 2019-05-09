@@ -2,6 +2,7 @@ package usc.choiceanalyst.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import usc.choiceanalyst.model.*;
 import usc.choiceanalyst.repository.RepositorioUsuario;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -138,14 +140,18 @@ public class ControladorExperimentos {
 
 
 
-   /* @PreAuthorize("permitAll()")
+    @PreAuthorize("permitAll()")
     @GetMapping(
-            path = "/realizarExperimento/{idEstablecimiento}/{fechaActual}",
+            path = "/realizarExperimento/{idEstablecimiento}",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public ResponseEntity<ModeloExperimento> getExperimentoEstablecimiento(@PathVariable("idEstablecimiento") String idEstablecimiento, @PathVariable("fechaActual") String fechaActual) {
+    public ResponseEntity<ModeloExperimento> getExperimentoEstablecimiento(@PathVariable("idEstablecimiento") String idEstablecimiento) {
+        String pattern = "dd-MM-yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        String fechaActual = simpleDateFormat.format(new Date());
+
         if (dbes.existsByIdEstablecimiento(idEstablecimiento)) {
-            Collection<ModeloExperimento> experimentos = dbex.findByIdEstablecimiento(idEstablecimiento);
+            Collection<ModeloExperimento> experimentos = dbex.findByIdsEstablecimientosContains(idEstablecimiento);
             for (int i = 0; i < experimentos.size(); i++) {
                 if (((List<ModeloExperimento>) experimentos).get(i).getFechasExperimento().contains(fechaActual)) {
                     return ResponseEntity.ok().body(((List<ModeloExperimento>) experimentos).get(i));
@@ -156,7 +162,5 @@ public class ControladorExperimentos {
             return ResponseEntity.notFound().build();
         }
     }
-
-    */
 
 }

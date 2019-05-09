@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity implements LoginTaskRespons
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        botonLogin=findViewById(R.id.botonRegistro);
+        botonLogin=findViewById(R.id.botonFinalizarExperimento);
         textoUsuario=findViewById(R.id.textoUsuario);
         textoContrasena=findViewById(R.id.textoContrasena);
         textViewRegistro=findViewById(R.id.textViewRegistro);
@@ -54,10 +54,11 @@ public class LoginActivity extends AppCompatActivity implements LoginTaskRespons
     }
 
     @Override
-    public void LoginFinishOK(String token) {
+    public void LoginFinishOK(String token, String idCliente) {
         SharedPreferences sharedPref = this.getSharedPreferences("Prefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("token", token);
+        editor.putString("idCliente",idCliente);
         editor.apply();
         Intent intentEstablecimientos = new Intent(this, EstablecimientosActivity.class);
         startActivity(intentEstablecimientos);

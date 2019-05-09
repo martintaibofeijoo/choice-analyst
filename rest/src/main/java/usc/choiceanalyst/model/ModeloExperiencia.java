@@ -9,19 +9,18 @@ import java.util.Date;
 
 public class ModeloExperiencia {
 
-    @Id private String idCliente;
+    private String idCliente;
     private String fechaRealizacion;
     private String idExperimento;
     private String higiene;
     private String ruido;
     private String distancia;
     private String energia;
-    private String compañia;
     private String compania;
     private String atmosfera;
     private String calidadServicio;
     private String apariencia;
-    private Float temperatura;
+    private String temperatura;
     private String saludable;
     private String sabroso;
     private String menuSeleccionado;
@@ -94,14 +93,6 @@ public class ModeloExperiencia {
         this.energia = energia;
     }
 
-    public String getCompañia() {
-        return compañia;
-    }
-
-    public void setCompañia(String compañia) {
-        this.compañia = compañia;
-    }
-
     public String getCompania() {
         return compania;
     }
@@ -134,11 +125,11 @@ public class ModeloExperiencia {
         this.apariencia = apariencia;
     }
 
-    public Float getTemperatura() {
+    public String getTemperatura() {
         return temperatura;
     }
 
-    public void setTemperatura(Float temperatura) {
+    public void setTemperatura(String temperatura) {
         this.temperatura = temperatura;
     }
 

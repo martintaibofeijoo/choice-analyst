@@ -43,7 +43,7 @@ public class RegistroActivity extends AppCompatActivity implements LoginTaskResp
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
-        botonRegistro=findViewById(R.id.botonRegistro);
+        botonRegistro=findViewById(R.id.botonFinalizarExperimento);
         textoUsuario=findViewById(R.id.textoUsuario);
         textoContrasena=findViewById(R.id.textoContrasena);
         textoCorreoElectronico=findViewById(R.id.textoCorreoElectronico);
@@ -64,7 +64,7 @@ public class RegistroActivity extends AppCompatActivity implements LoginTaskResp
         adapterSpinnerNivelEstudios = ArrayAdapter.createFromResource(this, R.array.nivelestudios_array, android.R.layout.simple_spinner_item);
         adapterSpinnerNivelEstudios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerNivelEstudios.setAdapter(adapterSpinnerNivelEstudios);
-        linearLayout = findViewById(R.id.linearLayout);
+        linearLayout = findViewById(R.id.experimentoLayout);
 
         botonRegistro.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,16 +83,15 @@ public class RegistroActivity extends AppCompatActivity implements LoginTaskResp
 
     }
 
-
-
     @Override
-    public void LoginFinishOK(String token) {
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+    public void LoginFinishOK(String token, String idCliente) {
+        SharedPreferences sharedPref = this.getSharedPreferences("Prefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("token", token);
+        editor.putString("idCliente",idCliente);
         editor.apply();
-        Intent intentMain = new Intent(this, MainActivity.class);
-        startActivity(intentMain);
+        Intent intentEstablecimientos = new Intent(this, EstablecimientosActivity.class);
+        startActivity(intentEstablecimientos);
     }
 
     @Override

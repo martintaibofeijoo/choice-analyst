@@ -4,6 +4,8 @@ package com.example.android.Remote;
 
 import com.example.android.Auxiliar.Credentials;
 import com.example.android.Auxiliar.Establecimiento;
+import com.example.android.Auxiliar.Experiencia;
+import com.example.android.Auxiliar.Experimento;
 import com.example.android.Auxiliar.Usuario;
 
 import java.util.Collection;
@@ -13,6 +15,7 @@ import retrofit2.http.Body;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface IRemote {
@@ -28,4 +31,9 @@ public interface IRemote {
     @GET("establecimientos")
     Call<Collection<Establecimiento>> establecimientos(@Query("nombreEstablecimiento") String nombreEstablecimiento, @Header("token") String token);
 
+    @GET("experimentos/responderExperimento/{idEstablecimiento}")
+    Call<Experimento> obtenerExperimento(@Path("idEstablecimiento") String idEstablecimiento, @Header("token") String token);
+
+    @POST("experiencias")
+    Call<Void> responderExperimento(@Body Experiencia experiencia, @Header("token") String token);
 }

@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.example.android.Auxiliar.Establecimiento;
 import com.example.android.Auxiliar.EstablecimientosTaskResponse;
-import com.example.android.Auxiliar.MyAdapter;
+import com.example.android.Auxiliar.EstablecimientosAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +17,7 @@ import java.util.Collection;
 public class EstablecimientosActivity extends AppCompatActivity implements EstablecimientosTaskResponse {
 
     private RecyclerView recyclerViewRestaurantes;
-    private MyAdapter adapter;
+    private EstablecimientosAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<Establecimiento> listadoEstablecimientos = new ArrayList<>();
 
@@ -29,7 +29,7 @@ public class EstablecimientosActivity extends AppCompatActivity implements Estab
         recyclerViewRestaurantes = findViewById(R.id.recyclerViewRestaurantes);
         layoutManager = new LinearLayoutManager(this);
         recyclerViewRestaurantes.setLayoutManager(layoutManager);
-        adapter = new MyAdapter(listadoEstablecimientos);
+        adapter = new EstablecimientosAdapter(listadoEstablecimientos);
         recyclerViewRestaurantes.setAdapter(adapter);
 
         SharedPreferences sharedPref = this.getSharedPreferences("Prefs", Context.MODE_PRIVATE);

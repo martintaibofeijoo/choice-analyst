@@ -8,17 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.android.EstablecimientosActivity;
-import com.example.android.MainActivity;
+import com.example.android.ExperimentoActivity;
 import com.example.android.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+public class EstablecimientosAdapter extends RecyclerView.Adapter<EstablecimientosAdapter.MyViewHolder> {
     private ArrayList<Establecimiento> listadoEstablecimientos;
 
-    public MyAdapter(ArrayList<Establecimiento> establecimientos){
+    public EstablecimientosAdapter(ArrayList<Establecimiento> establecimientos){
         listadoEstablecimientos = establecimientos;
     }
 
@@ -57,7 +55,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentMain = new Intent(v.getContext(), MainActivity.class);
+                Intent intentMain = new Intent(v.getContext(), ExperimentoActivity.class);
                 intentMain.putExtra("establecimiento", establecimiento);
                 v.getContext().startActivity(intentMain);
             }

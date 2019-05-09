@@ -1,10 +1,9 @@
 package com.example.android;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.example.android.Auxiliar.LoginTaskResponse;
-import com.example.android.Auxiliar.Credentials;
+import com.example.android.Auxiliar.Experiencia;
+import com.example.android.Auxiliar.ResponderExperimentoTaskResponse;
 import com.example.android.Remote.IRemote;
 
 import java.io.IOException;
@@ -16,23 +15,22 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class LoginTask extends AsyncTask<Void, Void, Void> {
-    private String usuario;
-    private String contrasena;
+public class ResponderExperimentoTask extends AsyncTask<Void, Void, Void> {
+    private Experiencia experiencia;
+
     private Response<Void> mResponse = null;
     private String token;
-    private LoginTaskResponse loginTaskResponse = null;
+    private ResponderExperimentoTaskResponse responderExperimentoTaskResponse = null;
 
-    public LoginTask(String usuario, String contrasena) {
-        this.usuario = usuario;
-        this.contrasena = contrasena;
+    public ResponderExperimentoTask(Experiencia experiencia, String token) {
+        this.token=token;
+        this.experiencia = experiencia;
     }
 
 
     @Override
     protected Void doInBackground(Void... voids) {
 
-        Credentials credentials = new Credentials(usuario, contrasena);
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -45,11 +43,10 @@ public class LoginTask extends AsyncTask<Void, Void, Void> {
 
         IRemote service = retrofit.create(IRemote.class);
 
-        Call<Void> call = service.login(credentials);
+        Call<Void> call = service.responderExperimento(experiencia, token);
         try {
             mResponse = call.execute();
-            token = mResponse.headers().get("Authorization");
-            Log.i("TOKEN", "El token es: " + token);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,16 +55,16 @@ public class LoginTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        if (mResponse!=null && mResponse.code()==200)
-            loginTaskResponse.LoginFinishOK(token, this.usuario);
-        else loginTaskResponse.LoginFinishERR();
+        if (mResponse!=null && mResponse.code()==201)
+            responderExperimentoTaskResponse.ResponderExperimentoFinishOK();
+        else responderExperimentoTaskResponse.ResponderExperimentoFinishERR();
     }
 
-    public LoginTaskResponse getLoginTaskResponse() {
-        return loginTaskResponse;
+    public ResponderExperimentoTaskResponse getResponderExperimentoTaskResponse() {
+        return responderExperimentoTaskResponse;
     }
 
-    public void setLoginTaskResponse(LoginTaskResponse loginTaskResponse) {
-        this.loginTaskResponse = loginTaskResponse;
+    public void setResponderExperimentoTaskResponse(ResponderExperimentoTaskResponse responderExperimentoTaskResponse) {
+        this.responderExperimentoTaskResponse = responderExperimentoTaskResponse;
     }
 }
