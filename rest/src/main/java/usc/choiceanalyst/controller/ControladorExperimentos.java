@@ -142,7 +142,7 @@ public class ControladorExperimentos {
 
     @PreAuthorize("permitAll()")
     @GetMapping(
-            path = "/realizarExperimento/{idEstablecimiento}",
+            path = "/obtenerExperimento/{idEstablecimiento}",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
     public ResponseEntity<ModeloExperimento> getExperimentoEstablecimiento(@PathVariable("idEstablecimiento") String idEstablecimiento) {

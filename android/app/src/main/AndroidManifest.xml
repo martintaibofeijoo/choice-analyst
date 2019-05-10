@@ -14,12 +14,13 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".EstablecimientosActivity"></activity>
-        <activity android:name=".ExperimentoActivity"></activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".RegistroActivity" />
-        <activity android:name=".LoginActivity">
-            <intent-filter>
+        <activity android:name=".Activities.EstablecimientosActivity"></activity>
+        <activity android:name=".Activities.ExperimentoActivity"></activity>
+        <activity android:name=".Activities.MainActivity"></activity>
+        <activity android:name=".Activities.RegistroActivity"></activity>
+        <activity android:name=".Activities.FinalizarActivity"></activity>
+        <activity android:name=".Activities.LoginActivity">
+        <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
