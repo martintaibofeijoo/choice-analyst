@@ -34,9 +34,6 @@ class VistaEstablecimientos extends Component {
             alertaExperimentos: {
                 status: ""
             },
-            alertaModificacion: {
-                status: ""
-            },
             establecimientos: [],
             nombreEstablecimiento: "",
             localizacionEstablecimiento: "",
@@ -108,9 +105,16 @@ class VistaEstablecimientos extends Component {
     }
 
     onCerrarVistaModificarExperimento = () => {
-        this.actualizarEstablecimientos();
         this.setState({
             mostrarVistaModificarExperimento: false
+        });
+    }
+
+    onEstablecimientoModificadoCorrectamente = () => {
+        this.actualizarEstablecimientos();
+        this.setState({
+            mostrarVistaModificarExperimento: false,
+            alertaExperimentos: {status: "OK", message: "Establecimiento Modificado Correctamente"},
         });
     }
 
@@ -136,6 +140,7 @@ class VistaEstablecimientos extends Component {
             })
         })
             .then(async response => {
+                debugger
                 const codigo = response.status;
                 if (codigo === 201) {
                     this.setState(prev => ({
@@ -146,21 +151,7 @@ class VistaEstablecimientos extends Component {
                         localizacionEstablecimiento: "",
                         tipoEstablecimiento: "Restaurante"
                     }))
-                    const postRequest = await fetch(`http://localhost:9000/establecimientos?idAdministrador=${this.props.auth.user.username}`, {
-                        method: "GET",
-                        mode: "cors",
-                        headers: {
-                            'Accept': 'application/json;charset=UTF-8',
-                            'Content-Type': 'application/json;charset=UTF-8',
-                            'Authorization': this.props.auth.token
-                        }
-                    })
-                    const postResponse = await postRequest.json()
-
-                    this.setState(prev => ({
-                        ...prev,
-                        establecimientos: postResponse
-                    }))
+                    this.actualizarEstablecimientos();
                 } else if (codigo === 409) {
                     this.setState(prev => ({
                         ...prev,
@@ -275,14 +266,16 @@ class VistaEstablecimientos extends Component {
                         eliminarEstablecimiento={this.doEliminarEstablecimiento}
                     />
                     {this.state.mostrarVistaModificarExperimento === true &&
-                        <VistaModificarEstablecimiento
-                            nombreEstablecimientoModificar ={this.state.nombreEstablecimientoModificar}
-                            tipoEstablecimientoModificar={this.state.tipoEstablecimientoModificar}
-                            localizacionEstablecimientoModificar={this.state.localizacionEstablecimientoModificar}
-                            auth={this.props.auth}
-                            show={this.state.mostrarVistaModificarExperimento}
-                            onHide={this.onCerrarVistaModificarExperimento}
-                        />
+                    <VistaModificarEstablecimiento
+                        nombreEstablecimientoModificar={this.state.nombreEstablecimientoModificar}
+                        idEstablecimientoModificar={this.state.idEstablecimientoModificar}
+                        tipoEstablecimientoModificar={this.state.tipoEstablecimientoModificar}
+                        localizacionEstablecimientoModificar={this.state.localizacionEstablecimientoModificar}
+                        auth={this.props.auth}
+                        show={this.state.mostrarVistaModificarExperimento}
+                        onHide={this.onCerrarVistaModificarExperimento}
+                        onEstablecimientoModificadoCorrectamente={this.onEstablecimientoModificadoCorrectamente}
+                    />
                     }
                     {(this.state.establecimientos.length === 0) ? (
                         <h2 style={{marginTop: '50px', textAlign: 'center'}}>!Aún no existe ningún establecimiento,
@@ -313,6 +306,7 @@ class VistaEstablecimientos extends Component {
                                                 <Button size={"sm"} block className={"botonWarning"}
                                                         onClick={() => this.setState({
                                                             mostrarVistaModificarExperimento: true,
+                                                            idEstablecimientoModificar: item.idEstablecimiento,
                                                             nombreEstablecimientoModificar: item.nombreEstablecimiento,
                                                             tipoEstablecimientoModificar: item.tipoEstablecimiento,
                                                             localizacionEstablecimientoModificar: item.localizacionEstablecimiento
@@ -419,11 +413,12 @@ class VistaModificarEstablecimiento extends Component {
     }
 
     doModificarEstablecimiento = (nombreEstablecimientoModificar, tipoEstablecimientoModificar, localizacionEstablecimientoModificar) => {
+        debugger
         let idEstablecimientoModificar = nombreEstablecimientoModificar.replace(/ /g, "-");
         idEstablecimientoModificar = idEstablecimientoModificar.toLowerCase()
         idEstablecimientoModificar = idEstablecimientoModificar.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 
-        fetch(`http://localhost:9000/establecimientos/${idEstablecimientoModificar}`, {
+        fetch(`http://localhost:9000/establecimientos/${this.props.idEstablecimientoModificar}`, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json;charset=UTF-8',
@@ -446,7 +441,7 @@ class VistaModificarEstablecimiento extends Component {
                         alertaExperimentos: {status: "OK", message: "Establecimiento Modificado Correctamente"},
                         validated: false
                     }))
-                    this.props.onHide();
+                    this.props.onEstablecimientoModificadoCorrectamente();
                 } else if (codigo === 409) {
                     this.setState(prev => ({
                         ...prev,

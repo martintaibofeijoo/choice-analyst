@@ -6,7 +6,7 @@ import {
     CardHeader,
     CardTitle,
     CardBody,
-    Input
+    Input, Alert
 } from 'reactstrap';
 import Button from 'react-bootstrap/Button'
 import Form from "react-bootstrap/Form";
@@ -104,9 +104,18 @@ class VistaVerExperimento extends Component {
 
 
     render() {
-        console.table(this.state.nombresEstablecimientos)
+        console.table(this.props.mensaje)
         return (
             <Container>
+                <h1 style={{textAlign: 'center'}}>Ver Experimento</h1>
+                {this.props.mensaje !== undefined &&
+                <Alert
+                    color={this.props.mensaje.status === "OK" ? "success" : "danger"}
+                    isOpen={this.props.mensaje.status !== ""}
+                >
+                    {this.props.mensaje.message}
+                </Alert>
+                }
                 <Row>
                     <Card block className="cards" color="primary">
                         <CardHeader style={{marginBottom: '-30px'}}>

@@ -198,7 +198,7 @@ class VistaMenus extends Component {
                                             </Col>
                                             <Col>
                                                 <Button size="sm" block className={"botonWarning"} tag={Link}
-                                                        to={`/experimentos/modificarExperimento/${item.idExperimento}`}>Modificar</Button>
+                                                        to={`/establecimientos/${this.props.idEstablecimiento}/menus/modificarMenu/${item.idMenu}`}>Modificar Menú</Button>
                                             </Col>
                                             <Col>
                                                 <Button size={"sm"} block className={"botonDanger"}

@@ -57,11 +57,16 @@ public class ControladorEstablecimiento {
     @GetMapping(
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public ResponseEntity<Collection<ModeloEstablecimiento>> getAllEstablecimientos(@RequestParam(value = "nombreEstablecimiento", defaultValue = "") String idAdministrador) {
+    public ResponseEntity<Collection<ModeloEstablecimiento>> getAllEstablecimientos(@RequestParam(value = "nombreEstablecimiento", defaultValue = "") String nombreEstablecimiento,
+                                                                                    @RequestParam(value = "idAdministrador", defaultValue = "") String idAdministrador) {
         ModeloEstablecimiento establecimiento = new ModeloEstablecimiento();
         if (!idAdministrador.isEmpty()) {
-           // establecimiento.setIdAdministrador(idAdministrador);
+                establecimiento.setIdAdministrador(idAdministrador);
         }
+        if (!nombreEstablecimiento.isEmpty()) {
+            establecimiento.setNombreEstablecimiento(nombreEstablecimiento);
+        }
+
         Collection<ModeloEstablecimiento> establecimientos = dbes.findAll(Example.of(establecimiento));
         return ResponseEntity.ok(establecimientos);
     }
@@ -137,13 +142,22 @@ public class ControladorEstablecimiento {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
             Optional<ModeloEstablecimiento> establecimientoExistente = dbes.findByIdEstablecimiento(idEstablecimiento);
+            establecimientoExistente.get().setLocalizacionEstablecimiento(establecimiento.getLocalizacionEstablecimiento());
+            establecimientoExistente.get().setNombreEstablecimiento(establecimiento.getNombreEstablecimiento());
+            establecimientoExistente.get().setTipoEstablecimiento(establecimiento.getTipoEstablecimiento());
+
             if (establecimientoExistente.get().getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
-                establecimientoExistente.get().setIdEstablecimiento(establecimiento.getIdEstablecimiento());
-                establecimientoExistente.get().setLocalizacionEstablecimiento(establecimiento.getLocalizacionEstablecimiento());
-                establecimientoExistente.get().setNombreEstablecimiento(establecimiento.getNombreEstablecimiento());
-                establecimientoExistente.get().setTipoEstablecimiento(establecimiento.getTipoEstablecimiento());
-                dbes.save(establecimientoExistente.get());
-                return ResponseEntity.ok().body(establecimientoExistente.get());
+                if (idEstablecimiento.equals(establecimiento.getIdEstablecimiento())) {
+                    dbes.save(establecimientoExistente.get());
+                    return ResponseEntity.ok().body(establecimientoExistente.get());
+                } else if (!idEstablecimiento.equals(establecimiento.getIdEstablecimiento()) && !dbes.existsByIdEstablecimiento(establecimiento.getIdEstablecimiento())) {
+                    establecimientoExistente.get().setIdEstablecimiento(establecimiento.getIdEstablecimiento());
+                    dbes.deleteByIdEstablecimiento(idEstablecimiento);
+                    dbes.save(establecimientoExistente.get());
+                    return ResponseEntity.ok().body(establecimientoExistente.get());
+                } else {
+                    return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                }
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }

@@ -3,7 +3,7 @@ import {
     Card,
     CardHeader,
     CardTitle,
-    CardBody,
+    CardBody, Alert,
 } from 'reactstrap';
 import Button from 'react-bootstrap/Button'
 import Container from "react-bootstrap/Container";
@@ -17,7 +17,7 @@ export class VerMenu extends Component {
         return <Authentication>
             {
                 auth => <VistaVerMenu auth={auth} idEstablecimiento={this.props.match.params.idEstablecimiento}
-                                      idMenu={this.props.match.params.idMenu}/>
+                                      idMenu={this.props.match.params.idMenu} mensaje={this.props.location.state}/>
             }
         </Authentication>
     }
@@ -88,11 +88,17 @@ class VistaVerMenu extends Component {
 
 
     render() {
-        console.table(this.props)
-
         return (
             <Container>
-
+                <h1 style={{textAlign: 'center'}}>Ver Menú</h1>
+                {this.props.mensaje !== undefined &&
+                <Alert
+                    color={this.props.mensaje.status === "OK" ? "success" : "danger"}
+                    isOpen={this.props.mensaje.status !== ""}
+                >
+                    {this.props.mensaje.message}
+                </Alert>
+                }
                 <Row>
                     <Card block className="cards" color="primary">
                         <CardHeader style={{marginBottom: '-30px'}}>

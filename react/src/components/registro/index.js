@@ -72,7 +72,7 @@ export default class VistaRegistro extends Component {
     }
 
     doRegister = (username, password, correoElectronico, telefonoContacto, nombre, apellidos) => {
-        fetch("http://localhost:9000/usuarios/", {
+        fetch("http://localhost:9000/usuarios/administradores", {
             method: 'POST',
             headers: {
                 'Accept': 'application/json;charset=UTF-8',

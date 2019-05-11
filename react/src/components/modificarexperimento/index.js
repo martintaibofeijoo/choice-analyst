@@ -251,7 +251,7 @@ class VistaModificarExperimento extends Component {
                 pathname: `/experimentos/verExperimento/${this.state.idExperimento}`,
                 state: {
                     mensaje:"modificado",
-                    status:true
+                    status:"OK"
                 }
             }}/>;
         else

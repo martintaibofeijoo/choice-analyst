@@ -84,6 +84,7 @@ public class ControladorUsuarios {
 
     @PreAuthorize("permitAll()")
     @PostMapping(
+            path = "/administradores",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )

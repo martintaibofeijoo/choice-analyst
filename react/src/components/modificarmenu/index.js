@@ -18,17 +18,17 @@ import moment from "moment";
 import {Redirect, Route} from "react-router-dom";
 
 
-export class CrearMenu extends Component {
+export class ModificarMenu extends Component {
     render() {
         return <Authentication>
             {
-                auth => <VistaCrearMenu auth={auth} idEstablecimiento={this.props.match.params.idEstablecimiento}/>
+                auth => <VistaModificarMenu auth={auth} idEstablecimiento={this.props.match.params.idEstablecimiento} idMenu={this.props.match.params.idMenu}/>
             }
         </Authentication>
     }
 }
 
-class VistaCrearMenu extends Component {
+class VistaModificarMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -37,47 +37,63 @@ class VistaCrearMenu extends Component {
                 message: []
             },
             ok: false,
-            idMenu:"",
+            idMenu: "",
             nombreMenu: "",
             idEstablecimiento: this.props.idEstablecimiento,
             fechasMenu: [],
-            primerosPlatos: [
-                {
-                    nombrePlato: "",
-                    precioPlato: "",
-                    tipoPlato: "PrimerPlato",
-                    ingredientes: [
-                        {
-                            textoIngrediente: ""
-                        }
-                    ]
-                }
-            ],
-            segundosPlatos: [
-                {
-                    nombrePlato: "",
-                    precioPlato: "",
-                    tipoPlato: "SegundoPlato",
-                    ingredientes: [
-                        {
-                            textoIngrediente: ""
-                        }
-                    ]
-                }
-            ],
-            postres: [
-                {
-                    nombrePlato: "",
-                    precioPlato: "",
-                    tipoPlato: "Postre",
-                    ingredientes: [
-                        {
-                            textoIngrediente: ""
-                        }
-                    ]
-                }
-            ]
+            primerosPlatos: [],
+            segundosPlatos: [],
+            postres: []
         }
+    }
+
+    async componentDidMount() {
+        const postRequest = await fetch(`http://localhost:9000/establecimientos/${this.props.idEstablecimiento}/menus/${this.props.idMenu}`, {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                'Accept': 'application/json;charset=UTF-8',
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Authorization': this.props.auth.token
+            },
+        })
+        const postResponse = await postRequest.json()
+        console.table(postResponse)
+        debugger
+        let platos = postResponse.platos;
+        let primerosPlatos = [];
+        let segundosPlatos = [];
+        let postres = [];
+        for (let i = 0; i < platos.length; i++) {
+            if (platos[i].tipoPlato === "PrimerPlato") {
+                primerosPlatos = [...primerosPlatos, platos[i]];
+            } else if (platos[i].tipoPlato === "SegundoPlato") {
+                segundosPlatos = [...segundosPlatos, platos[i]];
+            } else if (platos[i].tipoPlato === "Postre") {
+                postres = [...postres, platos[i]];
+            }
+        }
+
+        let fechasMenu = postResponse.fechasMenu;
+        let fechas = "";
+        for (let j = 0; j < fechasMenu.length; j++) {
+            if (j === 0) {
+                fechas = fechasMenu[j];
+            } else {
+                fechas = fechas + ", " + fechasMenu[j];
+            }
+        }
+
+        this.setState(prev => ({
+            ...prev,
+            idMenu: postResponse.idMenu,
+            nombreMenu: postResponse.nombreMenu,
+            fechasMenu: fechas,
+            precioMenu: postResponse.precioMenu,
+            primerosPlatos: primerosPlatos,
+            segundosPlatos: segundosPlatos,
+            postres: postres
+        }))
     }
 
     onNombreMenuChange = (event) => {
@@ -493,14 +509,14 @@ class VistaCrearMenu extends Component {
             return <Redirect to={{
                 pathname: `/establecimientos/${this.props.idEstablecimiento}/menus/verMenu/${this.state.idMenu}`,
                 state: {
-                    message: "Menú Creado Correctamente",
+                    message: "Menú Modificado Correctamente",
                     status: "OK"
                 }
             }}/>;
         else
             return (
                 <Container>
-                    <h1 style={{textAlign: 'center'}}>Crear Menú</h1>
+                    <h1 style={{textAlign: 'center'}}>Modificar Menú</h1>
                     <Row>
                         <Col sm={8}
                              style={{paddingTop: '0px', paddingBottom: '0px', paddingLeft: '0px', paddingRight: '5px'}}>
@@ -821,5 +837,3 @@ class Ingrediente extends Component {
         )
     }
 }
-
-

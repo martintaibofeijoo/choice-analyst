@@ -39,6 +39,7 @@ class VistaCrearExperimento extends Component {
             },
             ok: false,
             listaEstablecimientos: [],
+            idExperimento: "",
             listaEstablecimientosSeleccionados: [],
             idAdministrador: this.props.auth.user.username,
             idEstablecimiento: "",
@@ -60,7 +61,6 @@ class VistaCrearExperimento extends Component {
                     textoObjetivo: ""
                 }
             ],
-            variablesAsignadas: [],
             variables: ["Higiene", "Ruído", "Distancía", "Energía", "Compañía", "Atmósfera", "Calidad de Servicio", "Apariencia", "Temperatura", "Saludable", "Sabroso"]
         }
     }
@@ -148,35 +148,34 @@ class VistaCrearExperimento extends Component {
         })
     }
 
-    onModificarVariableAsociadaPregunta = (variableAsociada, identificador) => {
+    onModificarVariableAsociadaPregunta = (antiguaVariableAsociada, nuevaVariableAsociada, identificadorPregunta) => {
         this.setState(state => {
             state.preguntas.map((item, index) => {
-                if (index === identificador) {
-                    item.variableAsociada = variableAsociada;
-                    /* if (this.state.variables.includes(variableAsociada)) {
-                         let posicion = 0;
-                         this.state.variables.map((item, index) => {
-                             if (item === variableAsociada) {
-                                 posicion = index;
-                             }
-                         })
-                         console.log(posicion)
-                         let {variables} = this.state;
+                if (index === identificadorPregunta) {
+                    debugger
+                    item.variableAsociada = nuevaVariableAsociada;
+                    let posicion = 0;
+                    this.state.variables.map((item, index) => {
+                        if (item === nuevaVariableAsociada) {
+                            posicion = index;
+                        }
+                    })
+                    let {variables} = this.state;
+                    let nuevasVariables = [
+                        ...variables.slice(0, posicion),
+                        ...variables.slice(posicion + 1),
+                    ]
+                    this.setState({variables: nuevasVariables});
 
-                         let nuevasVariables = [
-                             ...variables.slice(0, posicion),
-                             ...variables.slice(posicion + 1),
-                         ]
-                         this.setState({variables: nuevasVariables});
-
-                     } else if (this.state.variables.includes(variableAsociada)) {
-                         let {variables} = this.state;
-                         let nuevasVariables = [
-                             ...variables, variableAsociada
-                         ]
-                         this.setState({variables: nuevasVariables});
-                     }*/
+                    if (antiguaVariableAsociada !== "") {
+                        let {variables1} = this.state;
+                        let nuevasVariables1 = [
+                            ...variables1, nuevaVariableAsociada
+                        ]
+                        this.setState({variables1: nuevasVariables1});
+                    }
                 }
+
             })
         })
     }
@@ -302,22 +301,22 @@ class VistaCrearExperimento extends Component {
                 {
                     textoPregunta: "¿Que menú seleccionaste?",
                     variableAsociada: "Menú Seleccionado",
-                    opciones:[]
+                    opciones: []
                 },
                 {
                     textoPregunta: "¿Que primer plato seleccionaste?",
                     variableAsociada: "Primer Plato",
-                    opciones:[]
+                    opciones: []
                 },
                 {
                     textoPregunta: "¿Que segundo plato seleccionaste?",
                     variableAsociada: "Segundo Plato",
-                    opciones:[]
+                    opciones: []
                 },
                 {
                     textoPregunta: "¿Que postre seleccionaste?",
                     variableAsociada: "Postre",
-                    opciones:[]
+                    opciones: []
                 }
             ];
 
@@ -345,7 +344,8 @@ class VistaCrearExperimento extends Component {
             if (codigo === 201) {
                 this.setState(prev => ({
                     ...prev,
-                    ok: true
+                    ok: true,
+                    idExperimento: idExperimento
                 }))
             } else {
                 this.setState(prev => ({...prev, alert: {status: "Error", message: "Error Creando Experimento"}}))
@@ -357,7 +357,13 @@ class VistaCrearExperimento extends Component {
 
     render() {
         if (this.state.ok)
-            return <Redirect to="/experimentos"/>;
+            return <Redirect to={{
+                pathname: `/experimentos/verExperimento/${this.state.idExperimento}`,
+                state: {
+                    message: "Experimento Creado Correctamente",
+                    status: "OK"
+                }
+            }}/>;
         else
             return (
                 <Container>
@@ -552,9 +558,10 @@ class Pregunta extends Component {
     }
 
     onVariableAsociadaChange = event => {
+        let antiguaVariableAsociada = this.state.variableAsociada;
         let value = event.target !== null ? event.target.value : ""
         this.setState(prev => ({...prev, variableAsociada: value}))
-        this.props.onModificarVariableAsociadaPregunta(value, this.props.identificadorPregunta)
+        this.props.onModificarVariableAsociadaPregunta(antiguaVariableAsociada, value, this.props.identificadorPregunta)
     }
 
     onEliminarPregunta = () => {
