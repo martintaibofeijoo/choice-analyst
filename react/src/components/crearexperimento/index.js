@@ -603,6 +603,7 @@ class Pregunta extends Component {
     }
 
     render() {
+        console.table(this.props);
         return (
             <Card className="cards" className="cards" color="primary">
                 <CardHeader style={{marginBottom: '-30px'}}>
@@ -625,6 +626,9 @@ class Pregunta extends Component {
                                         (item, index) =>
                                             <option>{item}</option>
                                     )
+                                    }
+                                    {!this.props.variables.includes(this.props.pregunta.variableAsociada) && this.props.pregunta.variableAsociada !=="" &&
+                                    <option>{this.props.pregunta.variableAsociada}</option>
                                     }
                                 </Input>
                             </Col>

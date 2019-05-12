@@ -252,4 +252,42 @@ public class ControladorEstablecimiento {
             return ResponseEntity.notFound().build();
         }
     }
+/*
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PutMapping(
+            path = "/{idEstablecimiento}/menus/{idMenu}",
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+
+    public ResponseEntity modifyMenu(@RequestBody Menu menu, @PathVariable("idEstablecimiento") String idEstablecimiento, @PathVariable("idMenu") String idMenu) {
+        if (!dbes.existsByIdEstablecimiento(idEstablecimiento)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            Optional<ModeloEstablecimiento> establecimientoExistente = dbes.findByIdEstablecimiento(idEstablecimiento);
+
+            if (establecimientoExistente.get().getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
+                for(int i=0; i<establecimientoExistente.get().getMenus().size();i++){
+                    if(establecimientoExistente.get().getMenus().get(i).getIdMenu().equals(idMenu)){
+                        establecimientoExistente.get().getMenus().set(i,menu);
+                    }
+                }
+
+                if (idEstablecimiento.equals(establecimiento.getIdEstablecimiento())) {
+                    dbes.save(establecimientoExistente.get());
+                    return ResponseEntity.ok().body(establecimientoExistente.get());
+                } else if (!idEstablecimiento.equals(establecimiento.getIdEstablecimiento()) && !dbes.existsByIdEstablecimiento(establecimiento.getIdEstablecimiento())) {
+                    establecimientoExistente.get().setIdEstablecimiento(establecimiento.getIdEstablecimiento());
+                    dbes.deleteByIdEstablecimiento(idEstablecimiento);
+                    dbes.save(establecimientoExistente.get());
+                    return ResponseEntity.ok().body(establecimientoExistente.get());
+                } else {
+                    return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+        }
+    }
+*/
 }

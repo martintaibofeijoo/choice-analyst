@@ -22,7 +22,8 @@ export class ModificarMenu extends Component {
     render() {
         return <Authentication>
             {
-                auth => <VistaModificarMenu auth={auth} idEstablecimiento={this.props.match.params.idEstablecimiento} idMenu={this.props.match.params.idMenu}/>
+                auth => <VistaModificarMenu auth={auth} idEstablecimiento={this.props.match.params.idEstablecimiento}
+                                            idMenu={this.props.match.params.idMenu}/>
             }
         </Authentication>
     }
@@ -43,7 +44,7 @@ class VistaModificarMenu extends Component {
             fechasMenu: [],
             primerosPlatos: [],
             segundosPlatos: [],
-            postres: []
+            postres: [],
         }
     }
 
@@ -59,7 +60,8 @@ class VistaModificarMenu extends Component {
         })
         const postResponse = await postRequest.json()
         console.table(postResponse)
-        debugger
+
+
         let platos = postResponse.platos;
         let primerosPlatos = [];
         let segundosPlatos = [];
@@ -73,17 +75,14 @@ class VistaModificarMenu extends Component {
                 postres = [...postres, platos[i]];
             }
         }
-
-        let fechasMenu = postResponse.fechasMenu;
-        let fechas = "";
-        for (let j = 0; j < fechasMenu.length; j++) {
-            if (j === 0) {
-                fechas = fechasMenu[j];
-            } else {
-                fechas = fechas + ", " + fechasMenu[j];
-            }
+        let formato = "T22:00:00.000Z";
+        let fechas = [];
+        let fechaSeparada = [];
+        for (let i = 0; i < postResponse.fechasMenu.length; i++) {
+            fechaSeparada = postResponse.fechasMenu[i].split("-");
+            fechas[i] = fechaSeparada[2] + "-" + fechaSeparada[1] + "-" + fechaSeparada[0] + formato;
         }
-
+        console.table(fechas)
         this.setState(prev => ({
             ...prev,
             idMenu: postResponse.idMenu,
@@ -358,11 +357,11 @@ class VistaModificarMenu extends Component {
         this.setState({postres: nuevosPostres});
     }
 
-    onCrearMenu = () => {
-        this.doCrearMenu(this.state.nombreMenu, this.state.primerosPlatos, this.state.segundosPlatos, this.state.postres, this.state.idEstablecimiento, this.state.fechasMenu)
+    onModificarMenu = () => {
+        this.doModificarMenu(this.state.nombreMenu, this.state.primerosPlatos, this.state.segundosPlatos, this.state.postres, this.state.idEstablecimiento, this.state.fechasMenu)
     }
 
-    doCrearMenu = async (nombreMenu, primerosPlatos, segundosPlatos, postres, idEstablecimiento, fechasMenu) => {
+    doModificarMenu = async (nombreMenu, primerosPlatos, segundosPlatos, postres, idEstablecimiento, fechasMenu) => {
         let ejecutar = true;
         let mensajeCampoVacio = false;
         let mensajeNoNumero = false;
@@ -468,6 +467,9 @@ class VistaModificarMenu extends Component {
             for (let i = 0; i < fechasMenu.length; i++) {
                 fechasCambiadas[i] = moment(fechasMenu[i]).format('DD-MM-YYYY')
             }
+
+            console.table(fechasMenu)
+            debugger
             let platos = primerosPlatos.concat(segundosPlatos)
             platos = platos.concat(postres)
             let idMenu = nombreMenu.replace(/ /g, "-");
@@ -550,7 +552,11 @@ class VistaModificarMenu extends Component {
                                                                     size={'lg'}
                                                                     regional={'es'}
 
-                                                                    onSubmit={dates => this.setState({fechasMenu: dates})}
+                                                                    onSubmit={fechasMenu => this.setState(prev => ({
+                                                                        ...prev,
+                                                                        fechasMenu: fechasMenu
+                                                                    }))
+                                                                    }
                                                 />
                                             </div>
                                         </CardBody>
@@ -659,20 +665,22 @@ class VistaModificarMenu extends Component {
                         )}
                     </Alert>
                     <Row>
-                        <Col style={{paddingLeft: '1px'}} sm={3}>
+                        <Col style={{paddingLeft: '1px'}}>
                             <Route>{
                                 ({history}) =>
                                     <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonPrimary"}
                                             onClick={() => history.goBack()}>Volver</Button>
                             }</Route>
                         </Col>
-                        <Col style={{padding: '0px'}} sm={9}>
-                            <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonSuccess"}
-                                    onClick={this.onCrearMenu}>Crear
-                                Menú</Button>
+                        <Col style={{paddingLeft: '1px'}}>
+                            <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonWarning"}
+                                    onClick={this.onModificarMenu}>Modificar Menu</Button>
+                        </Col>
+                        <Col style={{padding: '0px'}}>
+                            <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonDanger"}
+                                    onClick={this.onModificarMenu}>Eliminar Menu</Button>
                         </Col>
                     </Row>
-
                 </Container>
             );
     }
