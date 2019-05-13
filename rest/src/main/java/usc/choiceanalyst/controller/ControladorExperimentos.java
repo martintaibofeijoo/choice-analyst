@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,15 +39,21 @@ public class ControladorExperimentos {
         this.dbu = dbu;
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR') and principal==#username")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @GetMapping(
-            path = "/{username}",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public ResponseEntity<Collection<ModeloExperimento>> getAllExperimentos(@PathVariable("username") String username) {
-        ModeloExperimento experimento = new ModeloExperimento();
-        experimento.setIdAdministrador(username);
-        return ResponseEntity.ok(dbex.findByIdAdministrador(username));
+    public ResponseEntity<Page<ModeloExperimento>> getAllExperimentos(@RequestParam(value = "idAdministrador", defaultValue = "") String idAdministrador, @RequestParam(value = "nombreExperimento", defaultValue = "") String nombreExperimento, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "10") int size) {
+        if (idAdministrador.equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
+            ModeloExperimento experimento = new ModeloExperimento();
+            experimento.setIdAdministrador(idAdministrador);
+            experimento.setNombreExperimento(nombreExperimento);
+
+            //return ResponseEntity.ok(dbex.findByNombreExperimentoContainsAndIdAdministrador(nombreExperimento,idAdministrador, PageRequest.of(page, size, Sort.by(Sort.Order.asc("nombreExperimento")))));
+            return ResponseEntity.ok(dbex.findAll(Example.of(experimento, ExampleMatcher.matching().withIgnoreCase()), PageRequest.of(page, size, Sort.by(Sort.Order.asc("nombreExperimento")))));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
@@ -131,13 +138,6 @@ public class ControladorExperimentos {
             return ResponseEntity.notFound().build();
         }
     }
-
-
-
-
-
-
-
 
 
     @PreAuthorize("permitAll()")

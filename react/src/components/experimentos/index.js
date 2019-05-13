@@ -3,7 +3,7 @@ import {Link, Redirect} from 'react-router-dom'
 import {
     Alert,
     Button, Card, CardBody, CardFooter, CardHeader, CardTitle,
-    Col,
+    Col, Input,
     Row,
 } from 'reactstrap';
 
@@ -26,6 +26,7 @@ class VistaExperimentos extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            nombreExperimentoBuscar: "",
             experimentos: [],
             mostrarVistaConfirmacion: false,
             nombreExperimentoEliminar: "",
@@ -40,8 +41,20 @@ class VistaExperimentos extends Component {
         this.actualizarExperimentos();
     }
 
+    onNombreExperimentoBuscarChange = (event) => {
+        let value = event.target !== null ? event.target.value : ""
+        this.setState(prev => ({...prev, nombreExperimentoBuscar: value}), () => this.actualizarExperimentos())
+    }
+
     async actualizarExperimentos() {
-        const postRequest = await fetch(`http://localhost:9000/experimentos/${this.props.auth.user.username}`, {
+        let consulta="";
+        if(this.state.nombreExperimentoBuscar ===""){
+            consulta=`http://localhost:9000/experimentos?idAdministrador=${this.props.auth.user.username}&page=0`;
+        }else{
+            consulta=`http://localhost:9000/experimentos?idAdministrador=${this.props.auth.user.username}&nombreExperimento=${this.state.nombreExperimentoBuscar}&page=0`;
+
+        }
+        const postRequest = await fetch(consulta, {
             method: "GET",
             mode: "cors",
             headers: {
@@ -54,7 +67,7 @@ class VistaExperimentos extends Component {
 
         this.setState(prev => ({
             ...prev,
-            experimentos: postResponse
+            experimentos: postResponse.content || []
         }))
 
     }
@@ -81,14 +94,14 @@ class VistaExperimentos extends Component {
         const codigo = response.status;
         if (codigo === 204) {
             this.setState(prev => ({...prev, alert: {status: "OK", message: "Experimento Eliminado Correctamente"}}))
-           this.actualizarExperimentos()
+            this.actualizarExperimentos()
         } else {
             this.setState(prev => ({...prev, alert: {status: "Error", message: "Error Eliminando Experimento"}}))
         }
     }
 
     render() {
-        if (this.state.experimentos.length === 0)
+        if (Array.isArray(this.state.experimentos) && this.state.experimentos.length === 0)
             return <Container>
                 <h1 style={{textAlign: 'center', marginTop: '150px'}}>Ups aún no existen experimentos...</h1>
                 <h2 style={{textAlign: 'center', marginBottom: '50px'}}>Puedes crear tu primer experimento pulsando el
@@ -106,6 +119,18 @@ class VistaExperimentos extends Component {
         else
             return <Container>
                 <h1 style={{textAlign: 'center'}}>Experimentos</h1>
+                <Row>
+                    <Col/>
+                    <Col xs={8}>
+                        <Card block className="cards" color="primary">
+                            <CardHeader>
+                                <Input className="inputs" size={"sm"} placeholder="Buscar por Nombre de Experimento..."
+                                       value={this.state.nombreExperimentoBuscar}
+                                       onChange={this.onNombreExperimentoBuscarChange}/> </CardHeader>
+                        </Card>
+                    </Col>
+                    <Col/>
+                </Row>
                 <Alert
                     color={this.state.alert.status === "OK" ? "success" : "danger"}
                     isOpen={this.state.alert.status !== ""}
