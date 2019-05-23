@@ -47,11 +47,11 @@ class VistaExperimentos extends Component {
     }
 
     async actualizarExperimentos() {
-        let consulta="";
-        if(this.state.nombreExperimentoBuscar ===""){
-            consulta=`http://localhost:9000/experimentos?idAdministrador=${this.props.auth.user.username}&page=0`;
-        }else{
-            consulta=`http://localhost:9000/experimentos?idAdministrador=${this.props.auth.user.username}&nombreExperimento=${this.state.nombreExperimentoBuscar}&page=0`;
+        let consulta = "";
+        if (this.state.nombreExperimentoBuscar === "") {
+            consulta = `http://localhost:9000/experimentos?idAdministrador=${this.props.auth.user.username}`;
+        } else {
+            consulta = `http://localhost:9000/experimentos?idAdministrador=${this.props.auth.user.username}&nombreExperimento=${this.state.nombreExperimentoBuscar}`;
 
         }
         const postRequest = await fetch(consulta, {
@@ -67,7 +67,7 @@ class VistaExperimentos extends Component {
 
         this.setState(prev => ({
             ...prev,
-            experimentos: postResponse.content || []
+            experimentos: postResponse || []
         }))
 
     }
@@ -101,50 +101,51 @@ class VistaExperimentos extends Component {
     }
 
     render() {
-        if (Array.isArray(this.state.experimentos) && this.state.experimentos.length === 0)
-            return <Container>
-                <h1 style={{textAlign: 'center', marginTop: '150px'}}>Ups aún no existen experimentos...</h1>
-                <h2 style={{textAlign: 'center', marginBottom: '50px'}}>Puedes crear tu primer experimento pulsando el
-                    siguiente botón.</h2>
-                <Row>
-                    <Col/>
-                    <Col>
-                        <Button className={"botonPrimary"} block size={"lg"} tag={Link}
-                                to={`/crearExperimento`}>Crear Experimento</Button>
-                    </Col>
-                    <Col/>
-                </Row>
-            </Container>
+        return <Container>
+            <h1 style={{textAlign: 'center'}}>Experimentos</h1>
+            <Row>
+                <Col/>
+                <Col xs={8}>
+                    <Card block className="cards" color="primary">
+                        <CardHeader>
+                            <Input className="inputs" size={"sm"} placeholder="Buscar por Nombre de Experimento..."
+                                   value={this.state.nombreExperimentoBuscar}
+                                   onChange={this.onNombreExperimentoBuscarChange}/> </CardHeader>
+                    </Card>
+                </Col>
+                <Col/>
+            </Row>
+            <Alert
+                color={this.state.alert.status === "OK" ? "success" : "danger"}
+                isOpen={this.state.alert.status !== ""}
+                toggle={() => this.setState(prev => ({...prev, alert: {status: ""}}))}
+            >
+                {this.state.alert.message}
+            </Alert>
+            <VistaConfirmacion
+                nombreExperimentoEliminar={this.state.nombreExperimentoEliminar}
+                show={this.state.mostrarVistaConfirmacion}
+                onHide={this.onCerrarVistaConfirmacion}
+                eliminarExperimento={this.doEliminarExperimento}
+            />
 
-        else
-            return <Container>
-                <h1 style={{textAlign: 'center'}}>Experimentos</h1>
-                <Row>
-                    <Col/>
-                    <Col xs={8}>
-                        <Card block className="cards" color="primary">
-                            <CardHeader>
-                                <Input className="inputs" size={"sm"} placeholder="Buscar por Nombre de Experimento..."
-                                       value={this.state.nombreExperimentoBuscar}
-                                       onChange={this.onNombreExperimentoBuscarChange}/> </CardHeader>
-                        </Card>
-                    </Col>
-                    <Col/>
-                </Row>
-                <Alert
-                    color={this.state.alert.status === "OK" ? "success" : "danger"}
-                    isOpen={this.state.alert.status !== ""}
-                    toggle={() => this.setState(prev => ({...prev, alert: {status: ""}}))}
-                >
-                    {this.state.alert.message}
-                </Alert>
-                <VistaConfirmacion
-                    nombreExperimentoEliminar={this.state.nombreExperimentoEliminar}
-                    show={this.state.mostrarVistaConfirmacion}
-                    onHide={this.onCerrarVistaConfirmacion}
-                    eliminarExperimento={this.doEliminarExperimento}
-                />
-                {this.state.experimentos.map(
+            {(this.state.experimentos.length === 0) ? (
+                <div style={{marginTop: "-100px"}}>
+                    <h1 style={{textAlign: 'center', marginTop: '150px'}}>Ups no existen experimentos con este
+                        nombre...</h1>
+                    <h2 style={{textAlign: 'center', marginBottom: '50px'}}>Si deseas puedes crear uno pulsando el
+                        siguiente botón.</h2>
+                    <Row>
+                        <Col/>
+                        <Col>
+                            <Button className={"botonPrimary"} block size={"lg"} tag={Link}
+                                    to={`/crearExperimento`}>Crear Experimento</Button>
+                        </Col>
+                        <Col/>
+                    </Row>
+                </div>
+            ) : (
+                this.state.experimentos.map(
                     (item, index) =>
                         <Card className={"cards"} block color="primary">
                             <CardHeader style={{marginBottom: '-30px'}}>
@@ -179,8 +180,8 @@ class VistaExperimentos extends Component {
                             </CardFooter>
                         </Card>
                 )
-                }
-            </Container>
+            )}
+        </Container>
     }
 }
 

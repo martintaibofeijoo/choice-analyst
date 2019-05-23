@@ -77,10 +77,13 @@ class VistaModificarMenu extends Component {
         }
         let formato = "T22:00:00.000Z";
         let fechas = [];
+        let fecha="";
         let fechaSeparada = [];
         for (let i = 0; i < postResponse.fechasMenu.length; i++) {
             fechaSeparada = postResponse.fechasMenu[i].split("-");
-            fechas[i] = fechaSeparada[2] + "-" + fechaSeparada[1] + "-" + fechaSeparada[0] + formato;
+            fecha = fechaSeparada[2] + "-" + fechaSeparada[1] + "-" + fechaSeparada[0];
+            console.table(fecha)
+            fechas[i]=new Date(fechaSeparada[2], fechaSeparada[1]-1, fechaSeparada[0]);
         }
         console.table(fechas)
         this.setState(prev => ({
@@ -467,9 +470,6 @@ class VistaModificarMenu extends Component {
             for (let i = 0; i < fechasMenu.length; i++) {
                 fechasCambiadas[i] = moment(fechasMenu[i]).format('DD-MM-YYYY')
             }
-
-            console.table(fechasMenu)
-            debugger
             let platos = primerosPlatos.concat(segundosPlatos)
             platos = platos.concat(postres)
             let idMenu = nombreMenu.replace(/ /g, "-");
@@ -551,7 +551,6 @@ class VistaModificarMenu extends Component {
                                                 <MultipleDatePicker className={'datepicker'}
                                                                     size={'lg'}
                                                                     regional={'es'}
-
                                                                     onSubmit={fechasMenu => this.setState(prev => ({
                                                                         ...prev,
                                                                         fechasMenu: fechasMenu

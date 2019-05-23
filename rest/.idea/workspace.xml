@@ -71,43 +71,19 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/controller/ControladorEstablecimiento.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="62" column="18" selection-start-line="62" selection-start-column="18" selection-end-line="62" selection-end-column="18" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/controller/ControladorUsuarios.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="101" column="46" selection-start-line="101" selection-start-column="46" selection-end-line="101" selection-end-column="46" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/controller/ControladorExperiencias.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
+            <state relative-caret-position="3">
               <caret line="29" column="13" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/controller/ControladorExperimentos.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="111">
-              <caret line="52" column="116" selection-start-line="52" selection-start-column="116" selection-end-line="52" selection-end-column="116" />
+            <state relative-caret-position="230">
+              <caret line="49" lean-forward="true" selection-start-line="49" selection-end-line="49" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -116,10 +92,13 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/5.0.11.RELEASE/9d486329560a0cfc0ccdd71877eb59b945032bb1/spring-beans-5.0.11.RELEASE.jar!/org/springframework/beans/factory/support/ConstructorResolver.class">
+        <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/ModeloExperimento.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="47">
-              <caret line="566" selection-start-line="566" selection-end-line="566" />
+            <state relative-caret-position="137">
+              <caret line="33" selection-start-line="33" selection-end-line="33" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -127,8 +106,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/repository/RepositorioExperimento.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="19" column="61" selection-start-line="19" selection-start-column="61" selection-end-line="19" selection-end-column="61" />
+            <state relative-caret-position="136">
+              <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -137,28 +116,22 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/ModeloUsuario.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/repository/RepositorioUsuario.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="32" column="8" selection-start-line="32" selection-start-column="8" selection-end-line="35" selection-end-column="34" />
+            <state relative-caret-position="119">
+              <caret line="12" column="28" selection-start-line="12" selection-start-column="28" selection-end-line="12" selection-end-column="28" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/auxiliar/Pregunta.java">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/controller/ControladorEstablecimiento.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="7" selection-end-column="34" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/auxiliar/Opcion.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" column="4" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="31" />
+            <state relative-caret-position="255">
+              <caret line="107" column="9" lean-forward="true" selection-start-line="107" selection-start-column="9" selection-end-line="107" selection-end-column="9" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -214,14 +187,14 @@
         <option value="$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/auxiliar/Objetivo.java" />
         <option value="$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/auxiliar/Opcion.java" />
         <option value="$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/auxiliar/Pregunta.java" />
-        <option value="$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/ModeloExperimento.java" />
         <option value="$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/ModeloUsuario.java" />
         <option value="$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/ModeloEstablecimiento.java" />
         <option value="$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/ModeloExperiencia.java" />
         <option value="$PROJECT_DIR$/src/main/java/usc/choiceanalyst/controller/ControladorExperiencias.java" />
         <option value="$PROJECT_DIR$/src/main/java/usc/choiceanalyst/controller/ControladorUsuarios.java" />
-        <option value="$PROJECT_DIR$/src/main/java/usc/choiceanalyst/controller/ControladorEstablecimiento.java" />
+        <option value="$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/ModeloExperimento.java" />
         <option value="$PROJECT_DIR$/src/main/java/usc/choiceanalyst/repository/RepositorioExperimento.java" />
+        <option value="$PROJECT_DIR$/src/main/java/usc/choiceanalyst/controller/ControladorEstablecimiento.java" />
         <option value="$PROJECT_DIR$/src/main/java/usc/choiceanalyst/controller/ControladorExperimentos.java" />
       </list>
     </option>
@@ -236,6 +209,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -300,8 +275,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -341,7 +314,7 @@
         </RuleState>
       </list>
     </option>
-    <option name="contentProportion" value="0.013004791" />
+    <option name="contentProportion" value="0.13611491" />
   </component>
   <component name="RunManager" selected="Spring Boot.ApplicationLauncher">
     <configuration name="rest [bootJar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -428,8 +401,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6609442" visible="true" weight="0.27315435" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6609442" visible="true" weight="0.2852349" />
       <window_info id="Structure" order="1" sideWeight="0.5042194" side_tool="true" weight="0.22147651" />
       <window_info id="Designer" order="2" />
       <window_info id="Learn" order="3" />
@@ -447,7 +421,7 @@
       <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.1451823" side_tool="true" weight="0.36076817" />
       <window_info anchor="bottom" id="Build" order="11" weight="0.3286119" />
-      <window_info active="true" anchor="bottom" id="Run Dashboard" order="12" sideWeight="0.8548177" visible="true" weight="0.53966004" />
+      <window_info active="true" anchor="bottom" id="Run Dashboard" order="12" sideWeight="0.8548177" visible="true" weight="0.25354108" />
       <window_info anchor="bottom" id="Spring" order="13" weight="0.3286119" />
       <window_info anchor="bottom" id="Messages" order="14" weight="0.31586403" />
       <window_info anchor="bottom" id="Java Enterprise" order="15" weight="0.3286119" />
@@ -462,10 +436,21 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="watch">
+      <expression>
+        <expression-string>dbex.findAll()</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>dbex.findAll(Example.of(experimento, ExampleMatcher.matching().withIgnoreCase()))</expression-string>
+        <language-id>JAVA</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
+  </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.security/spring-security-core/5.1.4.RELEASE/471a9157eb19b4cbe5881a74a8b8ac621d07f0ad/spring-security-core-5.1.4.RELEASE-sources.jar!/org/springframework/security/authentication/dao/AbstractUserDetailsAuthenticationProvider.java" />
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.security/spring-security-core/5.1.4.RELEASE/471a9157eb19b4cbe5881a74a8b8ac621d07f0ad/spring-security-core-5.1.4.RELEASE-sources.jar!/org/springframework/security/authentication/ProviderManager.java" />
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.security/spring-security-web/5.1.4.RELEASE/6ae7ec82249ca3b7b64f204f925a7e01971a4cca/spring-security-web-5.1.4.RELEASE-sources.jar!/org/springframework/security/web/authentication/AbstractAuthenticationProcessingFilter.java" />
     <entry file="file://$PROJECT_DIR$/gradlew.bat">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -522,13 +507,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/repository/RepositorioUsuario.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="12" column="28" selection-start-line="12" selection-start-column="28" selection-end-line="12" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/filter/AuthorizationFilter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="125">
@@ -578,20 +556,6 @@
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.security/spring-security-core/5.0.10.RELEASE/2c43466e52380534afeca7da40162b20eacff9ed/spring-security-core-5.0.10.RELEASE-sources.jar!/org/springframework/security/access/intercept/aopalliance/MethodSecurityInterceptor.java" />
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/5.0.11.RELEASE/db796becd9b411929e238f66ba5523c6d80d6270/spring-core-5.0.11.RELEASE.jar!/org/springframework/cglib/proxy/MethodProxy.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="105" selection-start-line="105" selection-end-line="105" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/repository/RepositorioEstablecimiento.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="18" selection-start-line="18" selection-end-line="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/auth/Credentials.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -627,9 +591,145 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/repository/RepositorioExperiencia.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/ModeloExperiencia.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1054">
+          <caret line="93" column="5" selection-start-line="93" selection-start-column="5" selection-end-line="93" selection-end-column="5" />
+          <folding>
+            <element signature="e#2412#2413#0" expanded="true" />
+            <element signature="e#2444#2445#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-commons/2.0.12.RELEASE/7183c8b9beefebb31ea6cb6fcb75a4bcb5077c0/spring-data-commons-2.0.12.RELEASE.jar!/org/springframework/data/domain/Sort.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1007">
+          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+          <folding>
+            <element signature="e#1308#1309#0" expanded="true" />
+            <element signature="e#1359#1360#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/controller/ControladorUsuarios.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1394">
+          <caret line="101" column="46" selection-start-line="101" selection-start-column="46" selection-end-line="101" selection-end-column="46" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/5.0.11.RELEASE/9d486329560a0cfc0ccdd71877eb59b945032bb1/spring-beans-5.0.11.RELEASE.jar!/org/springframework/beans/factory/support/ConstructorResolver.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8891">
+          <caret line="566" selection-start-line="566" selection-end-line="566" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/5.0.11.RELEASE/b37b5d1ae78d22958e260ae756792962166a9c8f/spring-aop-5.0.11.RELEASE.jar!/org/springframework/aop/framework/ReflectiveMethodInvocation.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-337">
+          <caret line="69" selection-start-line="69" selection-end-line="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/5.0.11.RELEASE/db796becd9b411929e238f66ba5523c6d80d6270/spring-core-5.0.11.RELEASE.jar!/org/springframework/cglib/proxy/MethodProxy.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1496">
+          <caret line="103" selection-start-line="103" selection-end-line="103" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/5.0.11.RELEASE/b37b5d1ae78d22958e260ae756792962166a9c8f/spring-aop-5.0.11.RELEASE.jar!/org/springframework/aop/framework/CglibAopProxy.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7259">
+          <caret line="473" selection-start-line="473" selection-end-line="473" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/ModeloUsuario.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="32" column="8" selection-start-line="32" selection-start-column="8" selection-end-line="35" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/auxiliar/Pregunta.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="7" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/auxiliar/Opcion.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="4" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-mongodb/2.0.12.RELEASE/9994f696998dae946e010775b6126ee94b49d093/spring-data-mongodb-2.0.12.RELEASE.jar!/org/springframework/data/mongodb/repository/MongoRepository.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="28" column="26" selection-start-line="28" selection-start-column="26" selection-end-line="28" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/repository/RepositorioUsuario.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="12" column="28" selection-start-line="12" selection-start-column="28" selection-end-line="12" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/repository/RepositorioEstablecimiento.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/controller/ControladorExperiencias.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3">
+          <caret line="29" column="13" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/ModeloExperimento.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="137">
+          <caret line="33" selection-start-line="33" selection-end-line="33" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/repository/RepositorioExperimento.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/ModeloEstablecimiento.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
+        <state relative-caret-position="-575">
           <caret line="14" column="7" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="7" />
           <folding>
             <element signature="e#611#612#0" expanded="true" />
@@ -656,114 +756,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/repository/RepositorioExperiencia.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/controller/ControladorExperimentos.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/ModeloExperiencia.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1054">
-          <caret line="93" column="5" selection-start-line="93" selection-start-column="5" selection-end-line="93" selection-end-column="5" />
+        <state relative-caret-position="230">
+          <caret line="49" lean-forward="true" selection-start-line="49" selection-end-line="49" />
           <folding>
-            <element signature="e#2412#2413#0" expanded="true" />
-            <element signature="e#2444#2445#0" expanded="true" />
+            <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/auxiliar/Pregunta.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="7" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/auxiliar/Opcion.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="4" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="31" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/controller/ControladorEstablecimiento.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="62" column="18" selection-start-line="62" selection-start-column="18" selection-end-line="62" selection-end-column="18" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/controller/ControladorExperiencias.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="29" column="13" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/controller/ControladorUsuarios.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="101" column="46" selection-start-line="101" selection-start-column="46" selection-end-line="101" selection-end-column="46" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-commons/2.0.12.RELEASE/7183c8b9beefebb31ea6cb6fcb75a4bcb5077c0/spring-data-commons-2.0.12.RELEASE.jar!/org/springframework/data/domain/Sort.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1007">
-          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
-          <folding>
-            <element signature="e#1308#1309#0" expanded="true" />
-            <element signature="e#1359#1360#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/5.0.11.RELEASE/9d486329560a0cfc0ccdd71877eb59b945032bb1/spring-beans-5.0.11.RELEASE.jar!/org/springframework/beans/factory/support/ConstructorResolver.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="47">
-          <caret line="566" selection-start-line="566" selection-end-line="566" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/repository/RepositorioExperimento.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="61" selection-start-line="19" selection-start-column="61" selection-end-line="19" selection-end-column="61" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/ModeloExperimento.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="26" column="11" selection-start-line="26" selection-start-column="11" selection-end-line="26" selection-end-column="11" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/model/ModeloUsuario.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="32" column="8" selection-start-line="32" selection-start-column="8" selection-end-line="35" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/usc/choiceanalyst/controller/ControladorExperimentos.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="111">
-          <caret line="52" column="116" selection-start-line="52" selection-start-column="116" selection-end-line="52" selection-end-column="116" />
+        <state relative-caret-position="255">
+          <caret line="107" column="9" lean-forward="true" selection-start-line="107" selection-start-column="9" selection-end-line="107" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

@@ -1,7 +1,5 @@
 package usc.choiceanalyst.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import usc.choiceanalyst.model.ModeloExperimento;
 
@@ -14,9 +12,5 @@ public interface RepositorioExperimento extends MongoRepository<ModeloExperiment
     Optional<ModeloExperimento> findByIdExperimento(String idExperimento);
     List<ModeloExperimento> findAll();
     List<ModeloExperimento> findByIdsEstablecimientosContains(String idExtablecimiento);
-    List<ModeloExperimento> findByIdAdministrador(String idAdministrador);
-    Page<ModeloExperimento> findAll(Pageable pageable);
     ModeloExperimento save(ModeloExperimento entity);
-    Page<ModeloExperimento> findByNombreExperimentoContainingAndIdAdministrador(String nombreExperimento,
-                                                                                String idAdminsitrador, Pageable pageable);
 }

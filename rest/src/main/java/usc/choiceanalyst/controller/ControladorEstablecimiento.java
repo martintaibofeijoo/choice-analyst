@@ -2,6 +2,8 @@ package usc.choiceanalyst.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -67,9 +69,9 @@ public class ControladorEstablecimiento {
             establecimiento.setNombreEstablecimiento(nombreEstablecimiento);
         }
 
-        Collection<ModeloEstablecimiento> establecimientos = dbes.findAll(Example.of(establecimiento));
-        return ResponseEntity.ok(establecimientos);
+        return ResponseEntity.ok(dbes.findAll(Example.of(establecimiento, ExampleMatcher.matching().withIgnoreCase()), Sort.by(Sort.Order.asc("idEstablecimiento"))));
     }
+
 /*    @PreAuthorize("hasRole('CLIENTE')")
     @GetMapping(
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}

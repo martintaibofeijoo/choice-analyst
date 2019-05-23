@@ -24,14 +24,6 @@ public class ModeloExperimento {
     private List<String> idsEstablecimientos;
 
 
-    public ModeloExperimento(){
-        String pattern = "dd-MM-yyyy";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        String date = simpleDateFormat.format(new Date());
-        this.fechaCreacion =date;
-
-    }
-
     public String getIdExperimento() {
         return idExperimento;
     }

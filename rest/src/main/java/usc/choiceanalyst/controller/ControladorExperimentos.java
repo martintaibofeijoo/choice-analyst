@@ -13,7 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import usc.choiceanalyst.model.ModeloUsuario;
 import usc.choiceanalyst.repository.RepositorioEstablecimiento;
 import usc.choiceanalyst.repository.RepositorioExperimento;
 import usc.choiceanalyst.model.*;
@@ -43,14 +42,13 @@ public class ControladorExperimentos {
     @GetMapping(
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public ResponseEntity<Page<ModeloExperimento>> getAllExperimentos(@RequestParam(value = "idAdministrador", defaultValue = "") String idAdministrador, @RequestParam(value = "nombreExperimento", defaultValue = "") String nombreExperimento, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "size", defaultValue = "10") int size) {
+    public ResponseEntity<Collection<ModeloExperimento>> getAllExperimentos(@RequestParam(value = "idAdministrador", defaultValue = "") String idAdministrador, @RequestParam(value = "nombreExperimento", defaultValue = "") String nombreExperimento) {
         if (idAdministrador.equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
             ModeloExperimento experimento = new ModeloExperimento();
             experimento.setIdAdministrador(idAdministrador);
             experimento.setNombreExperimento(nombreExperimento);
 
-            //return ResponseEntity.ok(dbex.findByNombreExperimentoContainsAndIdAdministrador(nombreExperimento,idAdministrador, PageRequest.of(page, size, Sort.by(Sort.Order.asc("nombreExperimento")))));
-            return ResponseEntity.ok(dbex.findAll(Example.of(experimento, ExampleMatcher.matching().withIgnoreCase()), PageRequest.of(page, size, Sort.by(Sort.Order.asc("nombreExperimento")))));
+            return ResponseEntity.ok(dbex.findAll(Example.of(experimento, ExampleMatcher.matching().withIgnoreCase()), Sort.by(Sort.Order.asc("idExperimento"))));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

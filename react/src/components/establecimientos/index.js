@@ -3,7 +3,7 @@ import {Link, Redirect} from 'react-router-dom'
 import {
     Alert,
     Button, Card, CardBody, CardFooter, CardHeader, CardTitle,
-    Col,
+    Col, Input,
     Label,
 } from 'reactstrap';
 
@@ -28,6 +28,7 @@ class VistaEstablecimientos extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            nombreEstablecimientoBuscar: "",
             alertaCreacion: {
                 status: ""
             },
@@ -67,7 +68,13 @@ class VistaEstablecimientos extends Component {
     }
 
     async actualizarEstablecimientos() {
-        const postRequest = await fetch(`http://localhost:9000/establecimientos?idAdministrador=${this.props.auth.user.username}`, {
+        let consulta = "";
+        if (this.state.nombreEstablecimientoBuscar !== "") {
+            consulta = `http://localhost:9000/establecimientos?idAdministrador=${this.props.auth.user.username}&nombreEstablecimiento=${this.state.nombreEstablecimientoBuscar}`;
+        } else {
+            consulta = `http://localhost:9000/establecimientos?idAdministrador=${this.props.auth.user.username}`;
+        }
+        const postRequest = await fetch(consulta, {
             method: "GET",
             mode: "cors",
             headers: {
@@ -84,6 +91,10 @@ class VistaEstablecimientos extends Component {
         }))
     }
 
+    onNombreEstablecimientoBuscarChange = (event) => {
+        let value = event.target !== null ? event.target.value : ""
+        this.setState(prev => ({...prev, nombreEstablecimientoBuscar: value}), () => this.actualizarEstablecimientos())
+    }
 
     onCrearEstablecimientoButtonClick = (event) => {
         this.setState({validated: true});
@@ -252,6 +263,19 @@ class VistaEstablecimientos extends Component {
             <Row>
                 <Col>
                     <h1 style={{textAlign: 'center'}}>Establecimientos</h1>
+                    <Row>
+                        <Col/>
+                        <Col xs={8}>
+                            <Card block className="cards" color="primary">
+                                <CardHeader>
+                                    <Input className="inputs" size={"sm"}
+                                           placeholder="Buscar por Nombre de Establecimiento..."
+                                           value={this.state.nombreEstablecimientoBuscar}
+                                           onChange={this.onNombreEstablecimientoBuscarChange}/> </CardHeader>
+                            </Card>
+                        </Col>
+                        <Col/>
+                    </Row>
                     <Alert
                         color={this.state.alertaExperimentos.status === "OK" ? "success" : "danger"}
                         isOpen={this.state.alertaExperimentos.status !== ""}
@@ -277,8 +301,9 @@ class VistaEstablecimientos extends Component {
                         onEstablecimientoModificadoCorrectamente={this.onEstablecimientoModificadoCorrectamente}
                     />
                     }
+
                     {(this.state.establecimientos.length === 0) ? (
-                        <h2 style={{marginTop: '50px', textAlign: 'center'}}>!Aún no existe ningún establecimiento,
+                        <h2 style={{marginTop: '50px', textAlign: 'center'}}>!No existe ningún establecimiento con ese nombre,
                             puedes crearlo aquí!</h2>
                     ) : (
                         this.state.establecimientos.map(

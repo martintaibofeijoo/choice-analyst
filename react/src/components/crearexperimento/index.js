@@ -168,11 +168,10 @@ class VistaCrearExperimento extends Component {
                     this.setState({variables: nuevasVariables});
 
                     if (antiguaVariableAsociada !== "") {
-                        let {variables1} = this.state;
-                        let nuevasVariables1 = [
-                            ...variables1, nuevaVariableAsociada
+                        nuevasVariables = [
+                            ...nuevasVariables, antiguaVariableAsociada
                         ]
-                        this.setState({variables1: nuevasVariables1});
+                        this.setState({variables: nuevasVariables});
                     }
                 }
 
@@ -403,7 +402,10 @@ class VistaCrearExperimento extends Component {
                                                                     size={'lg'}
                                                                     regional={'es'}
                                                                     block
-                                                                    onSubmit={dates => this.setState({fechasExperimento: dates})}
+                                                                    onSubmit={dates => {
+                                                                        this.setState({fechasExperimento: dates})
+                                                                        console.table(dates)
+                                                                    }}
                                                 />
                                             </div>
                                         </CardBody>
@@ -627,7 +629,7 @@ class Pregunta extends Component {
                                             <option>{item}</option>
                                     )
                                     }
-                                    {!this.props.variables.includes(this.props.pregunta.variableAsociada) && this.props.pregunta.variableAsociada !=="" &&
+                                    {!this.props.variables.includes(this.props.pregunta.variableAsociada) && this.props.pregunta.variableAsociada !== "" &&
                                     <option>{this.props.pregunta.variableAsociada}</option>
                                     }
                                 </Input>
