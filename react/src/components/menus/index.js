@@ -22,7 +22,7 @@ export class Menus extends Component {
     render() {
         return <Authentication>
             {
-                auth => <VistaMenus auth={auth} idEstablecimiento={this.props.match.params.idEstablecimiento}/>
+                auth => <VistaMenus auth={auth} idEstablecimiento={this.props.match.params.idEstablecimiento} mensaje={this.props.location.state}/>
             }
         </Authentication>
     }
@@ -68,7 +68,6 @@ class VistaMenus extends Component {
         fechaSeleccionada = moment(this.state.fechaSeleccionada).format('DD-MM-YYYY')
         const postRequest = await fetch(`http://localhost:9000/establecimientos/${this.props.idEstablecimiento}/menus?fechaSeleccionada=${fechaSeleccionada}`, {
             method: "GET",
-            //'Authorization': this.props.auth.token,
             mode: "cors",
             headers: {
                 'Accept': 'application/json;charset=UTF-8',
@@ -166,6 +165,14 @@ class VistaMenus extends Component {
                     >
                         {this.state.alertaMenus.message}
                     </Alert>
+                    {this.props.mensaje !== undefined &&
+                    <Alert
+                        color={this.props.mensaje.status === "OK" ? "success" : "danger"}
+                        isOpen={this.props.mensaje.status !== ""}
+                    >
+                        {this.props.mensaje.message}
+                    </Alert>
+                    }
                     <VistaEliminarMenu
                         nombreMenuEliminar={this.state.nombreMenuEliminar}
                         show={this.state.mostrarVistaEliminarMenu}

@@ -16,7 +16,7 @@ export class Experimentos extends Component {
     render() {
         return <Authentication>
             {
-                auth => <VistaExperimentos auth={auth}/>
+                auth => <VistaExperimentos auth={auth} mensaje={this.props.location.state}/>
             }
         </Authentication>
     }
@@ -122,6 +122,14 @@ class VistaExperimentos extends Component {
             >
                 {this.state.alert.message}
             </Alert>
+            {this.props.mensaje !== undefined &&
+            <Alert
+                color={this.props.mensaje.status === "OK" ? "success" : "danger"}
+                isOpen={this.props.mensaje.status !== ""}
+            >
+                {this.props.mensaje.message}
+            </Alert>
+            }
             <VistaConfirmacion
                 nombreExperimentoEliminar={this.state.nombreExperimentoEliminar}
                 show={this.state.mostrarVistaConfirmacion}

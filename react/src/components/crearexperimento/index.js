@@ -236,6 +236,8 @@ class VistaCrearExperimento extends Component {
 
     doCrearExperimento = async (idAdministrador, idEstablecimiento, nombreExperimento, preguntas, objetivos, fechasExperimento, listaEstablecimientosSeleccionados) => {
         //Comprobación de los parametros
+        console.table(listaEstablecimientosSeleccionados);
+        debugger
         let ejecutar = true;
         let mensajeCampoVacio = false;
         let mensaje = [];
@@ -340,14 +342,21 @@ class VistaCrearExperimento extends Component {
             })
             const codigo = response.status
 
-            if (codigo === 201) {
+            if (codigo === 200) {
                 this.setState(prev => ({
                     ...prev,
                     ok: true,
                     idExperimento: idExperimento
                 }))
+            } else if (codigo === 409) {
+                mensaje = [...mensaje, "Ya existe un experimento con otro nombre!"];
+                this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
+            } else if (codigo === 401) {
+                mensaje = [...mensaje, "No puedes crear este experimento!"];
+                this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
             } else {
-                this.setState(prev => ({...prev, alert: {status: "Error", message: "Error Creando Experimento"}}))
+                mensaje = [...mensaje, "Error creando el experimento!"];
+                this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
             }
         } else {
             this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
@@ -605,7 +614,6 @@ class Pregunta extends Component {
     }
 
     render() {
-        console.table(this.props);
         return (
             <Card className="cards" className="cards" color="primary">
                 <CardHeader style={{marginBottom: '-30px'}}>

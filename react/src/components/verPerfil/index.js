@@ -38,7 +38,8 @@ class VistaVerPerfil extends Component {
         }
     }
 
-    async componentDidMount() {
+
+    async actualizarUsuario() {
         const postRequest = await fetch(`http://localhost:9000/usuarios/${this.props.auth.user.username}`, {
             method: "GET",
             //'Authorization': this.props.auth.token,
@@ -54,12 +55,14 @@ class VistaVerPerfil extends Component {
         this.setState(prev => ({
             ...prev,
             username: postResponse.username,
-            password: postResponse.password,
             correoElectronico: postResponse.correoElectronico,
             telefonoContacto: postResponse.telefonoContacto,
             nombre: postResponse.nombre,
             apellidos: postResponse.apellidos,
         }))
+    }
+    async componentDidMount() {
+      this.actualizarUsuario()
     }
 
     onUsernameChange = event => {
@@ -95,8 +98,13 @@ class VistaVerPerfil extends Component {
     onRegisterButtonClick = (event) => {
         this.setState({validated: true});
         const form = event.currentTarget;
-        if (form.checkValidity() === true) {
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
             this.doModificarUsuario(this.state.username, this.state.password, this.state.correoElectronico, this.state.telefonoContacto, this.state.nombre, this.state.apellidos)
+            event.preventDefault();
+            event.stopPropagation();
         }
     }
 
@@ -116,18 +124,30 @@ class VistaVerPerfil extends Component {
                 nombre: nombre,
                 apellidos: apellidos,
             })
+        }).then(response => {
+            const codigo = response.status;
+            if (codigo === 200) {
+                this.setState(prev => ({
+                    ...prev,
+                    alert: {status: "OK", message: "Usuario modificado correctamente!"}
+                }))
+                console.table(this.props.auth);
+                this.props.auth.logout()
+                this.props.auth.login(this.state.username, this.state.password)
+            } else if (codigo === 409) {
+                this.setState(prev => ({
+                    ...prev,
+                    alert: {status: "Error", message: "Usuario ya existente!"}
+                }))
+                this.actualizarUsuario()
+            } else if (codigo === 401) {
+                this.setState(prev => ({
+                    ...prev,
+                    alert: {status: "Error", message: "No puede modificar su perfil si la contraseña no es correcta!"}
+                }))
+                this.actualizarUsuario()
+            }
         })
-            .then(response => {
-                const codigo = response.status;
-                if (codigo === 201) {
-                    //this.props.login(this.state.username, this.state.password)
-                } else if (codigo === 409) {
-                    this.setState(prev => ({
-                        ...prev,
-                        alert: {status: "Error", message: "Usuario ya existente"}
-                    }))
-                }
-            })
     }
 
     render() {
@@ -151,15 +171,6 @@ class VistaVerPerfil extends Component {
                                                   pattern="[a-z][a-z0-9-_\.]{4,20}" required/>
                                     <Form.Control.Feedback type="invalid">
                                         El usuario debe contener: 4-20 carácteres (sin mayúsculas).
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-                                <Form.Group as={Col}>
-                                    <Label>Contraseña</Label>
-                                    <Form.Control size={"sm"} type="password" value={this.state.password}
-                                                  onChange={this.onPasswordChange}
-                                                  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*" required/>
-                                    <Form.Control.Feedback type="invalid">
-                                        La contraseña debe contener: una mayúscula, una minúscula y un número.
                                     </Form.Control.Feedback>
                                 </Form.Group>
                             </Form.Row>
@@ -203,7 +214,17 @@ class VistaVerPerfil extends Component {
                                     </Form.Control.Feedback>
                                 </Form.Group>
                             </Form.Row>
-
+                            <Form.Row>
+                                <Form.Group as={Col}>
+                                    <Label>Contraseña</Label>
+                                    <Form.Control size={"sm"} type="password" value={this.state.password}
+                                                  onChange={this.onPasswordChange}
+                                                  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*" required/>
+                                    <Form.Control.Feedback type="invalid">
+                                        La contraseña debe contener: una mayúscula, una minúscula y un número.
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                            </Form.Row>
                             <Alert
                                 color={this.state.alert.status === "OK" ? "success" : "danger"}
                                 isOpen={this.state.alert.status !== ""}

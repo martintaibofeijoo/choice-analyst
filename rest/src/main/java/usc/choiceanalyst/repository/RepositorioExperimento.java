@@ -10,6 +10,7 @@ public interface RepositorioExperimento extends MongoRepository<ModeloExperiment
     boolean existsByIdExperimento(String idExperimento);
     void deleteByIdExperimento(String idExperimento);
     Optional<ModeloExperimento> findByIdExperimento(String idExperimento);
+    List<ModeloExperimento> findByIdAdministrador(String idAdministrador);
     List<ModeloExperimento> findAll();
     List<ModeloExperimento> findByIdsEstablecimientosContains(String idExtablecimiento);
     ModeloExperimento save(ModeloExperimento entity);

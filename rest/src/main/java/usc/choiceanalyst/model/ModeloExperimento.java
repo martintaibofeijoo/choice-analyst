@@ -3,9 +3,6 @@ package usc.choiceanalyst.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import usc.choiceanalyst.model.auxiliar.*;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 

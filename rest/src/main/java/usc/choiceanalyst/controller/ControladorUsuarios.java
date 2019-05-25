@@ -1,6 +1,8 @@
 package usc.choiceanalyst.controller;
 
 
+import usc.choiceanalyst.model.ModeloEstablecimiento;
+import usc.choiceanalyst.model.ModeloExperimento;
 import usc.choiceanalyst.model.ModeloUsuario;
 
 import java.net.URI;
@@ -8,6 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import usc.choiceanalyst.repository.RepositorioEstablecimiento;
+import usc.choiceanalyst.repository.RepositorioExperiencia;
+import usc.choiceanalyst.repository.RepositorioExperimento;
 import usc.choiceanalyst.repository.RepositorioUsuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,17 +31,20 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequestMapping("usuarios")
 public class ControladorUsuarios {
 
-    private RepositorioUsuario dbu;
-    private RepositorioEstablecimiento dbes;
+    private RepositorioUsuario dbUsuario;
+    private RepositorioEstablecimiento dbEstablecimiento;
+    private RepositorioExperimento dbExperimento;
+    private RepositorioExperiencia dbExperiencia;
     private PasswordEncoder passwordEncoder;
 
 
     @Autowired
-    public ControladorUsuarios(RepositorioUsuario dbu, RepositorioEstablecimiento dbes, PasswordEncoder passwordEncoder) {
+    public ControladorUsuarios(RepositorioUsuario dbUsuario, RepositorioEstablecimiento dbEstablecimiento, RepositorioExperimento dbExperimento, RepositorioExperiencia dbExperiencia, PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
-        this.dbu = dbu;
-        this.dbes = dbes;
-
+        this.dbUsuario = dbUsuario;
+        this.dbEstablecimiento = dbEstablecimiento;
+        this.dbExperimento = dbExperimento;
+        this.dbExperiencia = dbExperiencia;
     }
 
     @PreAuthorize("hasRole('CLIENTE') and principal==#username")
@@ -46,8 +53,8 @@ public class ControladorUsuarios {
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
     public ResponseEntity<ModeloUsuario> getUser(@PathVariable("username") String username) {
-        if (dbu.existsByUsername(username)) {
-            return ResponseEntity.ok().body(dbu.findByUsername(username).get());
+        if (dbUsuario.existsByUsername(username)) {
+            return ResponseEntity.ok().body(dbUsuario.findByUsername(username).get());
 
         } else {
             return ResponseEntity.notFound().build();
@@ -67,17 +74,17 @@ public class ControladorUsuarios {
                 usuario.setRol(rol);
             }
         }
-        return ResponseEntity.ok(dbu.findAll(Example.of(usuario), PageRequest.of(page, size, criteria)));
+        return ResponseEntity.ok(dbUsuario.findAll(Example.of(usuario), PageRequest.of(page, size, criteria)));
     }
 
 
     @PreAuthorize("hasRole('CLIENTE') and principal==#username")
     @DeleteMapping(path = "/{username}")
     public ResponseEntity deleteUser(@PathVariable("username") String username) {
-        if (!dbu.existsByUsername(username)) {
+        if (!dbUsuario.existsByUsername(username)) {
             return ResponseEntity.notFound().build();
         } else {
-            dbu.deleteByUsername(username);
+            dbUsuario.deleteByUsername(username);
             return ResponseEntity.noContent().build();
         }
     }
@@ -90,7 +97,7 @@ public class ControladorUsuarios {
     )
 
     public ResponseEntity createAdministrador(@RequestBody ModeloUsuario usuario) {
-        if (dbu.existsByUsername(usuario.getUsername())) {
+        if (dbUsuario.existsByUsername(usuario.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } else {
             String pattern = "dd-MM-yyyy";
@@ -98,7 +105,7 @@ public class ControladorUsuarios {
             usuario.setFechaRegistro(simpleDateFormat.format(new Date()));
             usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
             usuario.setRol("ADMINISTRADOR");
-            dbu.save(usuario);
+            dbUsuario.save(usuario);
             URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/usuarios/{username}").buildAndExpand(usuario.getUsername()).toUri();
             return ResponseEntity.created(location).body(usuario.setPassword("*********"));
         }
@@ -112,7 +119,7 @@ public class ControladorUsuarios {
     )
 
     public ResponseEntity createCliente(@RequestBody ModeloUsuario usuario) {
-        if (dbu.existsByUsername(usuario.getUsername())) {
+        if (dbUsuario.existsByUsername(usuario.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } else {
             String pattern = "dd-MM-yyyy";
@@ -120,7 +127,7 @@ public class ControladorUsuarios {
             usuario.setFechaRegistro(simpleDateFormat.format(new Date()));
             usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
             usuario.setRol("CLIENTE");
-            dbu.save(usuario);
+            dbUsuario.save(usuario);
             URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/usuarios/clientes/{username}").buildAndExpand(usuario.getUsername()).toUri();
             return ResponseEntity.created(location).body(usuario.setPassword("*********"));
         }
@@ -135,18 +142,41 @@ public class ControladorUsuarios {
     )
 
     public ResponseEntity modifyUser(@RequestBody ModeloUsuario usuario, @PathVariable("username") String username) {
-        if (!dbu.existsByUsername(username)) {
+        if (!dbUsuario.existsByUsername(username)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
-            Optional<ModeloUsuario> usuarioExistente = dbu.findByUsername(username);
-            usuarioExistente.get().setCorreoElectronico(usuario.getCorreoElectronico());
-            usuarioExistente.get().setPassword(passwordEncoder.encode(usuario.getPassword()));
-            usuarioExistente.get().setPassword(passwordEncoder.encode(usuario.getPassword()));
+            ModeloUsuario usuarioExistente = dbUsuario.findByUsername(username).get();
+            //if(passwordEncoder.encode(usuario.getPassword()).equals(usuarioExistente.getPassword())){
+            //Si existe ya un usuario con un username, no se puede realizar la acción
+            if (dbUsuario.existsByUsername(usuario.getUsername())) {
+                usuarioExistente.setCorreoElectronico(usuario.getCorreoElectronico());
+                usuarioExistente.setTelefonoContacto(usuario.getTelefonoContacto());
+                usuarioExistente.setNombre(usuario.getNombre());
+                usuarioExistente.setApellidos(usuario.getApellidos());
+                //Si se modifica el Username hay que actualizar los idAdministrador de las colecciones de experimentos, establecimientos y experiencias.
+                if (!usuarioExistente.getUsername().equals(usuario.getUsername())) {
+                    usuarioExistente.setUsername(usuario.getUsername());
+                    Collection<ModeloEstablecimiento> establecimientos = dbEstablecimiento.findByIdAdministrador(username);
+                    for (int i = 0; i < establecimientos.size(); i++) {
+                        ((List<ModeloEstablecimiento>) establecimientos).get(i).setIdAdministrador(usuario.getUsername());
+                        dbEstablecimiento.save(((List<ModeloEstablecimiento>) establecimientos).get(i));
+                    }
 
-            usuarioExistente.get().setUsername(usuario.getUsername());
-
-            dbu.save(usuarioExistente.get());
-            return ResponseEntity.ok().body(usuarioExistente.get().setPassword("*******"));
+                    Collection<ModeloExperimento> experimentos = dbExperimento.findByIdAdministrador(username);
+                    for (int i = 0; i < experimentos.size(); i++) {
+                        ((List<ModeloExperimento>) experimentos).get(i).setIdAdministrador(usuario.getUsername());
+                        dbExperimento.save(((List<ModeloExperimento>) experimentos).get(i));
+                    }
+                    dbUsuario.deleteByUsername(username);
+                }
+                dbUsuario.save(usuarioExistente);
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
+            return ResponseEntity.ok().body(usuarioExistente.setPassword("*******"));
+            /*}else{
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }*/
         }
     }
 

@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import usc.choiceanalyst.repository.RepositorioEstablecimiento;
+import usc.choiceanalyst.repository.RepositorioExperiencia;
 import usc.choiceanalyst.repository.RepositorioExperimento;
 import usc.choiceanalyst.model.*;
 import usc.choiceanalyst.repository.RepositorioUsuario;
@@ -27,15 +28,18 @@ import java.util.Optional;
 @RequestMapping("experimentos")
 public class ControladorExperimentos {
 
-    private RepositorioExperimento dbex;
-    private RepositorioEstablecimiento dbes;
-    private RepositorioUsuario dbu;
+    private RepositorioExperimento dbExperimento;
+    private RepositorioEstablecimiento dbEstablecimiento;
+    private RepositorioUsuario dbUsuario;
+    private RepositorioExperiencia dbExperiencia;
+
 
     @Autowired
-    public ControladorExperimentos(RepositorioExperimento dbex, RepositorioEstablecimiento dbes, RepositorioUsuario dbu) {
-        this.dbex = dbex;
-        this.dbes = dbes;
-        this.dbu = dbu;
+    public ControladorExperimentos(RepositorioExperimento dbExperimento, RepositorioEstablecimiento dbEstablecimiento, RepositorioUsuario dbUsuario, RepositorioExperiencia dbExperiencia) {
+        this.dbExperimento = dbExperimento;
+        this.dbEstablecimiento = dbEstablecimiento;
+        this.dbUsuario = dbUsuario;
+        this.dbExperiencia = dbExperiencia;
     }
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
@@ -48,7 +52,7 @@ public class ControladorExperimentos {
             experimento.setIdAdministrador(idAdministrador);
             experimento.setNombreExperimento(nombreExperimento);
 
-            return ResponseEntity.ok(dbex.findAll(Example.of(experimento, ExampleMatcher.matching().withIgnoreCase()), Sort.by(Sort.Order.asc("idExperimento"))));
+            return ResponseEntity.ok(dbExperimento.findAll(Example.of(experimento, ExampleMatcher.matching().withIgnoreCase()), Sort.by(Sort.Order.asc("idExperimento"))));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -62,10 +66,14 @@ public class ControladorExperimentos {
 
     public ResponseEntity createExperimento(@RequestBody ModeloExperimento experimento) {
         if (experimento.getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
-            if (dbex.existsByIdExperimento(experimento.getIdExperimento())) {
+            if (dbExperimento.existsByIdExperimento(experimento.getIdExperimento())) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).build();
             } else {
-                dbex.save(experimento);
+                String pattern = "dd-MM-yyyy";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                String fechaActual = simpleDateFormat.format(new Date());
+                experimento.setFechaCreacion(fechaActual);
+                dbExperimento.save(experimento);
                 URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/experimentos/{idExperimento}").buildAndExpand(experimento.getIdExperimento()).toUri();
                 return ResponseEntity.created(location).body(experimento);
             }
@@ -77,12 +85,12 @@ public class ControladorExperimentos {
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping(path = "/{idExperimento}")
     public ResponseEntity deleteExperimento(@PathVariable("idExperimento") String idExperimento) {
-        if (!dbex.existsByIdExperimento(idExperimento)) {
+        if (!dbExperimento.existsByIdExperimento(idExperimento)) {
             return ResponseEntity.notFound().build();
         } else {
-            ModeloExperimento experimento = dbex.findByIdExperimento(idExperimento).get();
+            ModeloExperimento experimento = dbExperimento.findByIdExperimento(idExperimento).get();
             if (experimento.getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
-                dbex.deleteByIdExperimento(idExperimento);
+                dbExperimento.deleteByIdExperimento(idExperimento);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
@@ -98,23 +106,28 @@ public class ControladorExperimentos {
     )
 
     public ResponseEntity modifyExperimento(@RequestBody ModeloExperimento experimento, @PathVariable("idExperimento") String idExperimento) {
-        if (!dbex.existsByIdExperimento(idExperimento)) {
+        if (!dbExperimento.existsByIdExperimento(idExperimento)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
-            Optional<ModeloExperimento> experimentoExistente = dbex.findByIdExperimento(idExperimento);
-            if (experimentoExistente.get().getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
-                if (!idExperimento.equals(experimento.getIdExperimento())) {
-                    experimentoExistente.get().setIdExperimento(experimento.getIdExperimento());
-                    dbex.deleteByIdExperimento(idExperimento);
+            ModeloExperimento experimentoExistente = dbExperimento.findByIdExperimento(idExperimento).get();
+            if (experimentoExistente.getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
+                if (dbExperimento.existsByIdExperimento(experimento.getIdExperimento())) {
+                    if (!idExperimento.equals(experimento.getIdExperimento())) {
+                        experimentoExistente.setIdExperimento(experimento.getIdExperimento());
+                        dbExperimento.deleteByIdExperimento(idExperimento);
+                    }
+                    experimentoExistente.setNombreExperimento(experimento.getNombreExperimento());
+                    experimentoExistente.setPreguntas(experimento.getPreguntas());
+                    experimentoExistente.setObjetivos(experimento.getObjetivos());
+                    experimentoExistente.setFechasExperimento(experimento.getFechasExperimento());
+                    experimentoExistente.setIdsEstablecimientos(experimento.getIdsEstablecimientos());
+                    dbExperimento.save(experimentoExistente);
+                    return ResponseEntity.ok().body(experimentoExistente);
+                } else {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
                 }
-                experimentoExistente.get().setNombreExperimento(experimento.getNombreExperimento());
-                experimentoExistente.get().setPreguntas(experimento.getPreguntas());
-                experimentoExistente.get().setObjetivos(experimento.getObjetivos());
-
-                dbex.save(experimentoExistente.get());
-                return ResponseEntity.ok().body(experimentoExistente.get());
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
             }
         }
     }
@@ -125,8 +138,8 @@ public class ControladorExperimentos {
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
     public ResponseEntity<ModeloExperimento> getExperimento(@PathVariable("idExperimento") String idExperimento) {
-        if (dbex.existsByIdExperimento(idExperimento)) {
-            ModeloExperimento experimento = dbex.findByIdExperimento(idExperimento).get();
+        if (dbExperimento.existsByIdExperimento(idExperimento)) {
+            ModeloExperimento experimento = dbExperimento.findByIdExperimento(idExperimento).get();
             if (experimento.getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
                 return ResponseEntity.ok().body(experimento);
             } else {
@@ -148,8 +161,8 @@ public class ControladorExperimentos {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         String fechaActual = simpleDateFormat.format(new Date());
 
-        if (dbes.existsByIdEstablecimiento(idEstablecimiento)) {
-            Collection<ModeloExperimento> experimentos = dbex.findByIdsEstablecimientosContains(idEstablecimiento);
+        if (dbEstablecimiento.existsByIdEstablecimiento(idEstablecimiento)) {
+            Collection<ModeloExperimento> experimentos = dbExperimento.findByIdsEstablecimientosContains(idEstablecimiento);
             for (int i = 0; i < experimentos.size(); i++) {
                 if (((List<ModeloExperimento>) experimentos).get(i).getFechasExperimento().contains(fechaActual)) {
                     return ResponseEntity.ok().body(((List<ModeloExperimento>) experimentos).get(i));

@@ -9,11 +9,10 @@ import {
     Input, Alert
 } from 'reactstrap';
 import Button from 'react-bootstrap/Button'
-import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import {Authentication} from "../authentication";
-import {Redirect, Route} from "react-router-dom";
+import {Route} from "react-router-dom";
 
 
 export class VerExperimento extends Component {

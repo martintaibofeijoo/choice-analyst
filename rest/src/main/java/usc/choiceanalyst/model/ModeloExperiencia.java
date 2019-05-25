@@ -12,6 +12,7 @@ public class ModeloExperiencia {
     private String idCliente;
     private String fechaRealizacion;
     private String idExperimento;
+    private String idEstablecimiento;
     private String higiene;
     private String ruido;
     private String distancia;
@@ -179,5 +180,13 @@ public class ModeloExperiencia {
 
     public void setPostre(String postre) {
         this.postre = postre;
+    }
+
+    public String getIdEstablecimiento() {
+        return idEstablecimiento;
+    }
+
+    public void setIdEstablecimiento(String idEstablecimiento) {
+        this.idEstablecimiento = idEstablecimiento;
     }
 }

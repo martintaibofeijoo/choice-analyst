@@ -16,6 +16,7 @@ import Container from "react-bootstrap/Container";
 import MultipleDatePicker from 'react-multiple-datepicker'
 import moment from "moment";
 import {Redirect, Route} from "react-router-dom";
+import Modal from "react-bootstrap/Modal";
 
 
 export class ModificarMenu extends Component {
@@ -38,6 +39,7 @@ class VistaModificarMenu extends Component {
                 message: []
             },
             ok: false,
+            eliminadoOk: false,
             idMenu: "",
             nombreMenu: "",
             idEstablecimiento: this.props.idEstablecimiento,
@@ -45,6 +47,9 @@ class VistaModificarMenu extends Component {
             primerosPlatos: [],
             segundosPlatos: [],
             postres: [],
+            mostrarVistaEliminarMenu: false,
+            nombreMenuEliminar: "",
+            idMenuEliminar: ""
         }
     }
 
@@ -77,13 +82,13 @@ class VistaModificarMenu extends Component {
         }
         let formato = "T22:00:00.000Z";
         let fechas = [];
-        let fecha="";
+        let fecha = "";
         let fechaSeparada = [];
         for (let i = 0; i < postResponse.fechasMenu.length; i++) {
             fechaSeparada = postResponse.fechasMenu[i].split("-");
             fecha = fechaSeparada[2] + "-" + fechaSeparada[1] + "-" + fechaSeparada[0];
             console.table(fecha)
-            fechas[i]=new Date(fechaSeparada[2], fechaSeparada[1]-1, fechaSeparada[0]);
+            fechas[i] = new Date(fechaSeparada[2], fechaSeparada[1] - 1, fechaSeparada[0]);
         }
         console.table(fechas)
         this.setState(prev => ({
@@ -475,8 +480,8 @@ class VistaModificarMenu extends Component {
             let idMenu = nombreMenu.replace(/ /g, "-");
             idMenu = idMenu.toLowerCase()
             idMenu = idMenu.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-            const response = await fetch(`http://localhost:9000/establecimientos/${idEstablecimiento}/menus`, {
-                method: 'POST',
+            const response = await fetch(`http://localhost:9000/establecimientos/${idEstablecimiento}/menus/${this.props.idMenu}`, {
+                method: 'PUT',
                 headers: {
                     'Accept': 'application/json;charset=UTF-8',
                     'Content-Type': 'application/json;charset=UTF-8',
@@ -498,11 +503,40 @@ class VistaModificarMenu extends Component {
                     idMenu: idMenu
                 }))
             } else if (codigo === 409) {
-                mensaje = [...mensaje, "Error creando menú, no puede haber dos menús con el mismo nombre."];
+                mensaje = [...mensaje, "Error modificando menú, no puede haber dos menús con el mismo nombre."];
+                this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
+            } else {
+                mensaje = [...mensaje, "Error modificando menú"];
                 this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
             }
         } else {
             this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
+        }
+    }
+
+    doEliminarMenu = async () => {
+        this.setState({
+            mostrarVistaEliminarMenu: false
+        });
+        const response = await fetch(`http://localhost:9000/establecimientos/${this.props.idEstablecimiento}/menus/${this.state.idMenuEliminar}`, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json;charset=UTF-8',
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Authorization': this.props.auth.token
+            }
+        })
+        const codigo = response.status;
+
+        if (codigo === 204) {
+            this.setState(prev => ({
+                ...prev,
+                eliminadoOk: true
+            }))
+        } else {
+            let mensaje = [];
+            mensaje = [...mensaje, "El experimento debe tener como mínimo una pregunta."];
+            this.setState(prev => ({...prev, alert: {status: "OK", message: mensaje}}))
         }
     }
 
@@ -515,10 +549,24 @@ class VistaModificarMenu extends Component {
                     status: "OK"
                 }
             }}/>;
+        if (this.state.eliminadoOk)
+            return <Redirect to={{
+                pathname: `/establecimientos/${this.props.idEstablecimiento}/menus`,
+                state: {
+                    message: "Menú Eliminado Correctamente",
+                    status: "OK"
+                }
+            }}/>;
         else
             return (
                 <Container>
                     <h1 style={{textAlign: 'center'}}>Modificar Menú</h1>
+                    <VistaEliminarMenu
+                        nombreMenuEliminar={this.state.nombreMenuEliminar}
+                        show={this.state.mostrarVistaEliminarMenu}
+                        onHide={this.onCerrarVistaEliminarMenu}
+                        eliminarMenu={this.doEliminarMenu}
+                    />
                     <Row>
                         <Col sm={8}
                              style={{paddingTop: '0px', paddingBottom: '0px', paddingLeft: '0px', paddingRight: '5px'}}>
@@ -677,7 +725,11 @@ class VistaModificarMenu extends Component {
                         </Col>
                         <Col style={{padding: '0px'}}>
                             <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonDanger"}
-                                    onClick={this.onModificarMenu}>Eliminar Menu</Button>
+                                    onClick={() => this.setState({
+                                        mostrarVistaEliminarMenu: true,
+                                        nombreMenuEliminar: this.state.nombreMenu,
+                                        idMenuEliminar: this.state.idMenu
+                                    })}>Eliminar Menú</Button>
                         </Col>
                     </Row>
                 </Container>
@@ -842,5 +894,42 @@ class Ingrediente extends Component {
                 </div>
             </li>
         )
+    }
+}
+
+class VistaEliminarMenu extends Component {
+    render() {
+        return <Modal
+            {...this.props}
+            size="lg"
+            classname={"modals"}
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    Eliminar Menú
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body style={{background: '#000'}}>
+                <Card className={"cards"} color={"primary"}>
+                    <CardBody>
+                        <p
+                            className="text-center"
+                            style={{
+                                fontSize: '20px',
+                                color: 'rgb(139, 154, 167)'
+                            }}> ¿Desea eliminar {this.props.nombreMenuEliminar}?
+                        </p>
+                    </CardBody>
+                    <CardFooter style={{marginTop: "-30px"}}>
+                        <Button size={"sm"} block className={"botonDanger"}
+                                onClick={this.props.eliminarMenu}>
+                            Eliminar Menú
+                        </Button>
+                    </CardFooter>
+                </Card>
+            </Modal.Body>
+        </Modal>
     }
 }
