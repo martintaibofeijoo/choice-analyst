@@ -93,10 +93,10 @@ class VistaExperimentos extends Component {
         })
         const codigo = response.status;
         if (codigo === 204) {
-            this.setState(prev => ({...prev, alert: {status: "OK", message: "Experimento Eliminado Correctamente"}}))
+            this.setState(prev => ({...prev, alert: {status: "OK", message: "Experimento eliminado correctamente!"}}))
             this.actualizarExperimentos()
         } else {
-            this.setState(prev => ({...prev, alert: {status: "Error", message: "Error Eliminando Experimento"}}))
+            this.setState(prev => ({...prev, alert: {status: "Error", message: "Error eliminando experimento!"}}))
         }
     }
 

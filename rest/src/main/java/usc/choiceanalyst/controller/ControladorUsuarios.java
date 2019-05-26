@@ -146,15 +146,10 @@ public class ControladorUsuarios {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
             ModeloUsuario usuarioExistente = dbUsuario.findByUsername(username).get();
-            //if(passwordEncoder.encode(usuario.getPassword()).equals(usuarioExistente.getPassword())){
-            //Si existe ya un usuario con un username, no se puede realizar la acción
-            if (dbUsuario.existsByUsername(usuario.getUsername())) {
-                usuarioExistente.setCorreoElectronico(usuario.getCorreoElectronico());
-                usuarioExistente.setTelefonoContacto(usuario.getTelefonoContacto());
-                usuarioExistente.setNombre(usuario.getNombre());
-                usuarioExistente.setApellidos(usuario.getApellidos());
-                //Si se modifica el Username hay que actualizar los idAdministrador de las colecciones de experimentos, establecimientos y experiencias.
-                if (!usuarioExistente.getUsername().equals(usuario.getUsername())) {
+            if (!username.equals(usuario.getUsername())) {
+                if (dbUsuario.existsByUsername(usuario.getUsername())) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                } else {
                     usuarioExistente.setUsername(usuario.getUsername());
                     Collection<ModeloEstablecimiento> establecimientos = dbEstablecimiento.findByIdAdministrador(username);
                     for (int i = 0; i < establecimientos.size(); i++) {
@@ -169,16 +164,14 @@ public class ControladorUsuarios {
                     }
                     dbUsuario.deleteByUsername(username);
                 }
-                dbUsuario.save(usuarioExistente);
-            } else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
             }
+            usuarioExistente.setCorreoElectronico(usuario.getCorreoElectronico());
+            usuarioExistente.setTelefonoContacto(usuario.getTelefonoContacto());
+            usuarioExistente.setNombre(usuario.getNombre());
+            usuarioExistente.setApellidos(usuario.getApellidos());
+
+            dbUsuario.save(usuarioExistente);
             return ResponseEntity.ok().body(usuarioExistente.setPassword("*******"));
-            /*}else{
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }*/
         }
     }
-
-
 }

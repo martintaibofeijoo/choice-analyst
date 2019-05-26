@@ -95,7 +95,7 @@ export default class VistaRegistro extends Component {
                 } else if (codigo === 409) {
                     this.setState(prev => ({
                         ...prev,
-                        alert: {status: "Error", message: "Usuario ya existente"}
+                        alert: {status: "Error", message: "Error creando usuario, no puede haber dos usuarios con el mismo username!"}
                     }))
                 }
             })

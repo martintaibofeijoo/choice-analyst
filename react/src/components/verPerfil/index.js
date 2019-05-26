@@ -137,7 +137,7 @@ class VistaVerPerfil extends Component {
             } else if (codigo === 409) {
                 this.setState(prev => ({
                     ...prev,
-                    alert: {status: "Error", message: "Usuario ya existente!"}
+                    alert: {status: "Error", message: "Error modificando usuario, no puede haber dos usuarios con el mismo username!"}
                 }))
                 this.actualizarUsuario()
             } else if (codigo === 401) {

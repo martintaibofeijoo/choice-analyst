@@ -382,11 +382,11 @@ class VistaModificarMenu extends Component {
         }
         if (fechasMenu.length === 0) {
             ejecutar = false;
-            mensaje = [...mensaje, "Un menú debe tener como mínimo una fecha asociada."];
+            mensaje = [...mensaje, "Un menú debe tener como mínimo una fecha asociada!"];
         }
         if (primerosPlatos.length === 0) {
             ejecutar = false;
-            mensaje = [...mensaje, "El menú debe tener como mínimo un primer plato."];
+            mensaje = [...mensaje, "El menú debe tener como mínimo un primer plato!"];
         } else {
             for (let i = 0; i < primerosPlatos.length; i++) {
                 if (primerosPlatos[i].nombrePlato === "" || primerosPlatos[i].precioPlato === "") {
@@ -410,7 +410,7 @@ class VistaModificarMenu extends Component {
         }
         if (segundosPlatos.length === 0) {
             ejecutar = false;
-            mensaje = [...mensaje, "El menú debe tener como mínimo un segundo plato."];
+            mensaje = [...mensaje, "El menú debe tener como mínimo un segundo plato!"];
         } else {
             for (let i = 0; i < segundosPlatos.length; i++) {
                 if (segundosPlatos[i].nombrePlato === "" || segundosPlatos[i].precioPlato === "") {
@@ -435,7 +435,7 @@ class VistaModificarMenu extends Component {
 
         if (postres.length === 0) {
             ejecutar = false;
-            mensaje = [...mensaje, "El menú debe tener como mínimo un postre."];
+            mensaje = [...mensaje, "El menú debe tener como mínimo un postre!"];
         } else {
             for (let i = 0; i < postres.length; i++) {
                 if (postres[i].nombrePlato === "" || postres[i].precioPlato === "") {
@@ -459,15 +459,15 @@ class VistaModificarMenu extends Component {
         }
         if (mensajeNoNumero === true) {
             ejecutar = false;
-            mensaje = [...mensaje, "El precio del plato deben ser de tipo númerico.."];
+            mensaje = [...mensaje, "El precio del plato deben ser de tipo númerico!"];
         }
         if (mensajeIngredientes === true) {
             ejecutar = false;
-            mensaje = [...mensaje, "Todos los platos deben tener como mínimo un ingrediente."];
+            mensaje = [...mensaje, "Todos los platos deben tener como mínimo un ingrediente!"];
         }
         if (mensajeCampoVacio === true) {
             ejecutar = false;
-            mensaje = [...mensaje, "No puede haber ningún campo vacio."];
+            mensaje = [...mensaje, "No puede haber ningún campo vacio!"];
         }
 
         if (ejecutar === true) {
@@ -503,10 +503,10 @@ class VistaModificarMenu extends Component {
                     idMenu: idMenu
                 }))
             } else if (codigo === 409) {
-                mensaje = [...mensaje, "Error modificando menú, no puede haber dos menús con el mismo nombre."];
+                mensaje = [...mensaje, "Error modificando menú, no puede haber dos menús con el mismo nombre!"];
                 this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
             } else {
-                mensaje = [...mensaje, "Error modificando menú"];
+                mensaje = [...mensaje, "Error modificando menú!"];
                 this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
             }
         } else {
@@ -535,7 +535,7 @@ class VistaModificarMenu extends Component {
             }))
         } else {
             let mensaje = [];
-            mensaje = [...mensaje, "El experimento debe tener como mínimo una pregunta."];
+            mensaje = [...mensaje, "Error eliminando menú!"];
             this.setState(prev => ({...prev, alert: {status: "OK", message: mensaje}}))
         }
     }

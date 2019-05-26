@@ -12,6 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import usc.choiceanalyst.model.ModeloEstablecimiento;
+import usc.choiceanalyst.model.ModeloExperimento;
+import usc.choiceanalyst.model.ModeloUsuario;
 import usc.choiceanalyst.model.auxiliar.Menu;
 import usc.choiceanalyst.repository.RepositorioEstablecimiento;
 import usc.choiceanalyst.repository.RepositorioExperiencia;
@@ -138,39 +140,6 @@ public class ControladorEstablecimiento {
         }
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
-    @PutMapping(
-            path = "/{idEstablecimiento}",
-            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},
-            consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
-    )
-
-    public ResponseEntity modifyEstablecimiento(@RequestBody ModeloEstablecimiento establecimiento, @PathVariable("idEstablecimiento") String idEstablecimiento) {
-        if (!dbEstablecimiento.existsByIdEstablecimiento(idEstablecimiento)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } else {
-            Optional<ModeloEstablecimiento> establecimientoExistente = dbEstablecimiento.findByIdEstablecimiento(idEstablecimiento);
-            establecimientoExistente.get().setLocalizacionEstablecimiento(establecimiento.getLocalizacionEstablecimiento());
-            establecimientoExistente.get().setNombreEstablecimiento(establecimiento.getNombreEstablecimiento());
-            establecimientoExistente.get().setTipoEstablecimiento(establecimiento.getTipoEstablecimiento());
-
-            if (establecimientoExistente.get().getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
-                if (idEstablecimiento.equals(establecimiento.getIdEstablecimiento())) {
-                    dbEstablecimiento.save(establecimientoExistente.get());
-                    return ResponseEntity.ok().body(establecimientoExistente.get());
-                } else if (!idEstablecimiento.equals(establecimiento.getIdEstablecimiento()) && !dbEstablecimiento.existsByIdEstablecimiento(establecimiento.getIdEstablecimiento())) {
-                    establecimientoExistente.get().setIdEstablecimiento(establecimiento.getIdEstablecimiento());
-                    dbEstablecimiento.deleteByIdEstablecimiento(idEstablecimiento);
-                    dbEstablecimiento.save(establecimientoExistente.get());
-                    return ResponseEntity.ok().body(establecimientoExistente.get());
-                } else {
-                    return ResponseEntity.status(HttpStatus.CONFLICT).build();
-                }
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-        }
-    }
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping(
@@ -291,6 +260,49 @@ public class ControladorEstablecimiento {
             }
             dbEstablecimiento.save(establecimiento);
             return ResponseEntity.ok().body(menu);
+        }
+    }
+
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PutMapping(
+            path = "/{idEstablecimiento}",
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+
+    public ResponseEntity modifyEstablecimiento(@RequestBody ModeloEstablecimiento establecimiento, @PathVariable("idEstablecimiento") String idEstablecimiento) {
+        ModeloEstablecimiento establecimientoExistente;
+        if (!dbEstablecimiento.existsByIdEstablecimiento(idEstablecimiento)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            establecimientoExistente = dbEstablecimiento.findByIdEstablecimiento(idEstablecimiento).get();
+            if (establecimientoExistente.getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
+                if (!idEstablecimiento.equals(establecimiento.getIdEstablecimiento())) {
+                    if (dbEstablecimiento.existsByIdEstablecimiento(establecimiento.getIdEstablecimiento())) {
+                        return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                    } else {
+                        establecimientoExistente.setIdEstablecimiento(establecimiento.getIdEstablecimiento());
+                        List<ModeloExperimento> experimentos = dbExperimento.findByIdAdministradorAndIdsEstablecimientosContains(establecimientoExistente.getIdAdministrador(), idEstablecimiento);
+                        for (int i = 0; i < experimentos.size(); i++) {
+                            for (int j = 0; j < experimentos.get(i).getIdsEstablecimientos().size(); j++) {
+                                if (experimentos.get(i).getIdsEstablecimientos().get(j).equals(idEstablecimiento)) {
+                                    experimentos.get(i).getIdsEstablecimientos().set(j, establecimiento.getIdEstablecimiento());
+                                    dbExperimento.save(experimentos.get(i));
+                                }
+                            }
+                        }
+                        dbEstablecimiento.deleteByIdEstablecimiento(idEstablecimiento);
+                    }
+                }
+                establecimientoExistente.setLocalizacionEstablecimiento(establecimiento.getLocalizacionEstablecimiento());
+                establecimientoExistente.setNombreEstablecimiento(establecimiento.getNombreEstablecimiento());
+                establecimientoExistente.setTipoEstablecimiento(establecimiento.getTipoEstablecimiento());
+                dbEstablecimiento.save(establecimientoExistente);
+
+                return ResponseEntity.ok().body(establecimientoExistente);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
         }
     }
 

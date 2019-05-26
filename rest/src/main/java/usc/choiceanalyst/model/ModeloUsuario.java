@@ -22,7 +22,6 @@ public class ModeloUsuario extends Credentials {
     private String sexo;
     private String origen;
     private String nivelEstudios;
-    private List<String> idsEstablecimientos;
 
 
     public ModeloUsuario() {
@@ -118,9 +117,4 @@ public class ModeloUsuario extends Credentials {
         this.nivelEstudios = nivelEstudios;
     }
 
-    public List<String> getIdsEstablecimientos() {
-        return idsEstablecimientos;
     }
-
-    public void setIdsEstablecimientos(List<String> idsEstablecimientos) { this.idsEstablecimientos = idsEstablecimientos; }
-}

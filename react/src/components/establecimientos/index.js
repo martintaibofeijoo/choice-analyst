@@ -156,7 +156,7 @@ class VistaEstablecimientos extends Component {
                 if (codigo === 201) {
                     this.setState(prev => ({
                         ...prev,
-                        alertaCreacion: {status: "OK", message: "Establecimiento Creado Correctamente"},
+                        alertaCreacion: {status: "OK", message: "Establecimiento creado correctamente!"},
                         validated: false,
                         nombreEstablecimiento: "",
                         localizacionEstablecimiento: "",
@@ -166,7 +166,7 @@ class VistaEstablecimientos extends Component {
                 } else if (codigo === 409) {
                     this.setState(prev => ({
                         ...prev,
-                        alertaCreacion: {status: "Error", message: "Establecimiento ya existente"}
+                        alertaCreacion: {status: "Error", message: "Error creando establecimiento, no puede haber dos establecimientos con el mismo nombre!"}
                     }))
                 }
             })
@@ -185,17 +185,17 @@ class VistaEstablecimientos extends Component {
             },
         })
         const codigo = response.status;
-        debugger
+
         if (codigo === 204) {
             this.setState(prev => ({
                 ...prev,
-                alertaExperimentos: {status: "OK", message: "Establecimiento Eliminado Correctamente"}
+                alertaExperimentos: {status: "OK", message: "Establecimiento eliminado correctamente!"}
             }))
             this.actualizarEstablecimientos();
         } else {
             this.setState(prev => ({
                 ...prev,
-                alertaExperimentos: {status: "Error", message: "Error Eliminando Experimento"}
+                alertaExperimentos: {status: "Error", message: "Error eliminando experimento!"}
             }))
         }
     }
@@ -463,19 +463,23 @@ class VistaModificarEstablecimiento extends Component {
                 if (codigo === 200) {
                     this.setState(prev => ({
                         ...prev,
-                        alertaExperimentos: {status: "OK", message: "Establecimiento Modificado Correctamente"},
+                        alertaExperimentos: {status: "OK", message: "Establecimiento modificado correctamente!"},
                         validated: false
                     }))
                     this.props.onEstablecimientoModificadoCorrectamente();
                 } else if (codigo === 409) {
                     this.setState(prev => ({
                         ...prev,
-                        alertaModificacion: {status: "Error", message: "Establecimiento ya existente"}
+                        alertaModificacion: {status: "Error", message: "Error modificando establecimiento, no puede haber dos establecimientos con el mismo nombre!"}
+                    }))
+                }else {
+                    this.setState(prev => ({
+                        ...prev,
+                        alertaModificacion: {status: "Error", message: "Error modificando establecimiento!"}
                     }))
                 }
             })
     }
-
 
     render() {
         return <Modal

@@ -106,28 +106,29 @@ public class ControladorExperimentos {
     )
 
     public ResponseEntity modifyExperimento(@RequestBody ModeloExperimento experimento, @PathVariable("idExperimento") String idExperimento) {
+        ModeloExperimento experimentoExistente;
         if (!dbExperimento.existsByIdExperimento(idExperimento)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
-            ModeloExperimento experimentoExistente = dbExperimento.findByIdExperimento(idExperimento).get();
+            experimentoExistente = dbExperimento.findByIdExperimento(idExperimento).get();
             if (experimentoExistente.getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
-                if (dbExperimento.existsByIdExperimento(experimento.getIdExperimento())) {
-                    if (!idExperimento.equals(experimento.getIdExperimento())) {
+                if (!idExperimento.equals(experimento.getIdExperimento())) {
+                    if (dbExperimento.existsByIdExperimento(experimento.getIdExperimento())) {
+                        return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                    } else {
                         experimentoExistente.setIdExperimento(experimento.getIdExperimento());
                         dbExperimento.deleteByIdExperimento(idExperimento);
                     }
-                    experimentoExistente.setNombreExperimento(experimento.getNombreExperimento());
-                    experimentoExistente.setPreguntas(experimento.getPreguntas());
-                    experimentoExistente.setObjetivos(experimento.getObjetivos());
-                    experimentoExistente.setFechasExperimento(experimento.getFechasExperimento());
-                    experimentoExistente.setIdsEstablecimientos(experimento.getIdsEstablecimientos());
-                    dbExperimento.save(experimentoExistente);
-                    return ResponseEntity.ok().body(experimentoExistente);
-                } else {
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
                 }
-            }else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                experimentoExistente.setNombreExperimento(experimento.getNombreExperimento());
+                experimentoExistente.setPreguntas(experimento.getPreguntas());
+                experimentoExistente.setObjetivos(experimento.getObjetivos());
+                experimentoExistente.setFechasExperimento(experimento.getFechasExperimento());
+                experimentoExistente.setIdsEstablecimientos(experimento.getIdsEstablecimientos());
+                dbExperimento.save(experimentoExistente);
+                return ResponseEntity.ok().body(experimentoExistente);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
         }
     }
@@ -156,7 +157,8 @@ public class ControladorExperimentos {
             path = "/obtenerExperimento/{idEstablecimiento}",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public ResponseEntity<ModeloExperimento> getExperimentoEstablecimiento(@PathVariable("idEstablecimiento") String idEstablecimiento) {
+    public ResponseEntity<ModeloExperimento> getExperimentoEstablecimiento
+            (@PathVariable("idEstablecimiento") String idEstablecimiento) {
         String pattern = "dd-MM-yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         String fechaActual = simpleDateFormat.format(new Date());

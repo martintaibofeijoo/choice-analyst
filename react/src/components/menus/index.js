@@ -111,13 +111,13 @@ class VistaMenus extends Component {
         if (codigo === 204) {
             this.setState(prev => ({
                 ...prev,
-                alertaMenus: {status: "OK", message: "Menú Eliminado Correctamente"}
+                alertaMenus: {status: "OK", message: "Menú eliminado correctamente!"}
             }))
             this.doBuscarMenus(this.state.fechaSeleccionada)
         } else {
             this.setState(prev => ({
                 ...prev,
-                alertaMenus: {status: "Error", message: "Error Eliminando Menú"}
+                alertaMenus: {status: "Error", message: "Error eliminando menú!"}
             }))
         }
     }

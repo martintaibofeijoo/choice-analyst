@@ -247,7 +247,7 @@ class VistaCrearExperimento extends Component {
         }
         if (objetivos.length === 0) {
             ejecutar = false;
-            mensaje = [...mensaje, "El experimento debe tener como mínimo un objetivo."];
+            mensaje = [...mensaje, "El experimento debe tener como mínimo un objetivo!"];
         } else {
             for (let i = 0; i < objetivos.length; i++) {
                 if (objetivos[i].textoObjetivo === "") {
@@ -257,11 +257,11 @@ class VistaCrearExperimento extends Component {
         }
         if (fechasExperimento.length === 0) {
             ejecutar = false;
-            mensaje = [...mensaje, "El experimento debe tener como mínimo una fecha asociada."];
+            mensaje = [...mensaje, "El experimento debe tener como mínimo una fecha asociada!"];
         }
         if (preguntas.length === 0) {
             ejecutar = false;
-            mensaje = [...mensaje, "El experimento debe tener como mínimo una pregunta."];
+            mensaje = [...mensaje, "El experimento debe tener como mínimo una pregunta!"];
         } else {
             for (let i = 0; i < preguntas.length; i++) {
                 if (preguntas[i].textoPregunta === "" || preguntas[i].variableAsociada === "") {
@@ -269,7 +269,7 @@ class VistaCrearExperimento extends Component {
                 }
                 if (preguntas[i].opciones.length === 0) {
                     ejecutar = false;
-                    mensaje = [...mensaje, "Todas las preguntas deben tener como mínimo una opción."];
+                    mensaje = [...mensaje, "Todas las preguntas deben tener como mínimo una opción!"];
                 } else {
                     for (let j = 0; j < preguntas[i].opciones.length; j++) {
                         if (preguntas[i].opciones[j].textoOpcion === "") {
@@ -281,7 +281,7 @@ class VistaCrearExperimento extends Component {
         }
         if (mensajeCampoVacio === true) {
             ejecutar = false;
-            mensaje = [...mensaje, "No puede haber ningún campo vacio."];
+            mensaje = [...mensaje, "No puede haber ningún campo vacio!"];
         }
 
         if (ejecutar === true) {
@@ -349,7 +349,7 @@ class VistaCrearExperimento extends Component {
                     idExperimento: idExperimento
                 }))
             } else if (codigo === 409) {
-                mensaje = [...mensaje, "Ya existe un experimento con otro nombre!"];
+                mensaje = [...mensaje, "Error creando experimento, no puede haber dos experimentos con el mismo nombre!"];
                 this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
             } else if (codigo === 401) {
                 mensaje = [...mensaje, "No puedes crear este experimento!"];

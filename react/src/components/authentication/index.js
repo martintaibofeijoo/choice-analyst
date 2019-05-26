@@ -49,7 +49,7 @@ export class AuthenticatedApp extends Component {
                 } else
                     this.setState(prev => ({
                         ...prev,
-                        error: {code: "INVALID_LOGIN", message: "Usuario o Contraseña Invalido!"}
+                        error: {code: "INVALID_LOGIN", message: "Usuario o contraseña inválido!"}
                     }))
             })
     }
