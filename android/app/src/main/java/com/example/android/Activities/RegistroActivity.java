@@ -21,6 +21,8 @@ import com.example.android.TasksResponse.LoginTaskResponse;
 import com.example.android.TasksResponse.RegistroTaskResponse;
 import com.example.android.Clases.Usuario;
 
+import java.util.regex.Pattern;
+
 public class RegistroActivity extends AppCompatActivity implements LoginTaskResponse, RegistroTaskResponse {
 
     private Button botonRegistro;
@@ -56,14 +58,17 @@ public class RegistroActivity extends AppCompatActivity implements LoginTaskResp
         textoFechaNacimiento=findViewById(R.id.textoFechaNacimiento);
         builder = new AlertDialog.Builder(this);
         spinnerSexo=findViewById(R.id.spinnerSexo);
+        spinnerSexo.setPadding(0,30,0,30);
         adapterSpinnerSexo = ArrayAdapter.createFromResource(this, R.array.sexo_array, android.R.layout.simple_spinner_item);
         adapterSpinnerSexo.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSexo.setAdapter(adapterSpinnerSexo);
         spinnerOrigen=findViewById(R.id.spinnerOrigen);
+        spinnerOrigen.setPadding(0,30,0,30);
         adapterSpinnerOrigen = ArrayAdapter.createFromResource(this, R.array.origen_array, android.R.layout.simple_spinner_item);
         adapterSpinnerOrigen.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerOrigen.setAdapter(adapterSpinnerOrigen);
         spinnerNivelEstudios=findViewById(R.id.spinnerNivelEstudios);
+        spinnerNivelEstudios.setPadding(0,30,0,30);
         adapterSpinnerNivelEstudios = ArrayAdapter.createFromResource(this, R.array.nivelestudios_array, android.R.layout.simple_spinner_item);
         adapterSpinnerNivelEstudios.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerNivelEstudios.setAdapter(adapterSpinnerNivelEstudios);
@@ -72,18 +77,39 @@ public class RegistroActivity extends AppCompatActivity implements LoginTaskResp
         botonRegistro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Usuario usuario = new Usuario(textoUsuario.getText().toString(),textoContrasena.getText().toString(),
-                        textoCorreoElectronico.getText().toString(),textoTelefonoContacto.getText().toString(),textoNombre.getText().toString(),
-                        textoApellidos.getText().toString(), textoFechaNacimiento.getText().toString(),
-                        spinnerSexo.getSelectedItem().toString(), spinnerOrigen.getSelectedItem().toString(), spinnerNivelEstudios.getSelectedItem().toString());
-                registroTask = new RegistroTask(usuario);
-                registroTask.setLoginTaskResponse(RegistroActivity.this);
-                registroTask.execute();
+                System.out.println("texto:"+textoUsuario.getText().toString());
+                if(!textoUsuario.getText().toString().equals("") &&
+                        !textoContrasena.getText().toString().equals("") &&
+                        !textoCorreoElectronico.getText().toString().equals("") &&
+                        !textoTelefonoContacto.getText().toString().equals("") &&
+                        !textoNombre.getText().toString().equals("") &&
+                        !textoApellidos.getText().toString().equals("") &&
+                        !textoFechaNacimiento.getText().toString().equals("") &&
+                        !spinnerSexo.getSelectedItem().toString().equals("") &&
+                        !spinnerOrigen.getSelectedItem().toString().equals("") &&
+                        !spinnerNivelEstudios.getSelectedItem().toString().equals("")
+                ) {
+
+                    Usuario usuario = new Usuario(textoUsuario.getText().toString(), textoContrasena.getText().toString(),
+                            textoCorreoElectronico.getText().toString(), textoTelefonoContacto.getText().toString(), textoNombre.getText().toString(),
+                            textoApellidos.getText().toString(), textoFechaNacimiento.getText().toString(),
+                            spinnerSexo.getSelectedItem().toString(), spinnerOrigen.getSelectedItem().toString(), spinnerNivelEstudios.getSelectedItem().toString());
+                    registroTask = new RegistroTask(usuario);
+                    registroTask.setLoginTaskResponse(RegistroActivity.this);
+                    registroTask.execute();
+                }else{
+                    builder.setMessage("Por favor, rellene todos los campos.")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
             }
         });
-
-        linearLayout.addView(new Spinner(this));
-
     }
 
     @Override
@@ -123,6 +149,15 @@ public class RegistroActivity extends AppCompatActivity implements LoginTaskResp
 
     @Override
     public void RegistroFinishERR() {
+        builder.setMessage("Error creando usuario, no puede haber dos usuarios con el mismo username!")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.show();
     }
 }

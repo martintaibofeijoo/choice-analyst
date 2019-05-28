@@ -57,7 +57,7 @@
                 android:layout_marginRight="30dp"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="usuario1" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:text="Contraseña" />
+                android:text="" />
 
             <EditText
                 android:id="@+id/textoContrasena"
@@ -75,7 +75,7 @@
                 android:layout_marginRight="30dp"
                 android:ems="10"
                 android:inputType="textPassword"
-                android:text="Matafe96" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/textViewRegistro"
@@ -93,7 +93,7 @@
                 android:layout_marginRight="30dp"
                 android:ems="10"
                 android:inputType="textEmailAddress"
-                android:text="hola" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/textView9"
@@ -223,7 +223,7 @@
 
         <Button
             android:id="@+id/botonFinalizarExperimento"
-            android:layout_width="wrap_content"
+            android:layout_width="361dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
@@ -231,8 +231,10 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
             android:layout_weight="1"
+            android:background="@color/colorPrimaryDark"
             android:padding="30dp"
-            android:text="Iniciar Sesión" />
+            android:text="Registrarse"
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

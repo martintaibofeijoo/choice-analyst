@@ -111,6 +111,8 @@ public class ControladorUsuarios {
         }
     }
 
+
+    //Servicio Movil
     @PreAuthorize("permitAll()")
     @PostMapping(
             path = "/clientes",

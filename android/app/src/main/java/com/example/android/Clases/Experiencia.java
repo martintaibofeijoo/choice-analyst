@@ -11,6 +11,8 @@ public class Experiencia implements Serializable {
     private String fechaRealizacion;
     @SerializedName("idExperimento")
     private String idExperimento;
+    @SerializedName("idEstablecimiento")
+    private String idEstablecimiento;
     @SerializedName("higiene")
     private String higiene;
     @SerializedName("ruido")
@@ -42,6 +44,7 @@ public class Experiencia implements Serializable {
     @SerializedName("postre")
     private String postre;
 
+
     public String getIdCliente() {
         return idCliente;
     }
@@ -64,6 +67,14 @@ public class Experiencia implements Serializable {
 
     public void setIdExperimento(String idExperimento) {
         this.idExperimento = idExperimento;
+    }
+
+    public String getIdEstablecimiento() {
+        return idEstablecimiento;
+    }
+
+    public void setIdEstablecimiento(String idEstablecimiento) {
+        this.idEstablecimiento = idEstablecimiento;
     }
 
     public String getHigiene() {

@@ -63,7 +63,7 @@ public class ControladorEstablecimiento {
         }
     }
 
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('CLIENTE')")
     @GetMapping(
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )

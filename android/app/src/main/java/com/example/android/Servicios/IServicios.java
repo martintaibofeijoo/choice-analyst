@@ -29,11 +29,11 @@ public interface IServicios {
     Call<Void> registro(@Body Usuario usuario);
 
     @GET("establecimientos")
-    Call<Collection<Establecimiento>> establecimientos(@Query("nombreEstablecimiento") String nombreEstablecimiento, @Header("token") String token);
+    Call<Collection<Establecimiento>> establecimientos(@Query("nombreEstablecimiento") String nombreEstablecimiento, @Header("Authorization") String token);
 
     @GET("experimentos/obtenerExperimento/{idEstablecimiento}")
-    Call<Experimento> obtenerExperimento(@Path("idEstablecimiento") String idEstablecimiento, @Header("token") String token);
+    Call<Experimento> obtenerExperimento(@Path("idEstablecimiento") String idEstablecimiento, @Header("Authorization") String token);
 
     @POST("experiencias")
-    Call<Void> responderExperimento(@Body Experiencia experiencia, @Header("token") String token);
+    Call<Void> responderExperimento(@Body Experiencia experiencia, @Header("Authorization") String token);
 }

@@ -13,6 +13,7 @@ public class ModeloExperiencia {
     private String fechaRealizacion;
     private String idExperimento;
     private String idEstablecimiento;
+
     private String higiene;
     private String ruido;
     private String distancia;
