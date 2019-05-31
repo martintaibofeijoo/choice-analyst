@@ -131,7 +131,6 @@ class VistaEstablecimientos extends Component {
 
     doCrearEstablecimiento = (nombreEstablecimiento, tipoEstablecimiento, localizacionEstablecimiento) => {
         let idEstablecimiento = nombreEstablecimiento.replace(/ /g, "-");
-        console.table(idEstablecimiento)
         idEstablecimiento = idEstablecimiento.toLowerCase()
         idEstablecimiento = idEstablecimiento.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 

@@ -6,13 +6,13 @@ import {
     CardHeader,
     CardTitle,
     CardBody,
+    Button,
     Input, Alert
 } from 'reactstrap';
-import Button from 'react-bootstrap/Button'
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import {Authentication} from "../authentication";
-import {Route} from "react-router-dom";
+import {Link, Route} from "react-router-dom";
 
 
 export class VerExperimento extends Component {
@@ -103,7 +103,7 @@ class VistaVerExperimento extends Component {
 
 
     render() {
-        console.table(this.props.mensaje)
+        console.table(this.state)
         return (
             <Container>
                 <h1 style={{textAlign: 'center'}}>Ver Experimento</h1>
@@ -216,11 +216,18 @@ class VistaVerExperimento extends Component {
                     </Card>
                 </Row>
                 <Row>
-                    <Route>{
-                        ({history}) =>
-                            <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonPrimary"}
-                                    onClick={() => history.goBack()}>Volver</Button>
-                    }</Route>
+                    <Col style={{paddingLeft: '1px'}}>
+                        <Route>{
+                            ({history}) =>
+                                <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonPrimary"}
+                                        onClick={() => history.goBack()}>Volver</Button>
+                        }</Route>
+                    </Col>
+                    <Col style={{paddingLeft: '1px'}}>
+                        <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonSuccess"}
+                                tag={Link}
+                                to={`/experimentos/verResultadosExperimento/${this.state.idExperimento}`}>Ver Resultados Experimento</Button>
+                    </Col>
                 </Row>
             </Container>
         );

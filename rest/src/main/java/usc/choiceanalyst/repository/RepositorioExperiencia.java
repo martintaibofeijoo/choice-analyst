@@ -13,6 +13,7 @@ public interface RepositorioExperiencia extends MongoRepository<ModeloExperienci
     void deleteByIdCliente(String idCliente);
     Optional<ModeloExperiencia> findByIdCliente(String username);
     List<ModeloExperiencia> findAll();
+    List<ModeloExperiencia> findByIdEstablecimientoAndIdExperimento(String idEstablecimiento, String idExperimento);
     Page<ModeloExperiencia> findAll(Pageable pageable);
     ModeloExperiencia save(ModeloExperiencia entity);
 }

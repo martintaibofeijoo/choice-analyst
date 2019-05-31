@@ -65,7 +65,7 @@ public class ExperimentoActivity extends AppCompatActivity implements ObtenerExp
                 String fechaActual = simpleDateFormat.format(new Date());
                 experiencia.setFechaRealizacion(fechaActual);
                 experiencia.setIdExperimento(experimento.getIdExperimento());
-
+                experiencia.setIdEstablecimiento(establecimiento.getIdEstablecimiento());
                 for (Map.Entry<String, Spinner> spinner : spinners.entrySet()) {
                     if (spinner.getKey().equals("Higiene")) {
                         experiencia.setHigiene(spinner.getValue().getSelectedItem().toString());
