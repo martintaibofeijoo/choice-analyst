@@ -1,8 +1,7 @@
 import React, {PureComponent as Component} from 'react'
-import {Link, Redirect} from 'react-router-dom'
+import {Link, Redirect, Route} from 'react-router-dom'
 import {
-    Alert,
-    Button, Card, CardBody, CardFooter, CardHeader, CardTitle,
+    Button,
     Col, Input,
     Row,
 } from 'reactstrap';
@@ -10,6 +9,7 @@ import {
 import {Authentication} from "../authentication";
 import Container from "react-bootstrap/Container";
 import {Bar, Doughnut} from "react-chartjs-2";
+import Table from "react-bootstrap/Table";
 
 
 export class VerResultadosExperimento extends Component {
@@ -31,15 +31,46 @@ class VistaVerResultadosExperimento extends Component {
             variableSeleccionada: "",
             nombresEstablecimientos: [],
             variablesPreguntas: [],
+            opciones: [],
+            valoresOpciones: [],
+            nombresMenus: [],
+            menuSeleccionado: "",
             datosGraficas: {
                 labels: [],
                 datasets: [
                     {
-                        legend: {
-                            position: 'right'
-                        },
-                        label: "My First dataset",
-                        backgroundColor: "rgb(0,0,0)",
+                        data: []
+                    }
+                ]
+            },
+
+
+            valoresOpcionesPrimerosPlatos: [],
+            opcionesPrimerosPlatos: [],
+            datosGraficasPrimerosPlatos: {
+                labels: [],
+                datasets: [
+                    {
+                        data: []
+                    }
+                ]
+            },
+            valoresOpcionesSegundosPlatos: [],
+            opcionesSegundosPlatos: [],
+            datosGraficasSegundosPlatos: {
+                labels: [],
+                datasets: [
+                    {
+                        data: []
+                    }
+                ]
+            },
+            valoresOpcionesPostres: [],
+            opcionesPostres: [],
+            datosGraficasPostres: {
+                labels: [],
+                datasets: [
+                    {
                         data: []
                     }
                 ]
@@ -65,9 +96,10 @@ class VistaVerResultadosExperimento extends Component {
         const postResponse = await postRequest.json()
 
         let variablesPreguntas = [];
-
         for (let i = 0; i < postResponse.preguntas.length; i++) {
-            variablesPreguntas = [...variablesPreguntas, postResponse.preguntas[i].variableAsociada];
+            if (postResponse.preguntas[i].variableAsociada !== "Primer Plato" && postResponse.preguntas[i].variableAsociada !== "Segundo Plato" && postResponse.preguntas[i].variableAsociada !== "Postre") {
+                variablesPreguntas = [...variablesPreguntas, postResponse.preguntas[i].variableAsociada];
+            }
         }
 
         this.setState(prev => ({
@@ -105,8 +137,11 @@ class VistaVerResultadosExperimento extends Component {
 
         this.setState(prev => ({
             ...prev,
-            nombresEstablecimientos: nombresEstablecimientos
-        }))
+            nombresEstablecimientos: nombresEstablecimientos,
+            variableSeleccionada: variablesPreguntas[0],
+            establecimientoSeleccionado: nombresEstablecimientos[0]
+        }), () => this.doActualizarDatos(this.state.establecimientoSeleccionado, this.state.menuSeleccionado, this.state.variableSeleccionada))
+
     }
 
     onEstablecimientoSeleccionadoChange = event => {
@@ -114,7 +149,7 @@ class VistaVerResultadosExperimento extends Component {
         this.setState(prev => ({
             ...prev,
             establecimientoSeleccionado: value
-        }), () => this.doActualizarDatos(this.state.establecimientoSeleccionado, this.state.variableSeleccionada))
+        }), () => this.doActualizarDatos(this.state.establecimientoSeleccionado, this.state.menuSeleccionado, this.state.variableSeleccionada))
     }
 
     onVariableSeleccionadaChange = event => {
@@ -122,11 +157,126 @@ class VistaVerResultadosExperimento extends Component {
         this.setState(prev => ({
             ...prev,
             variableSeleccionada: value
-        }), () => this.doActualizarDatos(this.state.establecimientoSeleccionado, this.state.variableSeleccionada))
+        }), () => this.doActualizarDatos(this.state.establecimientoSeleccionado, this.state.menuSeleccionado, this.state.variableSeleccionada))
+    }
+
+    onMenuSeleccionadoChange = event => {
+        let value = event.target !== null ? event.target.value : ""
+        this.setState(prev => ({
+            ...prev,
+            menuSeleccionado: value
+        }), () => this.doActualizarPlatosMenu(this.state.establecimientoSeleccionado, this.state.menuSeleccionado))
+    }
+
+    async doActualizarPlatosMenu(nombreEstablecimiento, nombreMenu) {
+        let idEstablecimiento = nombreEstablecimiento.replace(/ /g, "-");
+        idEstablecimiento = idEstablecimiento.toLowerCase()
+        idEstablecimiento = idEstablecimiento.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+
+        let idMenu = nombreMenu.replace(/ /g, "-");
+        idMenu = idMenu.toLowerCase()
+        idMenu = idMenu.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+        let color = ""
+
+
+        let idVariable = "primer-plato";
+        const postRequestPrimerosPlatos = await fetch(`http://localhost:9000/experiencias/${this.props.idExperimento}/${idEstablecimiento}/menus/${idMenu}/${idVariable}`, {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                'Accept': 'application/json;charset=UTF-8',
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Authorization': this.props.auth.token
+            },
+        })
+        const postResponsePrimerosPlatos = await postRequestPrimerosPlatos.json()
+        let opcionesPrimerosPlatos = []
+        let backgroundColorPrimerosPlatos = []
+        for (let i = 0; i < postResponsePrimerosPlatos.valores.length; i++) {
+            color = 'rgba(' + 30 * i + ' ,99, 132, 0.6)';
+            backgroundColorPrimerosPlatos = [...backgroundColorPrimerosPlatos, color];
+            opcionesPrimerosPlatos = [...opcionesPrimerosPlatos, "Opción " + (i + 1)];
+        }
+
+        this.setState(prev => ({
+            ...prev,
+            datosGraficasPrimerosPlatos: {
+                labels: opcionesPrimerosPlatos, datasets: [{
+                    data: postResponsePrimerosPlatos.valores,
+                    backgroundColor: backgroundColorPrimerosPlatos
+                }]
+            },
+            valoresOpcionesPrimerosPlatos: postResponsePrimerosPlatos.opciones,
+            opcionesPrimerosPlatos: opcionesPrimerosPlatos
+        }))
+
+        idVariable = "segundo-plato";
+        const postRequestSegundosPlatos = await fetch(`http://localhost:9000/experiencias/${this.props.idExperimento}/${idEstablecimiento}/menus/${idMenu}/${idVariable}`, {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                'Accept': 'application/json;charset=UTF-8',
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Authorization': this.props.auth.token
+            },
+        })
+        const postResponseSegundosPlatos = await postRequestSegundosPlatos.json()
+        let opcionesSegundosPlatos = []
+        let backgroundColorSegundosPlatos = []
+        for (let i = 0; i < postResponseSegundosPlatos.valores.length; i++) {
+            color = 'rgba(' + 30 * i + ' ,99, 132, 0.6)';
+            backgroundColorSegundosPlatos = [...backgroundColorSegundosPlatos, color];
+            opcionesSegundosPlatos = [...opcionesSegundosPlatos, "Opción " + (i + 1)];
+        }
+
+        this.setState(prev => ({
+            ...prev,
+            datosGraficasSegundosPlatos: {
+                labels: opcionesSegundosPlatos, datasets: [{
+                    data: postResponseSegundosPlatos.valores,
+                    backgroundColor: backgroundColorSegundosPlatos
+                }]
+            },
+            valoresOpcionesSegundosPlatos: postResponseSegundosPlatos.opciones,
+            opcionesSegundosPlatos: opcionesSegundosPlatos
+        }))
+
+
+        idVariable = "postre";
+        const postRequestPostres = await fetch(`http://localhost:9000/experiencias/${this.props.idExperimento}/${idEstablecimiento}/menus/${idMenu}/${idVariable}`, {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                'Accept': 'application/json;charset=UTF-8',
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Authorization': this.props.auth.token
+            },
+        })
+        const postResponsePostres = await postRequestPostres.json()
+        let opcionesPostres = []
+        let backgroundColorPostres = []
+        for (let i = 0; i < postResponsePostres.valores.length; i++) {
+            color = 'rgba(' + 30 * i + ' ,99, 132, 0.6)';
+            backgroundColorPostres = [...backgroundColorPostres, color];
+            opcionesPostres = [...opcionesPostres, "Opción " + (i + 1)];
+        }
+
+        this.setState(prev => ({
+            ...prev,
+            datosGraficasPostres: {
+                labels: opcionesPostres, datasets: [{
+                    data: postResponsePostres.valores,
+                    backgroundColor: backgroundColorPostres
+                }]
+            },
+            valoresOpcionesPostres: postResponsePostres.opciones,
+            opcionesPostres: opcionesPostres
+        }))
+
     }
 
 
-    async doActualizarDatos(nombreEstablecimiento, nombreVariable) {
+    async doActualizarDatos(nombreEstablecimiento, nombreMenuSeleccionado, nombreVariable) {
         let idEstablecimiento = nombreEstablecimiento.replace(/ /g, "-");
         idEstablecimiento = idEstablecimiento.toLowerCase()
         idEstablecimiento = idEstablecimiento.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
@@ -134,7 +284,6 @@ class VistaVerResultadosExperimento extends Component {
         let idVariable = nombreVariable.replace(/ /g, "-");
         idVariable = idVariable.toLowerCase()
         idVariable = idVariable.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-        idVariable = "higiene";
         const postRequest = await fetch(`http://localhost:9000/experiencias/${this.props.idExperimento}/${idEstablecimiento}/${idVariable}`, {
             method: "GET",
             mode: "cors",
@@ -145,62 +294,161 @@ class VistaVerResultadosExperimento extends Component {
             },
         })
         const postResponse = await postRequest.json()
-        console.table(postResponse)
+        let backgroundColor = []
+        let color = ""
+        let opciones = []
+        for (let i = 0; i < postResponse.valores.length; i++) {
+            color = 'rgba(' + 30 * i + ' ,99, 132, 0.6)';
+            backgroundColor = [...backgroundColor, color];
+            opciones = [...opciones, "Opción " + (i + 1)];
+        }
+
         this.setState(prev => ({
             ...prev,
             datosGraficas: {
-                labels: postResponse.opciones, datasets: [{
-                    data: postResponse.valores
+                labels: opciones, datasets: [{
+                    data: postResponse.valores,
+                    backgroundColor: backgroundColor
                 }]
-            }
+            },
+            valoresOpciones: postResponse.opciones,
+            opciones: opciones
         }))
 
-
+        if (idVariable === "menu-seleccionado") {
+            this.setState(prev => ({
+                    ...prev,
+                    nombresMenus: postResponse.opciones,
+                    menuSeleccionado: postResponse.opciones[0]
+                }), () => this.doActualizarPlatosMenu(nombreEstablecimiento, postResponse.opciones[0])
+            )
+        }
     }
 
     render() {
-        console.table(this.state.datosGraficas)
+        console.table(this.state)
         return <Container>
             <h1 style={{textAlign: 'center'}}>Resultados Experimento</h1>
-            <Row style={{marginTop:'50px'}}>
+            <Row style={{marginTop: '50px'}}>
                 <Col>
+                    <p style={{textAlign: 'center'}}>Establecimiento a Analizar</p>
                     <Input className="inputs" size={"sm"} type={"select"} placeholder="Añadir Variable"
                            value={this.state.establecimientoSeleccionado}
                            onChange={this.onEstablecimientoSeleccionadoChange}>
-                        <option selected>Seleccionar Establecimiento</option>
                         {this.state.nombresEstablecimientos.map(
-                            (item, index) =>
-                                <option>{item}</option>
+                            (item, index) => {
+                                if (index === 0) {
+                                    return <option selected>{item}</option>
+                                } else {
+                                    return <option>{item}</option>
+                                }
+                            }
                         )
                         }
                     </Input>
                 </Col>
                 <Col>
+                    <p style={{textAlign: 'center'}}>Variable a Analizar</p>
                     <Input className="inputs" size={"sm"} type={"select"} placeholder="Añadir Variable"
                            value={this.state.variableSeleccionada}
                            onChange={this.onVariableSeleccionadaChange}>
-                        <option value="" disabled>Seleccionar Variable</option>
                         {this.state.variablesPreguntas.map(
-                            (item, index) =>
-                                <option>{item}</option>
+                            (item, index) => {
+                                if (index === 0) {
+                                    return <option selected>{item}</option>
+                                } else {
+                                    return <option>{item}</option>
+                                }
+                            }
                         )
                         }
                     </Input>
                 </Col>
             </Row>
-            <Row style={{marginTop:'50px'}}>
+            <Graficas datosGraficas={this.state.datosGraficas}
+                      opciones={this.state.opciones}
+                      valoresOpciones={this.state.valoresOpciones}
+            />
+
+            {this.state.variableSeleccionada === "Menú Seleccionado" &&
+            <Container>
+                <Row style={{marginTop: '20px'}}>
+                    <Col>
+                        <p style={{textAlign: 'center'}}>Menú a Analizar</p>
+                        <Input className="inputs" size={"sm"} type={"select"} placeholder="Añadir Variable"
+                               value={this.state.menuSeleccionado}
+                               onChange={this.onMenuSeleccionadoChange}>
+                            {this.state.nombresMenus.map(
+                                (item, index) => {
+                                    if (index === 0) {
+                                        return <option selected>{item}</option>
+                                    } else {
+                                        return <option>{item}</option>
+                                    }
+                                }
+                            )
+                            }
+                        </Input>
+                    </Col>
+                </Row>
+                <Row style={{marginTop: '20px'}}>
+                    <Col>
+                        <h2 style={{textAlign: 'center'}}>Primeros Platos</h2>
+                        <Graficas datosGraficas={this.state.datosGraficasPrimerosPlatos}
+                                  opciones={this.state.opcionesPrimerosPlatos}
+                                  valoresOpciones={this.state.valoresOpcionesPrimerosPlatos}
+                        />
+                    </Col>
+                </Row>
+                <Row style={{marginTop: '20px'}}>
+                    <Col>
+                        <h2 style={{textAlign: 'center'}}>Segundos Platos</h2>
+                        <Graficas datosGraficas={this.state.datosGraficasSegundosPlatos}
+                                  opciones={this.state.opcionesSegundosPlatos}
+                                  valoresOpciones={this.state.valoresOpcionesSegundosPlatos}
+                        />
+                    </Col>
+                </Row>
+                <Row style={{marginTop: '20px'}}>
+                    <Col>
+                        <h2 style={{textAlign: 'center'}}>Postres</h2>
+                        <Graficas datosGraficas={this.state.datosGraficasPostres}
+                                  opciones={this.state.opcionesPostres}
+                                  valoresOpciones={this.state.valoresOpcionesPostres}
+                        />
+                    </Col>
+                </Row>
+            </Container>
+
+            }
+            <Row>
+                <Route>{
+                    ({history}) =>
+                        <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonPrimary"}
+                                onClick={() => history.goBack()}>Volver</Button>
+                }</Route>
+            </Row>
+
+        </Container>
+    }
+}
+
+class Graficas extends Component {
+    render() {
+        return <Container>
+            <Row style={{marginTop: '50px'}}>
                 <Col>
-                    <h2 style={{textAlign: 'center'}}>Gráfico de Barras</h2>
+                    <h4 style={{textAlign: 'center'}}>Gráfico de Barras</h4>
                 </Col>
                 <Col>
-                    <h2 style={{textAlign: 'center'}}>Gráfico de Sectores</h2>
+                    <h4 style={{textAlign: 'center'}}>Gráfico de Sectores</h4>
                 </Col>
             </Row>
             <Row>
                 <Col>
                     <Bar
                         type={'horizontalBar'}
-                        data={this.state.datosGraficas}
+                        data={this.props.datosGraficas}
                         legend={{position: 'bottom'}}
                         options={{
                             scales: {
@@ -215,13 +463,34 @@ class VistaVerResultadosExperimento extends Component {
                 </Col>
                 <Col>
                     <Doughnut
-                        data={this.state.datosGraficas}
+                        data={this.props.datosGraficas}
                         legend={{position: 'bottom'}}
                         options={{maintainAspectRatio: false}}
                     />
                 </Col>
             </Row>
-
+            <Row style={{marginTop: '30px'}}>
+                <Col>
+                    <h4 style={{textAlign: 'center'}}>Opciones</h4>
+                    <Table striped bordered hover variant="dark" size="sm">
+                        <thead>
+                        <tr>
+                            <th style={{textAlign: 'center'}}>Opción</th>
+                            <th style={{textAlign: 'center'}}>Texto Opción</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {this.props.opciones.map(
+                            (item, index) =>
+                                <tr>
+                                    <td style={{textAlign: 'center'}}>{this.props.opciones[index]}</td>
+                                    <td style={{textAlign: 'center'}}>{this.props.valoresOpciones[index]}</td>
+                                </tr>)
+                        }
+                        </tbody>
+                    </Table>
+                </Col>
+            </Row>
         </Container>
     }
 }

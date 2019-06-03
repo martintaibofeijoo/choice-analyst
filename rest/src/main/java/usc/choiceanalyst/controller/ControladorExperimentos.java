@@ -22,7 +22,6 @@ import usc.choiceanalyst.repository.RepositorioUsuario;
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("experimentos")
@@ -85,16 +84,20 @@ public class ControladorExperimentos {
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping(path = "/{idExperimento}")
     public ResponseEntity deleteExperimento(@PathVariable("idExperimento") String idExperimento) {
-        if (!dbExperimento.existsByIdExperimento(idExperimento)) {
-            return ResponseEntity.notFound().build();
-        } else {
-            ModeloExperimento experimento = dbExperimento.findByIdExperimento(idExperimento).get();
-            if (experimento.getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
-                dbExperimento.deleteByIdExperimento(idExperimento);
+        if (!dbExperiencia.existsByIdExperimento(idExperimento)) {
+            if (!dbExperimento.existsByIdExperimento(idExperimento)) {
+                return ResponseEntity.notFound().build();
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                ModeloExperimento experimento = dbExperimento.findByIdExperimento(idExperimento).get();
+                if (experimento.getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
+                    dbExperimento.deleteByIdExperimento(idExperimento);
+                } else {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                }
+                return ResponseEntity.noContent().build();
             }
-            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
@@ -106,30 +109,34 @@ public class ControladorExperimentos {
     )
 
     public ResponseEntity modifyExperimento(@RequestBody ModeloExperimento experimento, @PathVariable("idExperimento") String idExperimento) {
-        ModeloExperimento experimentoExistente;
-        if (!dbExperimento.existsByIdExperimento(idExperimento)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } else {
-            experimentoExistente = dbExperimento.findByIdExperimento(idExperimento).get();
-            if (experimentoExistente.getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
-                if (!idExperimento.equals(experimento.getIdExperimento())) {
-                    if (dbExperimento.existsByIdExperimento(experimento.getIdExperimento())) {
-                        return ResponseEntity.status(HttpStatus.CONFLICT).build();
-                    } else {
-                        experimentoExistente.setIdExperimento(experimento.getIdExperimento());
-                        dbExperimento.deleteByIdExperimento(idExperimento);
-                    }
-                }
-                experimentoExistente.setNombreExperimento(experimento.getNombreExperimento());
-                experimentoExistente.setPreguntas(experimento.getPreguntas());
-                experimentoExistente.setObjetivos(experimento.getObjetivos());
-                experimentoExistente.setFechasExperimento(experimento.getFechasExperimento());
-                experimentoExistente.setIdsEstablecimientos(experimento.getIdsEstablecimientos());
-                dbExperimento.save(experimentoExistente);
-                return ResponseEntity.ok().body(experimentoExistente);
+        if (!dbExperiencia.existsByIdExperimento(idExperimento)) {
+            ModeloExperimento experimentoExistente;
+            if (!dbExperimento.existsByIdExperimento(idExperimento)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                experimentoExistente = dbExperimento.findByIdExperimento(idExperimento).get();
+                if (experimentoExistente.getIdAdministrador().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
+                    if (!idExperimento.equals(experimento.getIdExperimento())) {
+                        if (dbExperimento.existsByIdExperimento(experimento.getIdExperimento())) {
+                            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                        } else {
+                            experimentoExistente.setIdExperimento(experimento.getIdExperimento());
+                            dbExperimento.deleteByIdExperimento(idExperimento);
+                        }
+                    }
+                    experimentoExistente.setNombreExperimento(experimento.getNombreExperimento());
+                    experimentoExistente.setPreguntas(experimento.getPreguntas());
+                    experimentoExistente.setObjetivos(experimento.getObjetivos());
+                    experimentoExistente.setFechasExperimento(experimento.getFechasExperimento());
+                    experimentoExistente.setIdsEstablecimientos(experimento.getIdsEstablecimientos());
+                    dbExperimento.save(experimentoExistente);
+                    return ResponseEntity.ok().body(experimentoExistente);
+                } else {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                }
             }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 

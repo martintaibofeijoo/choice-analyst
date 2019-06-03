@@ -165,7 +165,10 @@ class VistaEstablecimientos extends Component {
                 } else if (codigo === 409) {
                     this.setState(prev => ({
                         ...prev,
-                        alertaCreacion: {status: "Error", message: "Error creando establecimiento, no puede haber dos establecimientos con el mismo nombre!"}
+                        alertaCreacion: {
+                            status: "Error",
+                            message: "Error creando establecimiento, no puede haber dos establecimientos con el mismo nombre!"
+                        }
                     }))
                 }
             })
@@ -191,6 +194,14 @@ class VistaEstablecimientos extends Component {
                 alertaExperimentos: {status: "OK", message: "Establecimiento eliminado correctamente!"}
             }))
             this.actualizarEstablecimientos();
+        } else if (codigo === 401) {
+            this.setState(prev => ({
+                ...prev,
+                alertaExperimentos: {
+                    status: "Error",
+                    message: "No puedes eliminar este establecimiento o bién porque no tienes permisos para ello o tiene experiencias asociadas a él!"
+                }
+            }))
         } else {
             this.setState(prev => ({
                 ...prev,
@@ -302,7 +313,8 @@ class VistaEstablecimientos extends Component {
                     }
 
                     {(this.state.establecimientos.length === 0) ? (
-                        <h2 style={{marginTop: '50px', textAlign: 'center'}}>!No existe ningún establecimiento con ese nombre,
+                        <h2 style={{marginTop: '50px', textAlign: 'center'}}>!No existe ningún establecimiento con ese
+                            nombre,
                             puedes crearlo aquí!</h2>
                     ) : (
                         this.state.establecimientos.map(
@@ -469,9 +481,20 @@ class VistaModificarEstablecimiento extends Component {
                 } else if (codigo === 409) {
                     this.setState(prev => ({
                         ...prev,
-                        alertaModificacion: {status: "Error", message: "Error modificando establecimiento, no puede haber dos establecimientos con el mismo nombre!"}
+                        alertaModificacion: {
+                            status: "Error",
+                            message: "Error modificando establecimiento, no puede haber dos establecimientos con el mismo nombre!"
+                        }
                     }))
-                }else {
+                } else if (codigo === 401) {
+                    this.setState(prev => ({
+                        ...prev,
+                        alertaModificacion: {
+                            status: "Error",
+                            message: "No puedes eliminar este establecimiento o bién porque no tienes permisos para ello o tiene experiencias asociadas a él!\n"
+                        }
+                    }))
+                } else {
                     this.setState(prev => ({
                         ...prev,
                         alertaModificacion: {status: "Error", message: "Error modificando establecimiento!"}

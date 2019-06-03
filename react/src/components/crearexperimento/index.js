@@ -342,7 +342,7 @@ class VistaCrearExperimento extends Component {
             })
             const codigo = response.status
 
-            if (codigo === 200) {
+            if (codigo === 201) {
                 this.setState(prev => ({
                     ...prev,
                     ok: true,

@@ -150,7 +150,12 @@ class VistaVerExperimento extends Component {
                             }}>Establecimientos</CardTitle>
                         </CardHeader>
                         <CardBody style={{marginBottom: '-30px'}}>
-                            <p style={{textAlign: 'center'}}>{this.state.nombresEstablecimientos}</p>
+                            {this.state.nombresEstablecimientos !== "" ? (
+                                <p style={{textAlign: 'center'}}>{this.state.nombresEstablecimientos}</p>
+                            ) : (
+                                <p style={{textAlign: 'center'}}>Esta experimento no tiene asociado ningún experimento,
+                                    por lo tanto no se pueden ver las experiencias asociadas a él!</p>
+                            )}
                         </CardBody>
                     </Card>
                 </Row>
@@ -223,11 +228,14 @@ class VistaVerExperimento extends Component {
                                         onClick={() => history.goBack()}>Volver</Button>
                         }</Route>
                     </Col>
+                    {this.state.nombresEstablecimientos !== "" &&
                     <Col style={{paddingLeft: '1px'}}>
                         <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonSuccess"}
                                 tag={Link}
-                                to={`/experimentos/verResultadosExperimento/${this.state.idExperimento}`}>Ver Resultados Experimento</Button>
+                                to={`/experimentos/verResultadosExperimento/${this.state.idExperimento}`}>Ver Resultados
+                            Experimento</Button>
                     </Col>
+                    }
                 </Row>
             </Container>
         );

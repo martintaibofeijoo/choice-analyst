@@ -95,6 +95,8 @@ class VistaExperimentos extends Component {
         if (codigo === 204) {
             this.setState(prev => ({...prev, alert: {status: "OK", message: "Experimento eliminado correctamente!"}}))
             this.actualizarExperimentos()
+        } else if (codigo === 401){
+            this.setState(prev => ({...prev, alert: {status: "Error", message: "No puedes eliminar este experimento o bién porque no tienes permisos para ello o tiene experiencias asociadas a él!"}}))
         } else {
             this.setState(prev => ({...prev, alert: {status: "Error", message: "Error eliminando experimento!"}}))
         }

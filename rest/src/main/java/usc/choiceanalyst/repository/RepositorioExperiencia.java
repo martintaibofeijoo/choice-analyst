@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RepositorioExperiencia extends MongoRepository<ModeloExperiencia, String> {
-    boolean existsByIdCliente(String idCliente);
+    boolean existsByIdEstablecimiento(String idEstablecimiento);
+    boolean existsByIdExperimento(String idExperimento);
     void deleteByIdCliente(String idCliente);
     Optional<ModeloExperiencia> findByIdCliente(String username);
     List<ModeloExperiencia> findAll();

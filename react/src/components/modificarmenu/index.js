@@ -505,7 +505,12 @@ class VistaModificarMenu extends Component {
             } else if (codigo === 409) {
                 mensaje = [...mensaje, "Error modificando menú, no puede haber dos menús con el mismo nombre!"];
                 this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
-            } else {
+
+            }else if (codigo===401){
+                mensaje = [...mensaje, "No puedes modificar este menú o bién porque no tienes permisos para ello o tiene experiencias asociadas a él!"];
+                this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
+            }
+            else {
                 mensaje = [...mensaje, "Error modificando menú!"];
                 this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
             }
@@ -533,10 +538,15 @@ class VistaModificarMenu extends Component {
                 ...prev,
                 eliminadoOk: true
             }))
+
+        } else if (codigo === 401) {
+            let mensaje = [];
+            mensaje = [...mensaje, "No puedes eliminar este menú o bién porque no tienes permisos para ello o tiene experiencias asociadas a él!"];
+            this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
         } else {
             let mensaje = [];
             mensaje = [...mensaje, "Error eliminando menú!"];
-            this.setState(prev => ({...prev, alert: {status: "OK", message: mensaje}}))
+            this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
         }
     }
 

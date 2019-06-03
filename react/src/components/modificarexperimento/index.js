@@ -396,7 +396,7 @@ class VistaModificarExperimento extends Component {
                 mensaje = [...mensaje, "Error modificando el experimento, no puede haber dos experimentos con el mismo nombre!"];
                 this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
             } else if (codigo === 401) {
-                mensaje = [...mensaje, "No puedes modificar este experimento!"];
+                mensaje = [...mensaje, "No puedes modificar este experimento o bién porque no tienes permisos para ello o tiene experiencias asociadas a él!"];
                 this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
             } else {
                 mensaje = [...mensaje, "Error modificando experimento!"];
@@ -425,10 +425,14 @@ class VistaModificarExperimento extends Component {
                 ...prev,
                 eliminadoOk: true
             }))
-        } else {
+        } else if (codigo===401){
             let mensaje = [];
-            mensaje = [...mensaje, "Error eliminando experimento!"];
-            this.setState(prev => ({...prev, alert: {status: "OK", message: mensaje}}))
+            mensaje = [...mensaje, "No puedes eliminar este experimento o bién porque no tienes permisos para ello o tiene experiencias asociadas a él!"];
+            this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
+        } else{
+            let mensaje = [];
+            mensaje = [...mensaje, "Error eliminando el experimento!"];
+            this.setState(prev => ({...prev, alert: {status: "Error", message: mensaje}}))
         }
     }
 
