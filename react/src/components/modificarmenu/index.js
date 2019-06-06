@@ -606,13 +606,21 @@ class VistaModificarMenu extends Component {
                                     <Card block className="cards" color="primary">
                                         <CardBody>
                                             <div style={{marginLeft: '15px'}}>
+                                                {console.error(this.state.fechasMenu)}
                                                 <MultipleDatePicker className={'datepicker'}
                                                                     size={'lg'}
                                                                     regional={'es'}
-                                                                    onSubmit={fechasMenu => this.setState(prev => ({
-                                                                        ...prev,
-                                                                        fechasMenu: fechasMenu
-                                                                    }))
+                                                                    onSubmit={fechasMenu => {
+                                                                        console.error(fechasMenu)
+                                                                        this.setState(prev => ({
+                                                                            ...prev,
+                                                                            fechasMenu: fechasMenu
+                                                                        }))
+                                                                    }}
+                                                                    selected = {
+                                                                        this.state.fechasMenu.length > 0
+                                                                            ? this.state.fechasMenu[0]
+                                                                         : new Date(2018, 5, 22)
                                                                     }
                                                 />
                                             </div>

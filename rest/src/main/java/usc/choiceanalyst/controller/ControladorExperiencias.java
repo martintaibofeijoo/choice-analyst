@@ -38,17 +38,8 @@ public class ControladorExperiencias {
     }
 
 
-    //hasRole('CLIENTE')
-    @PreAuthorize("permitAll()")
-    @PostMapping(
-            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},
-            consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
-    )
 
-    public ResponseEntity createExperiencia(@RequestBody ModeloExperiencia experiencia) {
-        dbExperiencia.save(experiencia);
-        return ResponseEntity.ok().body(experiencia);
-    }
+
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @GetMapping(
@@ -306,13 +297,13 @@ public class ControladorExperiencias {
                 }
             }
 
-            /*for (int i = 0; i < experiencias.size(); i++) {
+            for (int i = 0; i < experiencias.size(); i++) {
                 for (int j = 0; j < datosGrafica.getOpciones().size(); j++) {
                     if (experiencias.get(i).getPrimerPlato().equals(datosGrafica.getOpciones().get(j))) {
                         datosGrafica.getValores().set(j, (datosGrafica.getValores().get(j) + 1));
                     }
                 }
-            }*/
+            }
         } else if (idVariable.equals("segundo-plato")) {
             //Segundo Plato
             for (int i = 0; i < establecimiento.getMenus().size(); i++) {
@@ -326,13 +317,13 @@ public class ControladorExperiencias {
                 }
             }
 
-            /*for (int i = 0; i < experiencias.size(); i++) {
+            for (int i = 0; i < experiencias.size(); i++) {
                 for (int j = 0; j < datosGrafica.getOpciones().size(); j++) {
                     if (experiencias.get(i).getSegundoPlato().equals(datosGrafica.getOpciones().get(j))) {
                         datosGrafica.getValores().set(j, (datosGrafica.getValores().get(j) + 1));
                     }
                 }
-            }*/
+            }
         } else if (idVariable.equals("postre")) {
             //Postre
             for (int i = 0; i < establecimiento.getMenus().size(); i++) {
@@ -346,18 +337,29 @@ public class ControladorExperiencias {
                 }
             }
 
-           /* for (int i = 0; i < experiencias.size(); i++) {
+            for (int i = 0; i < experiencias.size(); i++) {
                 for (int j = 0; j < datosGrafica.getOpciones().size(); j++) {
                     if (experiencias.get(i).getPostre().equals(datosGrafica.getOpciones().get(j))) {
                         datosGrafica.getValores().set(j, (datosGrafica.getValores().get(j) + 1));
                     }
                 }
-            }*/
+            }
         }
 
         return ResponseEntity.ok().body(datosGrafica);
 
     }
 
+    //Movil
+    @PreAuthorize("hasRole('CLIENTE')")
+    @PostMapping(
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+
+    public ResponseEntity createExperiencia(@RequestBody ModeloExperiencia experiencia) {
+        dbExperiencia.save(experiencia);
+        return ResponseEntity.ok().body(experiencia);
+    }
 
 }

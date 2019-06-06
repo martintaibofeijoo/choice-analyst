@@ -2,9 +2,9 @@ package com.example.android.Tasks;
 
 import android.os.AsyncTask;
 
-import com.example.android.Clases.Experimento;
-import com.example.android.TasksResponse.ObtenerExperimentoTaskResponse;
+import com.example.android.Clases.Usuario;
 import com.example.android.Servicios.IServicios;
+import com.example.android.TasksResponse.ObtenerUsuarioTaskResponse;
 
 import java.io.IOException;
 
@@ -15,15 +15,15 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ObtenerExperimentoTask extends AsyncTask<Void, Void, Void> {
+public class ObtenerUsuarioTask extends AsyncTask<Void, Void, Void> {
     private String token;
-    private String idEstablecimiento;
-    private Response<Experimento> mResponse = null;
-    private ObtenerExperimentoTaskResponse obtenerExperimentoTaskResponse = null;
+    private String idUsuario;
+    private Response<Usuario> mResponse = null;
+    private ObtenerUsuarioTaskResponse obtenerUsuarioTaskResponse = null;
 
-    public ObtenerExperimentoTask(String idEstablecimiento, String token) {
+    public ObtenerUsuarioTask(String idUsuario, String token) {
         this.token = token;
-        this.idEstablecimiento = idEstablecimiento;
+        this.idUsuario = idUsuario;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ObtenerExperimentoTask extends AsyncTask<Void, Void, Void> {
 
         IServicios service = retrofit.create(IServicios.class);
 
-        Call<Experimento> call = service.obtenerExperimento(this.idEstablecimiento, token);
+        Call<Usuario> call = service.obtenerUsuario(this.idUsuario, token);
         try {
             mResponse = call.execute();
         } catch (IOException e) {
@@ -53,15 +53,15 @@ public class ObtenerExperimentoTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         if (mResponse != null && mResponse.code() == 200) {
-            obtenerExperimentoTaskResponse.ObtenerExperimentoFinishOK(mResponse.body());
-        } else obtenerExperimentoTaskResponse.ObtenerExperimentoFinishERR();
+            obtenerUsuarioTaskResponse.ObtenerUsuarioFinishOK(mResponse.body());
+        } else obtenerUsuarioTaskResponse.ObtenerUsuarioFinishERR();
     }
 
-    public ObtenerExperimentoTaskResponse getObtenerExperimentoTaskResponse() {
-        return obtenerExperimentoTaskResponse;
+    public ObtenerUsuarioTaskResponse getObtenerUsuarioTaskResponse() {
+        return obtenerUsuarioTaskResponse;
     }
 
-    public void setObtenerExperimentoTaskResponse(ObtenerExperimentoTaskResponse obtenerExperimentoTaskResponse) {
-        this.obtenerExperimentoTaskResponse = obtenerExperimentoTaskResponse;
+    public void setObtenerUsuarioTaskResponse(ObtenerUsuarioTaskResponse obtenerUsuarioTaskResponse) {
+        this.obtenerUsuarioTaskResponse = obtenerUsuarioTaskResponse;
     }
 }

@@ -9,15 +9,18 @@
     </string-array>
 
     <string-array name="origen_array">
-        <item>Europeo</item>
-        <item>Americano</item>
-        <item>Africano</item>
+        <item>Africano/a</item>
+        <item>Americano/a</item>
+        <item>Asiatico/a</item>
+        <item>Europeo/a</item>
+        <item>Oceánico/a</item>
     </string-array>
 
     <string-array name="nivelestudios_array">
-        <item>Alto</item>
-        <item>Medio</item>
-        <item>Bajo</item>
+        <item>Educación Primaria</item>
+        <item>Educación Secundaria Obligatoria</item>
+        <item>Bachillerato</item>
+        <item>Educación Superior</item>
     </string-array>
 </resources>
 

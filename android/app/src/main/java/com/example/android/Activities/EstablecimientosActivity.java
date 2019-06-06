@@ -1,7 +1,9 @@
 package com.example.android.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,12 +29,14 @@ public class EstablecimientosActivity extends AppCompatActivity implements Estab
     private ArrayList<Establecimiento> listadoEstablecimientos = new ArrayList<>();
     private EditText textoBusqueda;
     private String token;
+    private AlertDialog.Builder builder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_establecimientos);
-
+        builder = new AlertDialog.Builder(this);
         recyclerViewRestaurantes = findViewById(R.id.recyclerViewRestaurantes);
         layoutManager = new LinearLayoutManager(this);
         recyclerViewRestaurantes.setLayoutManager(layoutManager);
@@ -43,13 +47,11 @@ public class EstablecimientosActivity extends AppCompatActivity implements Estab
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                System.out.println("hOLA");
 
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                System.out.println("hOLA");
             }
 
             public void afterTextChanged(Editable s) {
@@ -67,7 +69,6 @@ public class EstablecimientosActivity extends AppCompatActivity implements Estab
             establecimientosTask.execute();
         }
 
-
     }
 
 
@@ -76,10 +77,29 @@ public class EstablecimientosActivity extends AppCompatActivity implements Estab
         listadoEstablecimientos = (ArrayList<Establecimiento>) establecimientos;
         adapter.setListadoEstablecimientos(listadoEstablecimientos);
         adapter.notifyDataSetChanged();
+        if (establecimientos.size() == 0) {
+            builder.setMessage("No existen establecimientos con este nombre!")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        }
     }
 
     @Override
     public void EstablecimientosFinishERR() {
-
+        builder.setMessage("Error buscando establecimientos!")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        onBackPressed();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

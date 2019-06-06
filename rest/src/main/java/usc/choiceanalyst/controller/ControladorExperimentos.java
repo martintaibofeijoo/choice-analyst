@@ -3,7 +3,7 @@ package usc.choiceanalyst.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
-import java.util.Collection;
+import java.util.*;
 
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
@@ -20,8 +20,6 @@ import usc.choiceanalyst.model.*;
 import usc.choiceanalyst.repository.RepositorioUsuario;
 
 import java.net.URI;
-import java.util.Date;
-import java.util.List;
 
 @RestController
 @RequestMapping("experimentos")
@@ -159,7 +157,8 @@ public class ControladorExperimentos {
     }
 
 
-    @PreAuthorize("permitAll()")
+    //Movil
+    @PreAuthorize("hasRole('CLIENTE')")
     @GetMapping(
             path = "/obtenerExperimento/{idEstablecimiento}",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
@@ -169,15 +168,23 @@ public class ControladorExperimentos {
         String pattern = "dd-MM-yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         String fechaActual = simpleDateFormat.format(new Date());
+        List<ModeloExperimento> listaPosiblesExperimentos= new ArrayList<>();
 
         if (dbEstablecimiento.existsByIdEstablecimiento(idEstablecimiento)) {
             Collection<ModeloExperimento> experimentos = dbExperimento.findByIdsEstablecimientosContains(idEstablecimiento);
             for (int i = 0; i < experimentos.size(); i++) {
                 if (((List<ModeloExperimento>) experimentos).get(i).getFechasExperimento().contains(fechaActual)) {
-                    return ResponseEntity.ok().body(((List<ModeloExperimento>) experimentos).get(i));
+                    listaPosiblesExperimentos.add(((List<ModeloExperimento>) experimentos).get(i));
                 }
             }
-            return ResponseEntity.notFound().build();
+
+            if(listaPosiblesExperimentos.size()!=0){
+                Random r = new Random();
+                int valorEntero = r.nextInt(listaPosiblesExperimentos.size());
+                return ResponseEntity.ok().body(listaPosiblesExperimentos.get(valorEntero));
+            }else{
+                return ResponseEntity.notFound().build();
+            }
         } else {
             return ResponseEntity.notFound().build();
         }

@@ -15,16 +15,18 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import com.example.android.Clases.Usuario;
 import com.example.android.R;
 import com.example.android.Tasks.LoginTask;
+import com.example.android.Tasks.ObtenerUsuarioTask;
 import com.example.android.Tasks.RegistroTask;
 import com.example.android.TasksResponse.LoginTaskResponse;
+import com.example.android.TasksResponse.ObtenerUsuarioTaskResponse;
 import com.example.android.TasksResponse.RegistroTaskResponse;
-import com.example.android.Clases.Usuario;
 
 import java.util.regex.Pattern;
 
-public class RegistroActivity extends AppCompatActivity implements LoginTaskResponse, RegistroTaskResponse {
+public class ModificarUsuarioActivity extends AppCompatActivity implements LoginTaskResponse, RegistroTaskResponse , ObtenerUsuarioTaskResponse {
 
     private Button botonRegistro;
     private EditText textoUsuario;
@@ -41,14 +43,16 @@ public class RegistroActivity extends AppCompatActivity implements LoginTaskResp
     ArrayAdapter<CharSequence> adapterSpinnerSexo;
     ArrayAdapter<CharSequence> adapterSpinnerOrigen;
     ArrayAdapter<CharSequence> adapterSpinnerNivelEstudios;
-
+    private String token;
+    private String idCliente;
     private AlertDialog.Builder builder;
     private RegistroTask registroTask;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registro);
+        setContentView(R.layout.activity_modificarUsuario);
         botonRegistro = findViewById(R.id.botonFinalizarExperimento);
         textoUsuario = findViewById(R.id.textoUsuario);
         textoContrasena = findViewById(R.id.textoContrasena);
@@ -107,7 +111,7 @@ public class RegistroActivity extends AppCompatActivity implements LoginTaskResp
                                                 textoApellidos.getText().toString(), textoFechaNacimiento.getText().toString(),
                                                 spinnerSexo.getSelectedItem().toString(), spinnerOrigen.getSelectedItem().toString(), spinnerNivelEstudios.getSelectedItem().toString());
                                         registroTask = new RegistroTask(usuario);
-                                        registroTask.setLoginTaskResponse(RegistroActivity.this);
+                                        registroTask.setLoginTaskResponse(ModificarUsuarioActivity.this);
                                         registroTask.execute();
                                     }
                                 });
@@ -127,6 +131,15 @@ public class RegistroActivity extends AppCompatActivity implements LoginTaskResp
                 }
             }
         });
+
+        SharedPreferences sharedPref = this.getSharedPreferences("Prefs", Context.MODE_PRIVATE);
+        this.token = sharedPref.getString("token", null);
+        this.idCliente = sharedPref.getString("idCliente", null);
+        if (token != null && idCliente != null) {
+            ObtenerUsuarioTask obtenerUsuarioTask = new ObtenerUsuarioTask(this.idCliente,this.token);
+            obtenerUsuarioTask.setObtenerUsuarioTaskResponse(ModificarUsuarioActivity.this);
+            obtenerUsuarioTask.execute();
+        }
     }
 
     public boolean validarCampos(String textoUsuario, String textoContrasena, String textoCorreoElectronico, String textoTelefonoContacto, String textoNombre, String textoApellidos, String textoFechaNacimiento) {
@@ -217,7 +230,7 @@ public class RegistroActivity extends AppCompatActivity implements LoginTaskResp
     @Override
     public void RegistroFinishOK() {
         LoginTask loginTask = new LoginTask(textoUsuario.getText().toString(), textoContrasena.getText().toString());
-        loginTask.setLoginTaskResponse(RegistroActivity.this);
+        loginTask.setLoginTaskResponse(ModificarUsuarioActivity.this);
         loginTask.execute();
     }
 
@@ -232,5 +245,15 @@ public class RegistroActivity extends AppCompatActivity implements LoginTaskResp
                 });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    @Override
+    public void ObtenerUsuarioFinishOK(Usuario usuario) {
+        System.out.println("hola");
+    }
+
+    @Override
+    public void ObtenerUsuarioFinishERR() {
+
     }
 }

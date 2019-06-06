@@ -69,15 +69,13 @@ public class LoginActivity extends AppCompatActivity implements LoginTaskRespons
     @Override
     public void LoginFinishERR() {
 
-        builder.setMessage("Error de login")
+        builder.setMessage("Error iniciando sesión!")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                     }
                 });
         AlertDialog alertDialog = builder.create();
-        alertDialog.show();
         alertDialog.show();
     }
 }

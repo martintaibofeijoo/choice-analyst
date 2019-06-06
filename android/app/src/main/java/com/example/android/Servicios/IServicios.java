@@ -34,6 +34,9 @@ public interface IServicios {
     @GET("experimentos/obtenerExperimento/{idEstablecimiento}")
     Call<Experimento> obtenerExperimento(@Path("idEstablecimiento") String idEstablecimiento, @Header("Authorization") String token);
 
+    @GET("usuarios/{username}")
+    Call<Usuario> obtenerUsuario(@Path("username") String idEstablecimiento, @Header("Authorization") String token);
+
     @POST("experiencias")
     Call<Void> responderExperimento(@Body Experiencia experiencia, @Header("Authorization") String token);
 }

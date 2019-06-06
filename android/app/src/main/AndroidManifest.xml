@@ -18,6 +18,7 @@
         <activity android:name=".Activities.ExperimentoActivity"></activity>
         <activity android:name=".Activities.MainActivity"></activity>
         <activity android:name=".Activities.RegistroActivity"></activity>
+        <activity android:name=".Activities.ModificarUsuarioActivity"></activity>
         <activity android:name=".Activities.FinalizarActivity"></activity>
         <activity android:name=".Activities.LoginActivity">
         <intent-filter>
