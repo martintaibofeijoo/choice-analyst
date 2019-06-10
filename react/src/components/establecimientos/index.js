@@ -150,7 +150,6 @@ class VistaEstablecimientos extends Component {
             })
         })
             .then(async response => {
-                debugger
                 const codigo = response.status;
                 if (codigo === 201) {
                     this.setState(prev => ({
@@ -449,7 +448,6 @@ class VistaModificarEstablecimiento extends Component {
     }
 
     doModificarEstablecimiento = (nombreEstablecimientoModificar, tipoEstablecimientoModificar, localizacionEstablecimientoModificar) => {
-        debugger
         let idEstablecimientoModificar = nombreEstablecimientoModificar.replace(/ /g, "-");
         idEstablecimientoModificar = idEstablecimientoModificar.toLowerCase()
         idEstablecimientoModificar = idEstablecimientoModificar.normalize('NFD').replace(/[\u0300-\u036f]/g, "");

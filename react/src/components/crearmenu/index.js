@@ -448,7 +448,6 @@ class VistaCrearMenu extends Component {
         }
 
         if (ejecutar === true) {
-            console.table(fechasMenu)
             let fechasCambiadas = []
             for (let i = 0; i < fechasMenu.length; i++) {
                 fechasCambiadas[i] = moment(fechasMenu[i]).format('DD-MM-YYYY')

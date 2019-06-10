@@ -135,7 +135,6 @@ class VistaVerPerfil extends Component {
                     ...prev,
                     alert: {status: "OK", message: "Usuario modificado correctamente!"}
                 }))
-                console.table(this.props.auth);
                 this.props.auth.logout()
                 this.props.auth.login(this.state.username, this.state.password)
             } else if (codigo === 409) {

@@ -89,7 +89,6 @@ export default class VistaRegistro extends Component {
         })
             .then(response => {
                 const codigo = response.status;
-                console.table(response.status)
                 if (codigo === 201) {
                     this.props.login(this.state.username, this.state.password)
                 } else if (codigo === 409) {

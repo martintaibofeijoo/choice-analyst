@@ -152,7 +152,6 @@ class VistaCrearExperimento extends Component {
         this.setState(state => {
             state.preguntas.map((item, index) => {
                 if (index === identificadorPregunta) {
-                    debugger
                     item.variableAsociada = nuevaVariableAsociada;
                     let posicion = 0;
                     this.state.variables.map((item, index) => {
@@ -236,8 +235,6 @@ class VistaCrearExperimento extends Component {
 
     doCrearExperimento = async (idAdministrador, idEstablecimiento, nombreExperimento, preguntas, objetivos, fechasExperimento, listaEstablecimientosSeleccionados) => {
         //Comprobación de los parametros
-        console.table(listaEstablecimientosSeleccionados);
-        debugger
         let ejecutar = true;
         let mensajeCampoVacio = false;
         let mensaje = [];
@@ -413,7 +410,6 @@ class VistaCrearExperimento extends Component {
                                                                     block
                                                                     onSubmit={dates => {
                                                                         this.setState({fechasExperimento: dates})
-                                                                        console.table(dates)
                                                                     }}
                                                 />
                                             </div>

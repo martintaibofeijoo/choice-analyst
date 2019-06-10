@@ -103,7 +103,6 @@ class VistaVerExperimento extends Component {
 
 
     render() {
-        console.table(this.state)
         return (
             <Container>
                 <h1 style={{textAlign: 'center'}}>Ver Experimento</h1>

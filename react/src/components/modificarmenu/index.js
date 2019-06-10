@@ -13,11 +13,10 @@ import Button from 'react-bootstrap/Button'
 import Form from "react-bootstrap/Form";
 import {Authentication} from "../authentication";
 import Container from "react-bootstrap/Container";
-import MultipleDatePicker from 'react-multiple-datepicker'
+import MultipleDatePicker from '../Datepicker'
 import moment from "moment";
 import {Redirect, Route} from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
-
 
 export class ModificarMenu extends Component {
     render() {
@@ -42,7 +41,7 @@ class VistaModificarMenu extends Component {
             eliminadoOk: false,
             idMenu: "",
             nombreMenu: "",
-            idEstablecimiento: this.props.idEstablecimiento,
+            idEstablecimiento: props.idEstablecimiento,
             fechasMenu: [],
             primerosPlatos: [],
             segundosPlatos: [],
@@ -64,8 +63,6 @@ class VistaModificarMenu extends Component {
             },
         })
         const postResponse = await postRequest.json()
-        console.table(postResponse)
-
 
         let platos = postResponse.platos;
         let primerosPlatos = [];
@@ -80,17 +77,16 @@ class VistaModificarMenu extends Component {
                 postres = [...postres, platos[i]];
             }
         }
-        let formato = "T22:00:00.000Z";
+        // let formato = "T22:00:00.000Z";
         let fechas = [];
-        let fecha = "";
+        // let fecha = "";
         let fechaSeparada = [];
         for (let i = 0; i < postResponse.fechasMenu.length; i++) {
             fechaSeparada = postResponse.fechasMenu[i].split("-");
-            fecha = fechaSeparada[2] + "-" + fechaSeparada[1] + "-" + fechaSeparada[0];
-            console.table(fecha)
-            fechas[i] = new Date(fechaSeparada[2], fechaSeparada[1] - 1, fechaSeparada[0]);
+            // fecha = fechaSeparada[2] + "-" + fechaSeparada[1] + "-" + fechaSeparada[0];
+            fechas.push(new Date(fechaSeparada[2], fechaSeparada[1] - 1, fechaSeparada[0]))
         }
-        console.table(fechas)
+
         this.setState(prev => ({
             ...prev,
             idMenu: postResponse.idMenu,
@@ -193,7 +189,6 @@ class VistaModificarMenu extends Component {
         this.setState({primerosPlatos: nuevosPrimerosPlatos});
     }
 
-
     onAnadirSegundoPlato = () => {
         let {segundosPlatos} = this.state;
         let nuevosSeguntosPlatos = [
@@ -278,7 +273,6 @@ class VistaModificarMenu extends Component {
         ]
         this.setState({segundosPlatos: nuevosSegundosPlatos});
     }
-
 
     onAnadirPostre = () => {
         let {postres} = this.state;
@@ -606,22 +600,16 @@ class VistaModificarMenu extends Component {
                                     <Card block className="cards" color="primary">
                                         <CardBody>
                                             <div style={{marginLeft: '15px'}}>
-                                                {console.error(this.state.fechasMenu)}
                                                 <MultipleDatePicker className={'datepicker'}
                                                                     size={'lg'}
                                                                     regional={'es'}
                                                                     onSubmit={fechasMenu => {
-                                                                        console.error(fechasMenu)
                                                                         this.setState(prev => ({
                                                                             ...prev,
                                                                             fechasMenu: fechasMenu
                                                                         }))
                                                                     }}
-                                                                    selected = {
-                                                                        this.state.fechasMenu.length > 0
-                                                                            ? this.state.fechasMenu[0]
-                                                                         : new Date(2018, 5, 22)
-                                                                    }
+                                                                    selected={this.state.fechasMenu}
                                                 />
                                             </div>
                                         </CardBody>

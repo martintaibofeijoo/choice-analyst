@@ -326,7 +326,6 @@ class VistaVerResultadosExperimento extends Component {
     }
 
     render() {
-        console.table(this.state)
         return <Container>
             <h1 style={{textAlign: 'center'}}>Resultados Experimento</h1>
             <Row style={{marginTop: '50px'}}>

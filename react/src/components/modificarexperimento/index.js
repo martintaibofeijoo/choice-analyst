@@ -13,7 +13,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import {Authentication} from "../authentication";
 import {Link, Redirect, Route} from "react-router-dom";
-import MultipleDatePicker from 'react-multiple-datepicker'
+import MultipleDatePicker from '../Datepicker'
 import moment from "moment";
 import Picky from 'react-picky';
 import 'react-picky/dist/picky.css';
@@ -506,7 +506,6 @@ class VistaModificarExperimento extends Component {
                                                                     block
                                                                     onSubmit={dates => {
                                                                         this.setState({fechasExperimento: dates})
-                                                                        console.table(dates)
                                                                     }}
                                                 />
                                             </div>
@@ -717,7 +716,7 @@ class Pregunta extends Component {
 
     render() {
         return (
-            <Card className="cards" className="cards" color="primary">
+            <Card className="cards" color="primary">
                 <CardHeader style={{marginBottom: '-30px'}}>
                     <CardTitle>Pregunta {this.props.identificadorPregunta + 1} </CardTitle>
                 </CardHeader>
@@ -746,8 +745,7 @@ class Pregunta extends Component {
                             </Col>
                         </Form.Row>
                     </Form>
-                    <Card className="cards" style={{marginTop: '20px', marginBottom: '-10px'}} className="cards"
-                          color="primary">
+                    <Card className="cards" style={{marginTop: '20px', marginBottom: '-10px'}} color="primary">
 
                         <CardHeader style={{marginBottom: '-30px'}}>
                             <CardTitle>Opciones</CardTitle>
@@ -867,7 +865,6 @@ class Objetivo extends Component {
 
 class VistaConfirmacion extends Component {
     render() {
-        console.table(this.props)
         return <Modal
             {...this.props}
             size="lg"

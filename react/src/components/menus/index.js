@@ -84,7 +84,6 @@ class VistaMenus extends Component {
     }
 
     onCambiarFechaSeleccionada = fechaSeleccionada => {
-        console.table(moment(fechaSeleccionada).format('DD-MM-YYYY'))
         this.setState({fechaSeleccionada: fechaSeleccionada}, () => this.doBuscarMenus(this.state.fechaSeleccionada))
     }
 

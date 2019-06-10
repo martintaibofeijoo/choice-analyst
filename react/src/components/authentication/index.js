@@ -23,7 +23,6 @@ export class AuthenticatedApp extends Component {
     }
 
     login = (user, pass) => {
-        console.log("Login")
         fetch("http://localhost:9000/login", {method: 'POST', body: JSON.stringify({username: user, password: pass})})
             .then(response => {
                 const codigo = response.status;
@@ -55,7 +54,6 @@ export class AuthenticatedApp extends Component {
     }
 
     logout = () => {
-        console.log(this.state)
         clearInterval(this.state.updateLogin)
         this.setState(prev => ({...prev, authenticated: false, user: {}, updateLogin: ''}), () => {
             sessionStorage.removeItem("authState")
@@ -71,8 +69,6 @@ export class AuthenticatedApp extends Component {
             login: this.login,
             logout: this.logout
         }
-
-        console.log(this.state.token)
 
         return <AuthContext.Provider value={auth}>
             {this.props.children}
