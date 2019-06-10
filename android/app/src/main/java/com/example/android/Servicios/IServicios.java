@@ -15,6 +15,7 @@ import retrofit2.http.Body;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.GET;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -35,7 +36,10 @@ public interface IServicios {
     Call<Experimento> obtenerExperimento(@Path("idEstablecimiento") String idEstablecimiento, @Header("Authorization") String token);
 
     @GET("usuarios/{username}")
-    Call<Usuario> obtenerUsuario(@Path("username") String idEstablecimiento, @Header("Authorization") String token);
+    Call<Usuario> obtenerUsuario(@Path("username") String idUsuario, @Header("Authorization") String token);
+
+    @PUT("usuarios/clientes/{username}")
+    Call<Void> modificarUsuario(@Path("username") String idUsuario, @Header("Authorization") String token, @Body Usuario usuario);
 
     @POST("experiencias")
     Call<Void> responderExperimento(@Body Experiencia experiencia, @Header("Authorization") String token);

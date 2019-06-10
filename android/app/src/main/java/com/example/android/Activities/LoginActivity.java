@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity implements LoginTaskRespons
         editor.putString("token", token);
         editor.putString("idCliente",idCliente);
         editor.apply();
-        Intent intentEstablecimientos = new Intent(this, EstablecimientosActivity.class);
+        Intent intentEstablecimientos = new Intent(this, ModificarUsuarioActivity.class);
         startActivity(intentEstablecimientos);
     }
 

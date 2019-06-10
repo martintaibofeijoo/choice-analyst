@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    tools:context=".Activities.LoginActivity">
+    tools:context=".Activities.ModificarUsuarioActivity">
 
     <TextView
         android:id="@+id/textView2"
@@ -57,24 +57,6 @@
                 android:layout_marginRight="30dp"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="" />
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:text="Contraseña" />
-
-            <EditText
-                android:id="@+id/textoContrasena"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:ems="10"
-                android:inputType="textPassword"
                 android:text="" />
 
             <TextView
@@ -208,6 +190,24 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp" />
 
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:text="Introduzca su Contraseña" />
+
+            <EditText
+                android:id="@+id/textoContrasena"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:text="" />
+
         </LinearLayout>
     </ScrollView>
 
@@ -233,7 +233,7 @@
             android:layout_weight="1"
             android:background="@color/colorPrimaryDark"
             android:padding="30dp"
-            android:text="Registrarse"
+            android:text="Modificar Usuario"
             android:textColor="#FFFFFF" />
     </LinearLayout>
 

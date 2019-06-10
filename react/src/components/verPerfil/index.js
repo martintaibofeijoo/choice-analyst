@@ -113,7 +113,7 @@ class VistaVerPerfil extends Component {
     }
 
     doModificarUsuario = (username, password, correoElectronico, telefonoContacto, nombre, apellidos) => {
-        fetch(`http://localhost:9000/usuarios/${this.props.auth.user.username}`, {
+        fetch(`http://localhost:9000/usuarios/administradores/${this.props.auth.user.username}`, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json;charset=UTF-8',

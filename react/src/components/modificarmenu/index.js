@@ -46,6 +46,7 @@ class VistaModificarMenu extends Component {
             primerosPlatos: [],
             segundosPlatos: [],
             postres: [],
+
             mostrarVistaEliminarMenu: false,
             nombreMenuEliminar: "",
             idMenuEliminar: ""
@@ -77,13 +78,10 @@ class VistaModificarMenu extends Component {
                 postres = [...postres, platos[i]];
             }
         }
-        // let formato = "T22:00:00.000Z";
         let fechas = [];
-        // let fecha = "";
         let fechaSeparada = [];
         for (let i = 0; i < postResponse.fechasMenu.length; i++) {
             fechaSeparada = postResponse.fechasMenu[i].split("-");
-            // fecha = fechaSeparada[2] + "-" + fechaSeparada[1] + "-" + fechaSeparada[0];
             fechas.push(new Date(fechaSeparada[2], fechaSeparada[1] - 1, fechaSeparada[0]))
         }
 

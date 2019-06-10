@@ -2,6 +2,7 @@ package usc.choiceanalyst.controller;
 
 
 import usc.choiceanalyst.model.ModeloEstablecimiento;
+import usc.choiceanalyst.model.ModeloExperiencia;
 import usc.choiceanalyst.model.ModeloExperimento;
 import usc.choiceanalyst.model.ModeloUsuario;
 
@@ -136,14 +137,14 @@ public class ControladorUsuarios {
     }
 
 
-    @PreAuthorize("hasRole('CLIENTE') and principal==#username")
+    @PreAuthorize("hasRole('ADMINISTRADOR') and principal==#username")
     @PutMapping(
-            path = "/{username}",
+            path = "/administradores/{username}",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
 
-    public ResponseEntity modifyUser(@RequestBody ModeloUsuario usuario, @PathVariable("username") String username) {
+    public ResponseEntity modifyAdministrador(@RequestBody ModeloUsuario usuario, @PathVariable("username") String username) {
         if (!dbUsuario.existsByUsername(username)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
@@ -164,6 +165,12 @@ public class ControladorUsuarios {
                         ((List<ModeloExperimento>) experimentos).get(i).setIdAdministrador(usuario.getUsername());
                         dbExperimento.save(((List<ModeloExperimento>) experimentos).get(i));
                     }
+
+                    Collection<ModeloExperiencia> experiencias = dbExperiencia.findByIdCliente(username);
+                    for (int i = 0; i < experiencias.size(); i++) {
+                        ((List<ModeloExperiencia>) experiencias).get(i).setIdCliente(usuario.getUsername());
+                        dbExperiencia.save(((List<ModeloExperiencia>) experiencias).get(i));
+                    }
                     dbUsuario.deleteByUsername(username);
                 }
             }
@@ -171,6 +178,42 @@ public class ControladorUsuarios {
             usuarioExistente.setTelefonoContacto(usuario.getTelefonoContacto());
             usuarioExistente.setNombre(usuario.getNombre());
             usuarioExistente.setApellidos(usuario.getApellidos());
+
+            dbUsuario.save(usuarioExistente);
+            return ResponseEntity.ok().body(usuarioExistente.setPassword("*******"));
+        }
+    }
+
+    @PreAuthorize("hasRole('CLIENTE') and principal==#username")
+    @PutMapping(
+            path = "clientes/{username}",
+            produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
+
+    public ResponseEntity modifyCliente(@RequestBody ModeloUsuario usuario, @PathVariable("username") String username) {
+        if (!dbUsuario.existsByUsername(username)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            ModeloUsuario usuarioExistente = dbUsuario.findByUsername(username).get();
+            if (!username.equals(usuario.getUsername())) {
+                if (dbUsuario.existsByUsername(usuario.getUsername())) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT).build();
+                }
+                Collection<ModeloExperiencia> experiencias = dbExperiencia.findByIdCliente(username);
+                for (int i = 0; i < experiencias.size(); i++) {
+                    ((List<ModeloExperiencia>) experiencias).get(i).setIdCliente(usuario.getUsername());
+                    dbExperiencia.save(((List<ModeloExperiencia>) experiencias).get(i));
+                }
+            }
+            usuarioExistente.setCorreoElectronico(usuario.getCorreoElectronico());
+            usuarioExistente.setTelefonoContacto(usuario.getTelefonoContacto());
+            usuarioExistente.setNombre(usuario.getNombre());
+            usuarioExistente.setApellidos(usuario.getApellidos());
+            usuarioExistente.setFechaNacimiento(usuario.getFechaNacimiento());
+            usuarioExistente.setOrigen(usuario.getOrigen());
+            usuarioExistente.setNivelEstudios(usuario.getNivelEstudios());
+            usuarioExistente.setSexo(usuario.getSexo());
 
             dbUsuario.save(usuarioExistente);
             return ResponseEntity.ok().body(usuarioExistente.setPassword("*******"));

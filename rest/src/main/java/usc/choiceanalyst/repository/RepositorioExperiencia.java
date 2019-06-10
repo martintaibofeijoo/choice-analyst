@@ -12,7 +12,7 @@ public interface RepositorioExperiencia extends MongoRepository<ModeloExperienci
     boolean existsByIdEstablecimiento(String idEstablecimiento);
     boolean existsByIdExperimento(String idExperimento);
     void deleteByIdCliente(String idCliente);
-    Optional<ModeloExperiencia> findByIdCliente(String username);
+    List<ModeloExperiencia>  findByIdCliente(String username);
     List<ModeloExperiencia> findAll();
     List<ModeloExperiencia> findByIdEstablecimientoAndIdExperimento(String idEstablecimiento, String idExperimento);
     Page<ModeloExperiencia> findAll(Pageable pageable);

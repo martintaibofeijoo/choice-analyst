@@ -18,15 +18,17 @@ import android.widget.Spinner;
 import com.example.android.Clases.Usuario;
 import com.example.android.R;
 import com.example.android.Tasks.LoginTask;
+import com.example.android.Tasks.ModificarUsuarioTask;
 import com.example.android.Tasks.ObtenerUsuarioTask;
 import com.example.android.Tasks.RegistroTask;
 import com.example.android.TasksResponse.LoginTaskResponse;
+import com.example.android.TasksResponse.ModificarUsuarioTaskResponse;
 import com.example.android.TasksResponse.ObtenerUsuarioTaskResponse;
 import com.example.android.TasksResponse.RegistroTaskResponse;
 
 import java.util.regex.Pattern;
 
-public class ModificarUsuarioActivity extends AppCompatActivity implements LoginTaskResponse, RegistroTaskResponse , ObtenerUsuarioTaskResponse {
+public class ModificarUsuarioActivity extends AppCompatActivity implements LoginTaskResponse, ModificarUsuarioTaskResponse, ObtenerUsuarioTaskResponse {
 
     private Button botonRegistro;
     private EditText textoUsuario;
@@ -45,14 +47,15 @@ public class ModificarUsuarioActivity extends AppCompatActivity implements Login
     ArrayAdapter<CharSequence> adapterSpinnerNivelEstudios;
     private String token;
     private String idCliente;
-    private AlertDialog.Builder builder;
-    private RegistroTask registroTask;
 
+
+    private AlertDialog.Builder builder;
+    private ModificarUsuarioTask modificarUsuarioTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_modificarUsuario);
+        setContentView(R.layout.activity_modificarusuario);
         botonRegistro = findViewById(R.id.botonFinalizarExperimento);
         textoUsuario = findViewById(R.id.textoUsuario);
         textoContrasena = findViewById(R.id.textoContrasena);
@@ -79,6 +82,17 @@ public class ModificarUsuarioActivity extends AppCompatActivity implements Login
         spinnerNivelEstudios.setAdapter(adapterSpinnerNivelEstudios);
         linearLayout = findViewById(R.id.experimentoLayout);
 
+
+        SharedPreferences sharedPref = this.getSharedPreferences("Prefs", Context.MODE_PRIVATE);
+        this.token = sharedPref.getString("token", null);
+        this.idCliente = sharedPref.getString("idCliente", null);
+        if (token != null && idCliente != null) {
+            ObtenerUsuarioTask obtenerUsuarioTask = new ObtenerUsuarioTask(idCliente, token);
+            obtenerUsuarioTask.setObtenerUsuarioTaskResponse(ModificarUsuarioActivity.this);
+            obtenerUsuarioTask.execute();
+        }
+
+
         botonRegistro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,23 +110,23 @@ public class ModificarUsuarioActivity extends AppCompatActivity implements Login
                     if (validarCampos(textoUsuario.getText().toString(), textoContrasena.getText().toString(),
                             textoCorreoElectronico.getText().toString(), textoTelefonoContacto.getText().toString(), textoNombre.getText().toString(),
                             textoApellidos.getText().toString(), textoFechaNacimiento.getText().toString())) {
-                        builder.setMessage("Los datos proporcionados serán utilizados con fines estadísticos. ¿Desea permitir dicho uso?")
+                        builder.setMessage("Desea modificar dicho usuario?")
                                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
 
                                     }
                                 })
-                                .setPositiveButton("Registrarse", new DialogInterface.OnClickListener() {
+                                .setPositiveButton("Modificar Usuario", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         Usuario usuario = new Usuario(textoUsuario.getText().toString(), textoContrasena.getText().toString(),
                                                 textoCorreoElectronico.getText().toString(), textoTelefonoContacto.getText().toString(), textoNombre.getText().toString(),
                                                 textoApellidos.getText().toString(), textoFechaNacimiento.getText().toString(),
                                                 spinnerSexo.getSelectedItem().toString(), spinnerOrigen.getSelectedItem().toString(), spinnerNivelEstudios.getSelectedItem().toString());
-                                        registroTask = new RegistroTask(usuario);
-                                        registroTask.setLoginTaskResponse(ModificarUsuarioActivity.this);
-                                        registroTask.execute();
+                                        modificarUsuarioTask = new ModificarUsuarioTask(usuario, token);
+                                        modificarUsuarioTask.setModificarUsuarioTaskResponse(ModificarUsuarioActivity.this);
+                                        modificarUsuarioTask.execute();
                                     }
                                 });
                         AlertDialog alertDialog = builder.create();
@@ -131,15 +145,6 @@ public class ModificarUsuarioActivity extends AppCompatActivity implements Login
                 }
             }
         });
-
-        SharedPreferences sharedPref = this.getSharedPreferences("Prefs", Context.MODE_PRIVATE);
-        this.token = sharedPref.getString("token", null);
-        this.idCliente = sharedPref.getString("idCliente", null);
-        if (token != null && idCliente != null) {
-            ObtenerUsuarioTask obtenerUsuarioTask = new ObtenerUsuarioTask(this.idCliente,this.token);
-            obtenerUsuarioTask.setObtenerUsuarioTaskResponse(ModificarUsuarioActivity.this);
-            obtenerUsuarioTask.execute();
-        }
     }
 
     public boolean validarCampos(String textoUsuario, String textoContrasena, String textoCorreoElectronico, String textoTelefonoContacto, String textoNombre, String textoApellidos, String textoFechaNacimiento) {
@@ -208,8 +213,6 @@ public class ModificarUsuarioActivity extends AppCompatActivity implements Login
         editor.putString("token", token);
         editor.putString("idCliente", idCliente);
         editor.apply();
-        Intent intentEstablecimientos = new Intent(this, EstablecimientosActivity.class);
-        startActivity(intentEstablecimientos);
     }
 
     @Override
@@ -228,15 +231,33 @@ public class ModificarUsuarioActivity extends AppCompatActivity implements Login
 
 
     @Override
-    public void RegistroFinishOK() {
+    public void ModificarUsuarioFinishOK() {
         LoginTask loginTask = new LoginTask(textoUsuario.getText().toString(), textoContrasena.getText().toString());
         loginTask.setLoginTaskResponse(ModificarUsuarioActivity.this);
         loginTask.execute();
+        SharedPreferences sharedPref = this.getSharedPreferences("Prefs", Context.MODE_PRIVATE);
+        this.token = sharedPref.getString("token", null);
+        this.idCliente = sharedPref.getString("idCliente", null);
+
+        builder.setMessage("Usuario Modificado Correctamente!")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (token != null && idCliente != null) {
+                            ObtenerUsuarioTask obtenerUsuarioTask = new ObtenerUsuarioTask(idCliente, token);
+                            obtenerUsuarioTask.setObtenerUsuarioTaskResponse(ModificarUsuarioActivity.this);
+                            obtenerUsuarioTask.execute();
+                        }
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
     }
 
     @Override
-    public void RegistroFinishERR() {
-        builder.setMessage("Error creando usuario, no puede haber dos usuarios con el mismo username!")
+    public void ModificarUsuarioFinishERR() {
+        builder.setMessage("Error modificando usuario, no puede haber dos usuarios con el mismo username!")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -249,11 +270,35 @@ public class ModificarUsuarioActivity extends AppCompatActivity implements Login
 
     @Override
     public void ObtenerUsuarioFinishOK(Usuario usuario) {
-        System.out.println("hola");
+
+        this.textoUsuario.setText(usuario.getUsername());
+        this.textoCorreoElectronico.setText(usuario.getCorreoElectronico());
+        this.textoTelefonoContacto.setText(usuario.getTelefonoContacto());
+        this.textoNombre.setText(usuario.getNombre());
+        this.textoApellidos.setText(usuario.getApellidos());
+        this.textoFechaNacimiento.setText(usuario.getFechaNacimiento());
+        if(usuario.getOrigen()!=null){
+
+        }
+        if(usuario.getSexo()!=null){
+
+        }
+        if(usuario.getNivelEstudios()!=null){
+
+        }
+
     }
 
     @Override
     public void ObtenerUsuarioFinishERR() {
+        builder.setMessage("Error obteniendo el usuario!")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

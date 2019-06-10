@@ -46,9 +46,9 @@ class VistaModificarExperimento extends Component {
             idAdministrador: this.props.auth.user.username,
             idEstablecimiento: "",
             nombreExperimento: "",
-            fechasExperimento: "",
             nombreExperimentoEliminar: "",
             idExperimentoEliminar: "",
+            fechasExperimento:[],
             preguntas: [],
             objetivos: [],
             variables: ["Higiene", "Ruído", "Distancía", "Energía", "Compañía", "Atmósfera", "Calidad de Servicio", "Apariencia", "Temperatura", "Saludable", "Sabroso"]
@@ -104,6 +104,12 @@ class VistaModificarExperimento extends Component {
             }
         }
 
+        let fechas = [];
+        let fechaSeparada = [];
+        for (let i = 0; i < postResponseExperimento.fechasExperimento.length; i++) {
+            fechaSeparada = postResponseExperimento.fechasExperimento[i].split("-");
+            fechas.push(new Date(fechaSeparada[2], fechaSeparada[1] - 1, fechaSeparada[0]))
+        }
 
         let establecimientosExperimento = postResponseExperimento.idsEstablecimientos;
         let posiblesEstablecimientos = postResponseEstablecimientos;
@@ -125,6 +131,7 @@ class VistaModificarExperimento extends Component {
             fechaCreacion: postResponseExperimento.fechaCreacion,
             objetivos: postResponseExperimento.objetivos,
             preguntas: preguntas,
+            fechasExperimento:fechas,
             listaEstablecimientos: postResponseEstablecimientos,
             listaEstablecimientosSeleccionados: establecimientosSeleccionados
         }))
@@ -501,12 +508,13 @@ class VistaModificarExperimento extends Component {
                                         <CardBody>
                                             <div style={{marginLeft: '15px'}}>
                                                 <MultipleDatePicker className={'datepicker'}
-                                                                    size={'lg'}
-                                                                    regional={'es'}
-                                                                    block
-                                                                    onSubmit={dates => {
-                                                                        this.setState({fechasExperimento: dates})
+                                                                    onSubmit={fechasExperimento => {
+                                                                        this.setState(prev => ({
+                                                                            ...prev,
+                                                                            fechasExperimento: fechasExperimento
+                                                                        }))
                                                                     }}
+                                                                    selected={this.state.fechasExperimento}
                                                 />
                                             </div>
                                         </CardBody>
