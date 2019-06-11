@@ -278,7 +278,11 @@ public class ModificarUsuarioActivity extends AppCompatActivity implements Login
         this.textoApellidos.setText(usuario.getApellidos());
         this.textoFechaNacimiento.setText(usuario.getFechaNacimiento());
         if(usuario.getOrigen()!=null){
-
+            for (int i=0; i<adapterSpinnerOrigen.getCount();i++){
+                if(adapterSpinnerOrigen.getItem(i).equals(usuario.getOrigen())){
+                    spinnerOrigen.setSelection(i);
+                }
+            }
         }
         if(usuario.getSexo()!=null){
 

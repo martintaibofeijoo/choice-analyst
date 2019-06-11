@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.android.R;
 import com.example.android.Tasks.LoginTask;
+import com.example.android.Tasks.ModificarUsuarioTask;
 import com.example.android.TasksResponse.LoginTaskResponse;
 
 public class LoginActivity extends AppCompatActivity implements LoginTaskResponse {

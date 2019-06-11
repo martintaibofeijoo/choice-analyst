@@ -31,8 +31,8 @@ public class FinalizarActivity extends AppCompatActivity {
         botonFinalizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intentFinalizar = new Intent(this, LoginActivity.class);
-               // startActivity(intentFinalizar);
+                Intent intentFinalizar = new Intent(v.getContext(), LoginActivity.class);
+               startActivity(intentFinalizar);
             }
         });
 

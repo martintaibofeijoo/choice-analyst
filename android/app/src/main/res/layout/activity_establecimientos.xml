@@ -7,21 +7,10 @@
     android:layout_height="match_parent"
     tools:context=".Activities.EstablecimientosActivity">
 
-    <TextView
-        android:id="@+id/textView2"
+    <include
+        layout="@layout/cabecera"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#141414"
-        android:gravity="center"
-        android:includeFontPadding="true"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:text="Choice-Analyst"
-        android:textColor="#F5F3F3"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
