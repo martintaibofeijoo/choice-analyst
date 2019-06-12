@@ -2,6 +2,7 @@ package com.example.android.Activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +11,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.example.android.Clases.Establecimiento;
 import com.example.android.R;
@@ -30,6 +34,7 @@ public class EstablecimientosActivity extends AppCompatActivity implements Estab
     private EditText textoBusqueda;
     private String token;
     private AlertDialog.Builder builder;
+    private ImageButton botonVerPerfil;
 
 
     @Override
@@ -42,6 +47,15 @@ public class EstablecimientosActivity extends AppCompatActivity implements Estab
         recyclerViewRestaurantes.setLayoutManager(layoutManager);
         adapter = new EstablecimientosAdapter(listadoEstablecimientos);
         recyclerViewRestaurantes.setAdapter(adapter);
+        botonVerPerfil = findViewById(R.id.botonVerPerfil);
+        botonVerPerfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentRegistro = new Intent(getApplicationContext(), ModificarUsuarioActivity.class);
+                startActivity(intentRegistro);
+            }
+        });
+
         textoBusqueda = findViewById(R.id.editTextBusqueda);
         textoBusqueda.addTextChangedListener(new TextWatcher() {
 
@@ -77,17 +91,6 @@ public class EstablecimientosActivity extends AppCompatActivity implements Estab
         listadoEstablecimientos = (ArrayList<Establecimiento>) establecimientos;
         adapter.setListadoEstablecimientos(listadoEstablecimientos);
         adapter.notifyDataSetChanged();
-        if (establecimientos.size() == 0) {
-            builder.setMessage("No existen establecimientos con este nombre!")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    });
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-        }
     }
 
     @Override

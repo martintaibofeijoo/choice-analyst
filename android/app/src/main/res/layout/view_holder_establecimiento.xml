@@ -16,17 +16,10 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:text="Nombre:"
-            android:textColor="#FFFFFF" />
-
-        <TextView
             android:id="@+id/textViewNombreEstablecimiento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="adsd"
+            android:text="Nombre Establecimiento"
             android:textColor="#FFFFFF"
             android:textSize="20sp" />
     </LinearLayout>
@@ -39,15 +32,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
             app:srcCompat="@drawable/ic_location" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:text="Localización"
-            android:textColor="#FFFFFF" />
 
         <TextView
             android:id="@+id/textViewLocalizacionEstablecimiento"

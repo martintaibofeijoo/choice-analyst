@@ -5,7 +5,6 @@ import java.util.List;
 public class Menu {
     private String idMenu;
     private String nombreMenu;
-    private String precio;
     private List<String> fechasMenu;
     private List<Plato> platos;
 
@@ -15,14 +14,6 @@ public class Menu {
 
     public void setIdMenu(String idMenu) {
         this.idMenu = idMenu;
-    }
-
-    public String getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(String precio) {
-        this.precio = precio;
     }
 
     public List<String> getFechasMenu() {

@@ -169,8 +169,17 @@ public class ControladorExperimentos {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         String fechaActual = simpleDateFormat.format(new Date());
         List<ModeloExperimento> listaPosiblesExperimentos= new ArrayList<>();
-
         if (dbEstablecimiento.existsByIdEstablecimiento(idEstablecimiento)) {
+            ModeloEstablecimiento establecimiento=dbEstablecimiento.findByIdEstablecimiento(idEstablecimiento).get();
+            boolean chequearMenu=false;
+            for(int i=0; i<establecimiento.getMenus().size();i++){
+                if(establecimiento.getMenus().get(i).getFechasMenu().contains(fechaActual)){
+                    chequearMenu=true;
+                }
+            }
+            if(chequearMenu==false){
+                return ResponseEntity.notFound().build();
+            }
             Collection<ModeloExperimento> experimentos = dbExperimento.findByIdsEstablecimientosContains(idEstablecimiento);
             for (int i = 0; i < experimentos.size(); i++) {
                 if (((List<ModeloExperimento>) experimentos).get(i).getFechasExperimento().contains(fechaActual)) {

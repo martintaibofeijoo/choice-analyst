@@ -186,7 +186,7 @@ public class ControladorUsuarios {
 
     @PreAuthorize("hasRole('CLIENTE') and principal==#username")
     @PutMapping(
-            path = "clientes/{username}",
+            path = "/clientes/{username}",
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
@@ -195,16 +195,34 @@ public class ControladorUsuarios {
         if (!dbUsuario.existsByUsername(username)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else {
+            String contrasena=passwordEncoder.encode(usuario.getPassword());
             ModeloUsuario usuarioExistente = dbUsuario.findByUsername(username).get();
             if (!username.equals(usuario.getUsername())) {
                 if (dbUsuario.existsByUsername(usuario.getUsername())) {
                     return ResponseEntity.status(HttpStatus.CONFLICT).build();
                 }
+                usuarioExistente.setUsername(usuario.getUsername());
+
                 Collection<ModeloExperiencia> experiencias = dbExperiencia.findByIdCliente(username);
                 for (int i = 0; i < experiencias.size(); i++) {
                     ((List<ModeloExperiencia>) experiencias).get(i).setIdCliente(usuario.getUsername());
                     dbExperiencia.save(((List<ModeloExperiencia>) experiencias).get(i));
                 }
+
+                if(usuarioExistente.getRol().equals("ADMINISTRADOR")){
+                    Collection<ModeloEstablecimiento> establecimientos = dbEstablecimiento.findByIdAdministrador(username);
+                    for (int i = 0; i < establecimientos.size(); i++) {
+                        ((List<ModeloEstablecimiento>) establecimientos).get(i).setIdAdministrador(usuario.getUsername());
+                        dbEstablecimiento.save(((List<ModeloEstablecimiento>) establecimientos).get(i));
+                    }
+
+                    Collection<ModeloExperimento> experimentos = dbExperimento.findByIdAdministrador(username);
+                    for (int i = 0; i < experimentos.size(); i++) {
+                        ((List<ModeloExperimento>) experimentos).get(i).setIdAdministrador(usuario.getUsername());
+                        dbExperimento.save(((List<ModeloExperimento>) experimentos).get(i));
+                    }
+                }
+                dbUsuario.deleteByUsername(username);
             }
             usuarioExistente.setCorreoElectronico(usuario.getCorreoElectronico());
             usuarioExistente.setTelefonoContacto(usuario.getTelefonoContacto());

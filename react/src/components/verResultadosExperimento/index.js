@@ -27,6 +27,7 @@ class VistaVerResultadosExperimento extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            verResultados: true,
             establecimientoSeleccionado: "",
             variableSeleccionada: "",
             nombresEstablecimientos: [],
@@ -297,137 +298,151 @@ class VistaVerResultadosExperimento extends Component {
         let backgroundColor = []
         let color = ""
         let opciones = []
+        let sumatorio = 0;
         for (let i = 0; i < postResponse.valores.length; i++) {
             color = 'rgba(' + 30 * i + ' ,99, 132, 0.6)';
             backgroundColor = [...backgroundColor, color];
             opciones = [...opciones, "Opción " + (i + 1)];
+            sumatorio = sumatorio + postResponse.valores[i];
         }
 
-        this.setState(prev => ({
-            ...prev,
-            datosGraficas: {
-                labels: opciones, datasets: [{
-                    data: postResponse.valores,
-                    backgroundColor: backgroundColor
-                }]
-            },
-            valoresOpciones: postResponse.opciones,
-            opciones: opciones
-        }))
-
-        if (idVariable === "menu-seleccionado") {
+        if (sumatorio === 0) {
             this.setState(prev => ({
-                    ...prev,
-                    nombresMenus: postResponse.opciones,
-                    menuSeleccionado: postResponse.opciones[0]
-                }), () => this.doActualizarPlatosMenu(nombreEstablecimiento, postResponse.opciones[0])
-            )
+                ...prev,
+                verResultados: false
+            }))
+        } else {
+            this.setState(prev => ({
+                ...prev,
+                datosGraficas: {
+                    labels: opciones, datasets: [{
+                        data: postResponse.valores,
+                        backgroundColor: backgroundColor
+                    }]
+                },
+                valoresOpciones: postResponse.opciones,
+                opciones: opciones
+            }))
+
+            if (idVariable === "menu-seleccionado") {
+                this.setState(prev => ({
+                        ...prev,
+                        nombresMenus: postResponse.opciones,
+                        menuSeleccionado: postResponse.opciones[0]
+                    }), () => this.doActualizarPlatosMenu(nombreEstablecimiento, postResponse.opciones[0])
+                )
+            }
         }
     }
 
     render() {
         return <Container>
             <h1 style={{textAlign: 'center'}}>Resultados Experimento</h1>
-            <Row style={{marginTop: '50px'}}>
-                <Col>
-                    <p style={{textAlign: 'center'}}>Establecimiento a Analizar</p>
-                    <Input className="inputs" size={"sm"} type={"select"} placeholder="Añadir Variable"
-                           value={this.state.establecimientoSeleccionado}
-                           onChange={this.onEstablecimientoSeleccionadoChange}>
-                        {this.state.nombresEstablecimientos.map(
-                            (item, index) => {
-                                if (index === 0) {
-                                    return <option selected>{item}</option>
-                                } else {
-                                    return <option>{item}</option>
-                                }
-                            }
-                        )
-                        }
-                    </Input>
-                </Col>
-                <Col>
-                    <p style={{textAlign: 'center'}}>Variable a Analizar</p>
-                    <Input className="inputs" size={"sm"} type={"select"} placeholder="Añadir Variable"
-                           value={this.state.variableSeleccionada}
-                           onChange={this.onVariableSeleccionadaChange}>
-                        {this.state.variablesPreguntas.map(
-                            (item, index) => {
-                                if (index === 0) {
-                                    return <option selected>{item}</option>
-                                } else {
-                                    return <option>{item}</option>
-                                }
-                            }
-                        )
-                        }
-                    </Input>
-                </Col>
-            </Row>
-            <Graficas datosGraficas={this.state.datosGraficas}
-                      opciones={this.state.opciones}
-                      valoresOpciones={this.state.valoresOpciones}
-            />
-
-            {this.state.variableSeleccionada === "Menú Seleccionado" &&
-            <Container>
-                <Row style={{marginTop: '20px'}}>
-                    <Col>
-                        <p style={{textAlign: 'center'}}>Menú a Analizar</p>
-                        <Input className="inputs" size={"sm"} type={"select"} placeholder="Añadir Variable"
-                               value={this.state.menuSeleccionado}
-                               onChange={this.onMenuSeleccionadoChange}>
-                            {this.state.nombresMenus.map(
-                                (item, index) => {
-                                    if (index === 0) {
-                                        return <option selected>{item}</option>
-                                    } else {
-                                        return <option>{item}</option>
+            {(this.state.verResultados === false) ? (
+                <h2 style={{marginTop: '50px', textAlign: 'center'}}>!Aún no existen experiencias asociadas a este experimento!</h2>
+            ) : (
+                <Container>
+                    <Row style={{marginTop: '50px'}}>
+                        <Col>
+                            <p style={{textAlign: 'center'}}>Establecimiento a Analizar</p>
+                            <Input className="inputs" size={"sm"} type={"select"} placeholder="Añadir Variable"
+                                   value={this.state.establecimientoSeleccionado}
+                                   onChange={this.onEstablecimientoSeleccionadoChange}>
+                                {this.state.nombresEstablecimientos.map(
+                                    (item, index) => {
+                                        if (index === 0) {
+                                            return <option selected>{item}</option>
+                                        } else {
+                                            return <option>{item}</option>
+                                        }
                                     }
+                                )
                                 }
-                            )
-                            }
-                        </Input>
-                    </Col>
-                </Row>
-                <Row style={{marginTop: '20px'}}>
-                    <Col>
-                        <h2 style={{textAlign: 'center'}}>Primeros Platos</h2>
-                        <Graficas datosGraficas={this.state.datosGraficasPrimerosPlatos}
-                                  opciones={this.state.opcionesPrimerosPlatos}
-                                  valoresOpciones={this.state.valoresOpcionesPrimerosPlatos}
-                        />
-                    </Col>
-                </Row>
-                <Row style={{marginTop: '20px'}}>
-                    <Col>
-                        <h2 style={{textAlign: 'center'}}>Segundos Platos</h2>
-                        <Graficas datosGraficas={this.state.datosGraficasSegundosPlatos}
-                                  opciones={this.state.opcionesSegundosPlatos}
-                                  valoresOpciones={this.state.valoresOpcionesSegundosPlatos}
-                        />
-                    </Col>
-                </Row>
-                <Row style={{marginTop: '20px'}}>
-                    <Col>
-                        <h2 style={{textAlign: 'center'}}>Postres</h2>
-                        <Graficas datosGraficas={this.state.datosGraficasPostres}
-                                  opciones={this.state.opcionesPostres}
-                                  valoresOpciones={this.state.valoresOpcionesPostres}
-                        />
-                    </Col>
-                </Row>
-            </Container>
+                            </Input>
+                        </Col>
+                        <Col>
+                            <p style={{textAlign: 'center'}}>Variable a Analizar</p>
+                            <Input className="inputs" size={"sm"} type={"select"} placeholder="Añadir Variable"
+                                   value={this.state.variableSeleccionada}
+                                   onChange={this.onVariableSeleccionadaChange}>
+                                {this.state.variablesPreguntas.map(
+                                    (item, index) => {
+                                        if (index === 0) {
+                                            return <option selected>{item}</option>
+                                        } else {
+                                            return <option>{item}</option>
+                                        }
+                                    }
+                                )
+                                }
+                            </Input>
+                        </Col>
+                    </Row>
+                    <Graficas datosGraficas={this.state.datosGraficas}
+                              opciones={this.state.opciones}
+                              valoresOpciones={this.state.valoresOpciones}
+                    />
 
-            }
-            <Row>
-                <Route>{
-                    ({history}) =>
-                        <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonPrimary"}
-                                onClick={() => history.goBack()}>Volver</Button>
-                }</Route>
-            </Row>
+                    {this.state.variableSeleccionada === "Menú Seleccionado" &&
+                    <Container>
+                        <Row style={{marginTop: '20px'}}>
+                            <Col>
+                                <p style={{textAlign: 'center'}}>Menú a Analizar</p>
+                                <Input className="inputs" size={"sm"} type={"select"} placeholder="Añadir Variable"
+                                       value={this.state.menuSeleccionado}
+                                       onChange={this.onMenuSeleccionadoChange}>
+                                    {this.state.nombresMenus.map(
+                                        (item, index) => {
+                                            if (index === 0) {
+                                                return <option selected>{item}</option>
+                                            } else {
+                                                return <option>{item}</option>
+                                            }
+                                        }
+                                    )
+                                    }
+                                </Input>
+                            </Col>
+                        </Row>
+                        <Row style={{marginTop: '20px'}}>
+                            <Col>
+                                <h2 style={{textAlign: 'center'}}>Primeros Platos</h2>
+                                <Graficas datosGraficas={this.state.datosGraficasPrimerosPlatos}
+                                          opciones={this.state.opcionesPrimerosPlatos}
+                                          valoresOpciones={this.state.valoresOpcionesPrimerosPlatos}
+                                />
+                            </Col>
+                        </Row>
+                        <Row style={{marginTop: '20px'}}>
+                            <Col>
+                                <h2 style={{textAlign: 'center'}}>Segundos Platos</h2>
+                                <Graficas datosGraficas={this.state.datosGraficasSegundosPlatos}
+                                          opciones={this.state.opcionesSegundosPlatos}
+                                          valoresOpciones={this.state.valoresOpcionesSegundosPlatos}
+                                />
+                            </Col>
+                        </Row>
+                        <Row style={{marginTop: '20px'}}>
+                            <Col>
+                                <h2 style={{textAlign: 'center'}}>Postres</h2>
+                                <Graficas datosGraficas={this.state.datosGraficasPostres}
+                                          opciones={this.state.opcionesPostres}
+                                          valoresOpciones={this.state.valoresOpcionesPostres}
+                                />
+                            </Col>
+                        </Row>
+                    </Container>
 
+                    }
+                    <Row>
+                        <Route>{
+                            ({history}) =>
+                                <Button size={"lg"} style={{marginBottom: '50px'}} block className={"botonPrimary"}
+                                        onClick={() => history.goBack()}>Volver</Button>
+                        }</Route>
+                    </Row>
+                </Container>
+            )}
         </Container>
     }
 }

@@ -31,14 +31,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/button2"
+        android:id="@+id/botonVerPerfil"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="#00FFFFFF"
-        android:padding="20dp"
+        android:padding="25dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_account_box_black_24dp"
+        android:src="@drawable/ic_account_circle_black_24dp"
         android:tint="#FFFFFF"
         android:visibility="visible" />
 

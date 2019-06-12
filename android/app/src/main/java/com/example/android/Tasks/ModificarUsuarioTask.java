@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import com.example.android.Clases.Usuario;
 import com.example.android.Servicios.IServicios;
 import com.example.android.TasksResponse.ModificarUsuarioTaskResponse;
-import com.example.android.TasksResponse.RegistroTaskResponse;
 
 import java.io.IOException;
 
@@ -18,14 +17,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ModificarUsuarioTask extends AsyncTask<Void, Void, Void> {
     private Usuario usuario;
+    private String idCliente;
 
     private Response<Void> mResponse = null;
     private String token;
     private ModificarUsuarioTaskResponse modificarUsuarioTaskResponse = null;
 
-    public ModificarUsuarioTask(Usuario usuario, String token) {
+    public ModificarUsuarioTask(Usuario usuario, String token, String idCliente) {
         this.usuario = usuario;
         this.token=token;
+        this.idCliente = idCliente;
     }
 
 
@@ -44,7 +45,7 @@ public class ModificarUsuarioTask extends AsyncTask<Void, Void, Void> {
 
         IServicios service = retrofit.create(IServicios.class);
 
-        Call<Void> call = service.modificarUsuario(usuario.getUsername(), this.token, this.usuario);
+        Call<Void> call = service.modificarUsuario(this.idCliente, this.token, this.usuario);
         try {
             mResponse = call.execute();
 

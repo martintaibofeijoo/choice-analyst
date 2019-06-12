@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class ExperimentoActivity extends AppCompatActivity implements ObtenerExperimentoTaskResponse, ResponderExperimentoTaskResponse {
 
@@ -155,7 +156,10 @@ public class ExperimentoActivity extends AppCompatActivity implements ObtenerExp
             } else {
                 String pattern = "dd-MM-yyyy";
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                String timezoneID = TimeZone.getDefault().getID();
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone(timezoneID));
                 String fechaActual = simpleDateFormat.format(new Date());
+
                 for (int j = 0; j < establecimiento.getMenus().size(); j++) {
                     if (establecimiento.getMenus().get(j).getFechasMenu().contains(fechaActual)) {
                         opciones.add(establecimiento.getMenus().get(j).getNombreMenu());
@@ -221,7 +225,7 @@ public class ExperimentoActivity extends AppCompatActivity implements ObtenerExp
     @Override
     public void ObtenerExperimentoFinishERR() {
         botonFinalizarExperimento.setVisibility(View.INVISIBLE);
-        builder.setMessage("No existe ningún experimento asociado a este establecimiento!")
+        builder.setMessage("No existe ningún experimento asociado a este establecimiento para el día de hoy!")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

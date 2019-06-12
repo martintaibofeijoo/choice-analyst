@@ -11,7 +11,7 @@ export class AuthenticatedApp extends Component {
             const stored = JSON.parse(sessionStorage.getItem("authState"))
             this.state = {
                 ...stored,
-                updateLogin: setInterval(this.login, 60*60*1000, stored.user.username, stored.user.password)
+                updateLogin: setInterval(this.login, 60*60*60*1000, stored.user.username, stored.user.password)
             }
         } else
             this.state = {
@@ -30,6 +30,7 @@ export class AuthenticatedApp extends Component {
                 if (codigo === 200) {
                     const token = response.headers.get("Authorization");
                     const decodeToken = JSON.parse(atob(token.split('.')[1]));
+                    if(decodeToken.rol === "ROLE_ADMINISTRADOR"){
                     this.setState(prev => ({
                             ...prev,
                             authenticated: true,
@@ -44,7 +45,12 @@ export class AuthenticatedApp extends Component {
                             }
                             sessionStorage.setItem("authState", JSON.stringify(this.state))
                         }
-                    )
+                    )}else{
+                        this.setState(prev => ({
+                            ...prev,
+                            error: {code: "INVALID_LOGIN", message: "Usuario o contraseña inválido!"}
+                        }))
+                    }
                 } else
                     this.setState(prev => ({
                         ...prev,

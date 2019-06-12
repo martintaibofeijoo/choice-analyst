@@ -124,13 +124,14 @@ public class ModificarUsuarioActivity extends AppCompatActivity implements Login
                                                 textoCorreoElectronico.getText().toString(), textoTelefonoContacto.getText().toString(), textoNombre.getText().toString(),
                                                 textoApellidos.getText().toString(), textoFechaNacimiento.getText().toString(),
                                                 spinnerSexo.getSelectedItem().toString(), spinnerOrigen.getSelectedItem().toString(), spinnerNivelEstudios.getSelectedItem().toString());
-                                        modificarUsuarioTask = new ModificarUsuarioTask(usuario, token);
+                                        modificarUsuarioTask = new ModificarUsuarioTask(usuario, token, idCliente);
                                         modificarUsuarioTask.setModificarUsuarioTaskResponse(ModificarUsuarioActivity.this);
                                         modificarUsuarioTask.execute();
                                     }
                                 });
                         AlertDialog alertDialog = builder.create();
                         alertDialog.show();
+                        builder=new AlertDialog.Builder(v.getContext());
 
                     }
                 } else {
@@ -217,8 +218,7 @@ public class ModificarUsuarioActivity extends AppCompatActivity implements Login
 
     @Override
     public void LoginFinishERR() {
-
-        builder.setMessage("Error de Registro!")
+        builder.setMessage("Error de Login!")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -243,11 +243,7 @@ public class ModificarUsuarioActivity extends AppCompatActivity implements Login
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (token != null && idCliente != null) {
-                            ObtenerUsuarioTask obtenerUsuarioTask = new ObtenerUsuarioTask(idCliente, token);
-                            obtenerUsuarioTask.setObtenerUsuarioTaskResponse(ModificarUsuarioActivity.this);
-                            obtenerUsuarioTask.execute();
-                        }
+
                     }
                 });
         AlertDialog alertDialog = builder.create();
@@ -285,10 +281,18 @@ public class ModificarUsuarioActivity extends AppCompatActivity implements Login
             }
         }
         if(usuario.getSexo()!=null){
-
+            for (int i=0; i<adapterSpinnerSexo.getCount();i++){
+                if(adapterSpinnerSexo.getItem(i).equals(usuario.getSexo())){
+                    spinnerSexo.setSelection(i);
+                }
+            }
         }
         if(usuario.getNivelEstudios()!=null){
-
+            for (int i=0; i<adapterSpinnerNivelEstudios.getCount();i++){
+                if(adapterSpinnerNivelEstudios.getItem(i).equals(usuario.getNivelEstudios())){
+                    spinnerNivelEstudios.setSelection(i);
+                }
+            }
         }
 
     }
