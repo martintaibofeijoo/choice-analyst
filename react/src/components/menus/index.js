@@ -46,7 +46,7 @@ class VistaMenus extends Component {
 
     async componentDidMount() {
         let fechaSeleccionada = moment(this.state.fechaSeleccionada).format('DD-MM-YYYY')
-        const postRequest = await fetch(`http://localhost:9000/establecimientos/${this.props.idEstablecimiento}/menus?fechaSeleccionada=${fechaSeleccionada}`, {
+        const postRequest = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/establecimientos/${this.props.idEstablecimiento}/menus?fechaSeleccionada=${fechaSeleccionada}`, {
             method: "GET",
             mode: "cors",
             headers: {
@@ -66,7 +66,7 @@ class VistaMenus extends Component {
 
     async doBuscarMenus(fechaSeleccionada) {
         fechaSeleccionada = moment(this.state.fechaSeleccionada).format('DD-MM-YYYY')
-        const postRequest = await fetch(`http://localhost:9000/establecimientos/${this.props.idEstablecimiento}/menus?fechaSeleccionada=${fechaSeleccionada}`, {
+        const postRequest = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/establecimientos/${this.props.idEstablecimiento}/menus?fechaSeleccionada=${fechaSeleccionada}`, {
             method: "GET",
             mode: "cors",
             headers: {
@@ -97,8 +97,9 @@ class VistaMenus extends Component {
         this.setState({
             mostrarVistaEliminarMenu: false
         });
-        const response = await fetch(`http://localhost:9000/establecimientos/${this.props.idEstablecimiento}/menus/${this.state.idMenuEliminar}`, {
+        const response = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/establecimientos/${this.props.idEstablecimiento}/menus/${this.state.idMenuEliminar}`, {
             method: 'DELETE',
+            mode: "cors",
             headers: {
                 'Accept': 'application/json;charset=UTF-8',
                 'Content-Type': 'application/json;charset=UTF-8',

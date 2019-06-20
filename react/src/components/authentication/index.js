@@ -23,13 +23,14 @@ export class AuthenticatedApp extends Component {
     }
 
     login = (user, pass) => {
-        fetch("http://localhost:9000/login", {method: 'POST', body: JSON.stringify({username: user, password: pass})})
+        fetch("https://tec.citius.usc.es/choiceanalyst/backend/login", {method: 'POST', mode: "cors", body: JSON.stringify({username: user, password: pass})})
             .then(response => {
                 const codigo = response.status;
 
                 if (codigo === 200) {
                     const token = response.headers.get("Authorization");
                     const decodeToken = JSON.parse(atob(token.split('.')[1]));
+                    console.table(decodeToken.rol)
                     if(decodeToken.rol === "ROLE_ADMINISTRADOR"){
                     this.setState(prev => ({
                             ...prev,

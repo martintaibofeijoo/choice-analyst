@@ -49,9 +49,9 @@ class VistaExperimentos extends Component {
     async actualizarExperimentos() {
         let consulta = "";
         if (this.state.nombreExperimentoBuscar === "") {
-            consulta = `http://localhost:9000/experimentos?idAdministrador=${this.props.auth.user.username}`;
+            consulta = `https://tec.citius.usc.es/choiceanalyst/backend/experimentos?idAdministrador=${this.props.auth.user.username}`;
         } else {
-            consulta = `http://localhost:9000/experimentos?idAdministrador=${this.props.auth.user.username}&nombreExperimento=${this.state.nombreExperimentoBuscar}`;
+            consulta = `https://tec.citius.usc.es/choiceanalyst/backend/experimentos?idAdministrador=${this.props.auth.user.username}&nombreExperimento=${this.state.nombreExperimentoBuscar}`;
 
         }
         const postRequest = await fetch(consulta, {
@@ -83,8 +83,9 @@ class VistaExperimentos extends Component {
         this.setState({
             mostrarVistaConfirmacion: false
         });
-        const response = await fetch(`http://localhost:9000/experimentos/${this.state.idExperimentoEliminar}`, {
+        const response = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/experimentos/${this.state.idExperimentoEliminar}`, {
             method: 'DELETE',
+            mode: "cors",
             headers: {
                 'Accept': 'application/json;charset=UTF-8',
                 'Content-Type': 'application/json;charset=UTF-8',

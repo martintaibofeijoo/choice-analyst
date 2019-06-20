@@ -37,7 +37,7 @@ export class Inicio extends Component {
         return <Authentication>
             {auth => {
                 if (auth.authenticated)
-                    return <Redirect to="/experimentos"/>;
+                    return <Redirect to="experimentos"/>;
                 else
                     return <article>
                         <Row>

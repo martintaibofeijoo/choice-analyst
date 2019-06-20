@@ -72,8 +72,9 @@ export default class VistaRegistro extends Component {
     }
 
     doRegister = (username, password, correoElectronico, telefonoContacto, nombre, apellidos) => {
-        fetch("http://localhost:9000/usuarios/administradores", {
+        fetch("https://tec.citius.usc.es/choiceanalyst/backend/usuarios/administradores", {
             method: 'POST',
+            mode: "cors",
             headers: {
                 'Accept': 'application/json;charset=UTF-8',
                 'Content-Type': 'application/json;charset=UTF-8'

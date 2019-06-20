@@ -40,11 +40,13 @@ export default class NavigationBar extends Component {
                     </NavItem>
                 </AuthenticatedOnly>
                 <AuthenticatedOnly>
-                    <NavDropdown title="Mi Perfil" id={"item"} style={{marginRight:'50px'}}>
-                        <NavDropdown.Item href="/verPerfil">Ver Perfil</NavDropdown.Item>
-                        <NavDropdown.Divider style={{borderColor: 'black', borderRadius: '4px'}}/>
-                        <NavDropdown.Item href="/logout">Cerrar Sesión</NavDropdown.Item>
-                    </NavDropdown>
+
+                    <NavItem>
+                        <NavLink tag={Link} to="/verPerfil">Ver Perfil</NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink tag={Link} to="/logout">Cerrar Sesión</NavLink>
+                    </NavItem>
                 </AuthenticatedOnly>
             </Nav>
         </Navbar>

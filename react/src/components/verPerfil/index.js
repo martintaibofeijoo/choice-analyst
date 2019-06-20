@@ -43,7 +43,7 @@ class VistaVerPerfil extends Component {
 
 
     async actualizarUsuario() {
-        const postRequest = await fetch(`http://localhost:9000/usuarios/${this.props.auth.user.username}`, {
+        const postRequest = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/usuarios/${this.props.auth.user.username}`, {
             method: "GET",
             //'Authorization': this.props.auth.token,
             mode: "cors",
@@ -113,8 +113,9 @@ class VistaVerPerfil extends Component {
     }
 
     doModificarUsuario = (username, password, correoElectronico, telefonoContacto, nombre, apellidos) => {
-        fetch(`http://localhost:9000/usuarios/administradores/${this.props.auth.user.username}`, {
+        fetch(`https://tec.citius.usc.es/choiceanalyst/backend/usuarios/administradores/${this.props.auth.user.username}`, {
             method: 'PUT',
+            mode: "cors",
             headers: {
                 'Accept': 'application/json;charset=UTF-8',
                 'Content-Type': 'application/json;charset=UTF-8',

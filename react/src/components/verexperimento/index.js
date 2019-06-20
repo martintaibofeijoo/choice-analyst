@@ -37,7 +37,7 @@ class VistaVerExperimento extends Component {
     }
 
     async componentDidMount() {
-        const postRequest = await fetch(`http://localhost:9000/experimentos/verExperimento/${this.props.idExperimento}`, {
+        const postRequest = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/experimentos/verExperimento/${this.props.idExperimento}`, {
             method: "GET",
             mode: "cors",
             headers: {
@@ -67,7 +67,7 @@ class VistaVerExperimento extends Component {
             fechasExperimento: fechas
         }))
 
-        const establecimientosRequest = await fetch(`http://localhost:9000/establecimientos?idAdministrador=${this.props.auth.user.username}`, {
+        const establecimientosRequest = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/establecimientos?idAdministrador=${this.props.auth.user.username}`, {
             method: "GET",
             mode: "cors",
             headers: {

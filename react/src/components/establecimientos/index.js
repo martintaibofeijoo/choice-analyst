@@ -70,9 +70,9 @@ class VistaEstablecimientos extends Component {
     async actualizarEstablecimientos() {
         let consulta = "";
         if (this.state.nombreEstablecimientoBuscar !== "") {
-            consulta = `http://localhost:9000/establecimientos?idAdministrador=${this.props.auth.user.username}&nombreEstablecimiento=${this.state.nombreEstablecimientoBuscar}`;
+            consulta = `https://tec.citius.usc.es/choiceanalyst/backend/establecimientos?idAdministrador=${this.props.auth.user.username}&nombreEstablecimiento=${this.state.nombreEstablecimientoBuscar}`;
         } else {
-            consulta = `http://localhost:9000/establecimientos?idAdministrador=${this.props.auth.user.username}`;
+            consulta = `https://tec.citius.usc.es/choiceanalyst/backend/establecimientos?idAdministrador=${this.props.auth.user.username}`;
         }
         const postRequest = await fetch(consulta, {
             method: "GET",
@@ -134,8 +134,9 @@ class VistaEstablecimientos extends Component {
         idEstablecimiento = idEstablecimiento.toLowerCase()
         idEstablecimiento = idEstablecimiento.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 
-        fetch("http://localhost:9000/establecimientos", {
+        fetch("https://tec.citius.usc.es/choiceanalyst/backend/establecimientos", {
             method: 'POST',
+            mode: "cors",
             headers: {
                 'Accept': 'application/json;charset=UTF-8',
                 'Content-Type': 'application/json;charset=UTF-8',
@@ -177,8 +178,9 @@ class VistaEstablecimientos extends Component {
         this.setState({
             mostrarVistaEliminarExperimento: false
         });
-        const response = await fetch(`http://localhost:9000/establecimientos/${this.state.idEstablecimientoEliminar}`, {
+        const response = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/establecimientos/${this.state.idEstablecimientoEliminar}`, {
             method: 'DELETE',
+            mode: "cors",
             headers: {
                 'Accept': 'application/json;charset=UTF-8',
                 'Content-Type': 'application/json;charset=UTF-8',
@@ -452,8 +454,9 @@ class VistaModificarEstablecimiento extends Component {
         idEstablecimientoModificar = idEstablecimientoModificar.toLowerCase()
         idEstablecimientoModificar = idEstablecimientoModificar.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 
-        fetch(`http://localhost:9000/establecimientos/${this.props.idEstablecimientoModificar}`, {
+        fetch(`https://tec.citius.usc.es/choiceanalyst/backend/establecimientos/${this.props.idEstablecimientoModificar}`, {
             method: 'PUT',
+            mode: "cors",
             headers: {
                 'Accept': 'application/json;charset=UTF-8',
                 'Content-Type': 'application/json;charset=UTF-8',

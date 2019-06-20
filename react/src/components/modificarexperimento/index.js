@@ -56,7 +56,7 @@ class VistaModificarExperimento extends Component {
     }
 
     async componentDidMount() {
-        const postRequestEstablecimientos = await fetch(`http://localhost:9000/establecimientos?idAdministrador=${this.props.auth.user.username}`, {
+        const postRequestEstablecimientos = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/establecimientos?idAdministrador=${this.props.auth.user.username}`, {
             method: "GET",
             mode: "cors",
             headers: {
@@ -67,7 +67,7 @@ class VistaModificarExperimento extends Component {
         })
         const postResponseEstablecimientos = await postRequestEstablecimientos.json()
 
-        const postRequestExperimento = await fetch(`http://localhost:9000/experimentos/verExperimento/${this.props.idExperimento}`, {
+        const postRequestExperimento = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/experimentos/verExperimento/${this.props.idExperimento}`, {
             method: "GET",
             mode: "cors",
             headers: {
@@ -373,8 +373,9 @@ class VistaModificarExperimento extends Component {
             ];
 
 
-            const response = await fetch(`http://localhost:9000/experimentos/${this.props.idExperimento}`, {
+            const response = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/experimentos/${this.props.idExperimento}`, {
                 method: 'PUT',
+                mode: "cors",
                 headers: {
                     'Authorization': this.props.auth.token,
                     'Accept': 'application/json;charset=UTF-8',
@@ -418,8 +419,9 @@ class VistaModificarExperimento extends Component {
         this.setState({
             mostrarVistaConfirmacion: false
         });
-        const response = await fetch(`http://localhost:9000/experimentos/${this.state.idExperimentoEliminar}`, {
+        const response = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/experimentos/${this.state.idExperimentoEliminar}`, {
             method: 'DELETE',
+            mode: "cors",
             headers: {
                 'Accept': 'application/json;charset=UTF-8',
                 'Content-Type': 'application/json;charset=UTF-8',

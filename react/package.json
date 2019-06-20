@@ -2,6 +2,7 @@
   "name": "example-interface",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://tec.citius.usc.es/choiceanalyst/",
   "dependencies": {
     "bootstrap": "^4.1.3",
     "bootswatch": "^4.1.3",

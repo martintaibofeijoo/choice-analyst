@@ -85,7 +85,7 @@ class VistaVerResultadosExperimento extends Component {
 
 
     async actualizarExperimentos() {
-        const postRequest = await fetch(`http://localhost:9000/experimentos/verExperimento/${this.props.idExperimento}`, {
+        const postRequest = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/experimentos/verExperimento/${this.props.idExperimento}`, {
             method: "GET",
             mode: "cors",
             headers: {
@@ -116,7 +116,7 @@ class VistaVerResultadosExperimento extends Component {
             variablesPreguntas: variablesPreguntas
         }))
 
-        const establecimientosRequest = await fetch(`http://localhost:9000/establecimientos?idAdministrador=${this.props.auth.user.username}`, {
+        const establecimientosRequest = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/establecimientos?idAdministrador=${this.props.auth.user.username}`, {
             method: "GET",
             mode: "cors",
             headers: {
@@ -181,7 +181,7 @@ class VistaVerResultadosExperimento extends Component {
 
 
         let idVariable = "primer-plato";
-        const postRequestPrimerosPlatos = await fetch(`http://localhost:9000/experiencias/${this.props.idExperimento}/${idEstablecimiento}/menus/${idMenu}/${idVariable}`, {
+        const postRequestPrimerosPlatos = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/experiencias/${this.props.idExperimento}/${idEstablecimiento}/menus/${idMenu}/${idVariable}`, {
             method: "GET",
             mode: "cors",
             headers: {
@@ -212,7 +212,7 @@ class VistaVerResultadosExperimento extends Component {
         }))
 
         idVariable = "segundo-plato";
-        const postRequestSegundosPlatos = await fetch(`http://localhost:9000/experiencias/${this.props.idExperimento}/${idEstablecimiento}/menus/${idMenu}/${idVariable}`, {
+        const postRequestSegundosPlatos = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/experiencias/${this.props.idExperimento}/${idEstablecimiento}/menus/${idMenu}/${idVariable}`, {
             method: "GET",
             mode: "cors",
             headers: {
@@ -244,7 +244,7 @@ class VistaVerResultadosExperimento extends Component {
 
 
         idVariable = "postre";
-        const postRequestPostres = await fetch(`http://localhost:9000/experiencias/${this.props.idExperimento}/${idEstablecimiento}/menus/${idMenu}/${idVariable}`, {
+        const postRequestPostres = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/experiencias/${this.props.idExperimento}/${idEstablecimiento}/menus/${idMenu}/${idVariable}`, {
             method: "GET",
             mode: "cors",
             headers: {
@@ -285,7 +285,7 @@ class VistaVerResultadosExperimento extends Component {
         let idVariable = nombreVariable.replace(/ /g, "-");
         idVariable = idVariable.toLowerCase()
         idVariable = idVariable.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-        const postRequest = await fetch(`http://localhost:9000/experiencias/${this.props.idExperimento}/${idEstablecimiento}/${idVariable}`, {
+        const postRequest = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/experiencias/${this.props.idExperimento}/${idEstablecimiento}/${idVariable}`, {
             method: "GET",
             mode: "cors",
             headers: {

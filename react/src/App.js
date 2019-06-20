@@ -9,7 +9,7 @@ import { AuthenticatedApp } from "./components/authentication";
 class App extends Component {
     render() {
         return <AuthenticatedApp>
-            <Router>
+            <Router basename={'/choiceanalyst'}>
                 <Layout/>
             </Router>
         </AuthenticatedApp>

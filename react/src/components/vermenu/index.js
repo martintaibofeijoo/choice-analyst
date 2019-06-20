@@ -40,7 +40,7 @@ class VistaVerMenu extends Component {
     }
 
     async componentDidMount() {
-        const postRequest = await fetch(`http://localhost:9000/establecimientos/${this.props.idEstablecimiento}/menus/${this.props.idMenu}`, {
+        const postRequest = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/establecimientos/${this.props.idEstablecimiento}/menus/${this.props.idMenu}`, {
             method: "GET",
             mode: "cors",
             headers: {

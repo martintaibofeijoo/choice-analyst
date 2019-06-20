@@ -66,7 +66,7 @@ class VistaCrearExperimento extends Component {
     }
 
     async componentDidMount() {
-        const postRequest = await fetch(`http://localhost:9000/establecimientos?idAdministrador=${this.props.auth.user.username}`, {
+        const postRequest = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/establecimientos?idAdministrador=${this.props.auth.user.username}`, {
             method: "GET",
             mode: "cors",
             headers: {
@@ -319,8 +319,9 @@ class VistaCrearExperimento extends Component {
             ];
 
 
-            const response = await fetch(`http://localhost:9000/experimentos/`, {
+            const response = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/experimentos/`, {
                 method: 'POST',
+                mode: "cors",
                 headers: {
                     'Authorization': this.props.auth.token,
                     'Accept': 'application/json;charset=UTF-8',

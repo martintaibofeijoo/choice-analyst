@@ -457,8 +457,9 @@ class VistaCrearMenu extends Component {
             let idMenu = nombreMenu.replace(/ /g, "-");
             idMenu = idMenu.toLowerCase()
             idMenu = idMenu.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-            const response = await fetch(`http://localhost:9000/establecimientos/${idEstablecimiento}/menus`, {
+            const response = await fetch(`https://tec.citius.usc.es/choiceanalyst/backend/establecimientos/${idEstablecimiento}/menus`, {
                 method: 'POST',
+                mode: "cors",
                 headers: {
                     'Accept': 'application/json;charset=UTF-8',
                     'Content-Type': 'application/json;charset=UTF-8',
