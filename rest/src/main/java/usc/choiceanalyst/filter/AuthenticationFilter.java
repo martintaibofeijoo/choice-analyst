@@ -58,7 +58,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .setExpiration(new Date(now + TOKEN_DURATION))
                 .claim(ROLES_CLAIM, authorities)
                 .signWith(SignatureAlgorithm.HS512, TextCodec.BASE64.decode(TOKEN_SECRET));
-        //.compressWith(CompressionCodecs.DEFLATE);
 
         response.addHeader(AUTH_HEADER, String.format("%s %s", TOKEN_PREFIX, tokenBuilder.compact()));
     }

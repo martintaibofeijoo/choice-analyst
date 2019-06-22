@@ -13,6 +13,8 @@ public interface RepositorioExperimento extends MongoRepository<ModeloExperiment
     List<ModeloExperimento> findByIdAdministrador(String idAdministrador);
     List<ModeloExperimento> findAll();
     List<ModeloExperimento> findByIdsEstablecimientosContains(String idExtablecimiento);
-    List<ModeloExperimento> findByIdAdministradorAndIdsEstablecimientosContains(String idAdministrador, String idExtablecimiento);
+    List<ModeloExperimento> findByIdAdministradorAndIdsEstablecimientosContains(
+            String idAdministrador, String idExtablecimiento
+    );
     ModeloExperimento save(ModeloExperimento entity);
 }

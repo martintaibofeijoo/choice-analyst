@@ -21,7 +21,7 @@ import retrofit2.http.Query;
 
 public interface IServicios {
 
-    String BASE_ROUTE = "http://10.0.2.2:9000/";
+    String BASE_ROUTE = "https://tec.citius.usc.es/choiceanalyst/backend/";
 
     @POST("login")
     Call<Void> login(@Body Credentials credentials);
