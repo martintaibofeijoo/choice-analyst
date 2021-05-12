@@ -6,7 +6,7 @@
   "dependencies": {
     "bootstrap": "^4.1.3",
     "bootswatch": "^4.1.3",
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.4",
     "lodash": "latest",
     "mdbreact": "^4.13.0",
     "moment": "^2.24.0",
