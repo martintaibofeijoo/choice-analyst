@@ -9,7 +9,7 @@
     "chart.js": "^2.8.0",
     "lodash": "latest",
     "mdbreact": "^4.13.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "prop-types": "^15.6.2",
     "react": "^16.5.2",
     "react-bootstrap": "^1.0.0-beta.5",
